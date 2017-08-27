@@ -59,7 +59,7 @@ void GSetPrint(GSet *s, FILE* stream,
   // While the pointer hasn't reach the end
   while (p != NULL) {
     // If there is a print function for the data
-    if (printData != NULL)
+    if (printData != NULL) {
       // Use the argument function to print the data of the 
       // current element
       (*printData)(p->_data, stream);
