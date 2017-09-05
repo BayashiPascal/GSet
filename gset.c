@@ -21,9 +21,33 @@ GSet* GSetCreate() {
   return s;
 }
 
+// Function to clone a GSet,
+// Return a pointer toward the new GSet, or null if it couldn't
+// clone the GSet
+GSet* GSetClone(GSet *s) {
+  // If the arguments are invalid, return NULL
+  if (s == NULL) return NULL;
+  // Create the clone
+  GSet *c = GSetCreate();
+  // If the clone could be created
+  if (c != NULL) {
+    // Set a pointer to the head of the set
+    GSetElem *ptr = s->_head;
+    // While the pointer is not at the end of the set
+    while (ptr != NULL) {
+      // Append the data of the current pointer to the clone
+      GSetAppend(c, ptr->_data);
+      // Move the pointer to the next element
+      ptr = ptr->_next;
+    }
+  }
+  // Return the clone
+  return c;
+}
+
 // Function to free the memory used by the GSet
 void GSetFree(GSet **s) {
-  // If the arguments are invalid, return null
+  // If the arguments are invalid, stop
   if (s == NULL || *s == NULL) return;
   // Empty the GSet
   GSetFlush(*s);
