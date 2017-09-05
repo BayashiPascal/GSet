@@ -26,7 +26,7 @@ GSet library is a C library to manipulate sets of data.\\
 
 Elements of the GSet are void pointers toward any kind of data. These data must be allocated and freed separately. The GSet only provides a mean to manipulate sets of pointers toward these data.\\
 
-It offers functions to add elements (at first position, last position, given position, or sorting based on a float value), to access elements (at first position, last position, given position), to get index of first/last element pointing to a given data, to remove elements (at first position, last position, given position, or first/last/all pointing toward a given data), to search for data in elements (first one or last one), to print the set on a stream.\\ 
+The GSet offers functions to add elements (at first position, last position, given position, or sorting based on a float value), to access elements (at first position, last position, given position), to get index of first/last element pointing to a given data, to remove elements (at first position, last position, given position, or first/last/all pointing toward a given data), to search for data in elements (first one or last one), to print the set on a stream.\\ 
 
 \section{Interface}
 
@@ -74,6 +74,11 @@ typedef struct GSet {
 // Return a pointer toward the new GSet, or null if it couldn't
 // create the GSet
 GSet* GSetCreate();
+
+// Function to clone a GSet,
+// Return a pointer toward the new GSet, or null if it couldn't
+// clone the GSet
+GSet* GSetClone(GSet *s);
 
 // Function to free the memory used by the GSet
 void GSetFree(GSet **s);
@@ -188,9 +193,33 @@ GSet* GSetCreate() {
   return s;
 }
 
+// Function to clone a GSet,
+// Return a pointer toward the new GSet, or null if it couldn't
+// clone the GSet
+GSet* GSetClone(GSet *s) {
+  // If the arguments are invalid, return NULL
+  if (s == NULL) return NULL;
+  // Create the clone
+  GSet *c = GSetCreate();
+  // If the clone could be created
+  if (c != NULL) {
+    // Set a pointer to the head of the set
+    GSetElem *ptr = s->_head;
+    // While the pointer is not at the end of the set
+    while (ptr != NULL) {
+      // Append the data of the current pointer to the clone
+      GSetAppend(c, ptr->_data);
+      // Move the pointer to the next element
+      ptr = ptr->_next;
+    }
+  }
+  // Return the clone
+  return c;
+}
+
 // Function to free the memory used by the GSet
 void GSetFree(GSet **s) {
-  // If the arguments are invalid, return null
+  // If the arguments are invalid, stop
   if (s == NULL || *s == NULL) return;
   // Empty the GSet
   GSetFlush(*s);
@@ -752,6 +781,12 @@ int main(int argc, char **argv) {
   }
   fprintf(stderr, "\n");
 
+  GSet *clone = GSetClone(theSet);
+  fprintf(stderr, "Clone the set and print it:\n");
+  GSetPrint(clone, stdout, &TestPrint, (char*)", ");
+  fprintf(stderr, "\n");
+  GSetFree(&clone);
+
   GSetRemove(theSet, 7);
   GSetRemove(theSet, 1);
   GSetRemove(theSet, 0);
@@ -803,6 +838,8 @@ Add sort [2,3,1] and get elements :
 3, 2, 1, 
 Insert 0 at 0, 2, 8 and get elements :
 0, 3, 0, 2, 1, (null), (null), 0, 
+Clone the set and print it:
+0, 3, 0, 2, 1, (null), (null), 0
 Remove at 7,1,0 and get elements :
 0, 2, 1, (null), (null), 
 Index of first null data : 3

@@ -40,6 +40,11 @@ typedef struct GSet {
 // create the GSet
 GSet* GSetCreate();
 
+// Function to clone a GSet,
+// Return a pointer toward the new GSet, or null if it couldn't
+// clone the GSet
+GSet* GSetClone(GSet *s);
+
 // Function to free the memory used by the GSet
 void GSetFree(GSet **s);
 

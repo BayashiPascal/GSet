@@ -86,6 +86,12 @@ int main(int argc, char **argv) {
   }
   fprintf(stderr, "\n");
 
+  GSet *clone = GSetClone(theSet);
+  fprintf(stderr, "Clone the set and print it:\n");
+  GSetPrint(clone, stdout, &TestPrint, (char*)", ");
+  fprintf(stderr, "\n");
+  GSetFree(&clone);
+
   GSetRemove(theSet, 7);
   GSetRemove(theSet, 1);
   GSetRemove(theSet, 0);
