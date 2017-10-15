@@ -1,0 +1,24 @@
+Created the set, nb elem : 0
+Pushed [1,3,2], nb elem : 3
+Print GSet:
+2, 3, 1
+Pop elements :
+2, 3, 1, 
+Push back and drop elements :
+1, 3, 2, 
+Append back and pop elements :
+1, 3, 2, 
+Append back and drop elements :
+2, 3, 1, 
+Add sort [2,3,1] and get elements :
+3, 2, 1, 
+Insert 0 at 0, 2, 8 and get elements :
+0, 3, 0, 2, 1, (null), (null), 0, 
+Clone the set and print it:
+0, 3, 0, 2, 1, (null), (null), 0
+Remove at 7,1,0 and get elements :
+0, 2, 1, (null), (null), 
+Index of first null data : 3
+Index of last null data : 4
+Delete all null and get elements :
+0, 2, 1, 

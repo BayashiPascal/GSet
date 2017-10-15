@@ -16,3 +16,6 @@ gset_main.o : gset.h gset_main.c Makefile
 gset.o : gset.c gset.h Makefile
 	gcc -c gset.c $(OPTIONS)
 
+install: 
+	cp gset.h ../Install; cp gset.o ../Install
+	
