@@ -8,7 +8,7 @@
 // Function to create a new GSet,
 // Return a pointer toward the new GSet, or null if it couldn't
 // create the GSet
-GSet* GSetCreate() {
+GSet* GSetCreate(void) {
   // Allocate memory for the GSet
   GSet *s = (GSet*)malloc(sizeof(GSet));
   // If we couldn't allocate memory return null
@@ -37,6 +37,8 @@ GSet* GSetClone(GSet *s) {
     while (ptr != NULL) {
       // Append the data of the current pointer to the clone
       GSetAppend(c, ptr->_data);
+      // Copy the sort value
+      c->_tail->_sortVal = ptr->_sortVal;
       // Move the pointer to the next element
       ptr = ptr->_next;
     }
@@ -425,16 +427,31 @@ void* GSetGet(GSet *s, int iElem) {
   if (s == NULL) return NULL;
   // Set a pointer for the return value
   void *ret = NULL;
+  // Get the iElem-th element
+  GSetElem* e = GSetGetElem(s, iElem);
+  // If we could ge the element
+  if (e != NULL)
+    // Get the data of the element
+    ret = e->_data;
+  // Return the data
+  return ret;
+}
+
+// Function to get the element at the 'iElem'-th position of the GSet
+// without removing it
+// Return the GSetElem
+// Return null if arguments are invalid
+GSetElem* GSetGetElem(GSet *s, int iElem) {
+  // If the arguments are invalid, return null
+  if (s == NULL) return NULL;
+  // Set a pointer for the return value
+  GSetElem *ret = NULL;
   // If iElem is a valid index
   if (iElem >= 0 && iElem < s->_nbElem) {
-    // Set a pointer to the head of the GSet
-    GSetElem *p = s->_head;
+    // Set the pointer to the head of the GSet
+    ret = s->_head;
     // Move to the next element iElem times
-    for (int i = iElem; i > 0 && p != NULL; --i, p = p->_next);
-    // If the pointer is not null (in case the GSet is empty)
-    if (p != NULL)
-      // Memorize the data pointed to by the elem
-      ret = p->_data;
+    for (int i = iElem; i > 0 && ret != NULL; --i, ret = ret->_next);
   }
   // Return the element
   return ret;
@@ -486,3 +503,195 @@ int GSetGetIndexLast(GSet *s, void *data) {
   return index;
 }
 
+// Function to sort the element of the gset in increasing order of 
+// _sortVal
+// Do nothing if arguments are invalid or the sort failed
+GSet* GSetSortRec(GSet *s);
+void GSetSort(GSet *s) {
+  // If the arguments are invalid, do nothing
+  if (s == NULL) return;
+  // Create a clone of the original set
+  // GSetSortRec destroys its argument, so if something wrong we need
+  // to still have the original set to give it back to the user
+  GSet *clone = GSetClone(s);
+  // Create recursively the sorted set
+  GSet* res = GSetSortRec(clone);
+  // Free the memory used by the clone
+  GSetFree(&clone);
+  // If we could sort the set
+  if (res != NULL) {
+    // Update the original set with the result one
+    memcpy(s, res, sizeof(GSet));
+    // Free the memory used by the result set
+    free(res);
+    res = NULL;
+  }
+}
+GSet* GSetSortRec(GSet *s) {
+  // If the arguments are invalid, do nothing
+  if (s == NULL) return NULL;
+  // Declare a variable for the result
+  GSet *res = GSetCreate();
+  // If we couldn't allocate memory
+  if (res == NULL)
+    // Stop here
+    return NULL;
+  // If the set contains no element or one element
+  if (s->_nbElem == 0 || s->_nbElem == 1) {
+    // Return the set
+    return s;
+  // Else, the set contains several elements
+  } else {
+    // Create two sets, one for elements lower than the pivot
+    // one for elements greater or equal than the pivot
+    GSet *lower = GSetCreate();
+    GSet *greater = GSetCreate();
+    // If we coudln't allocate memory
+    if (lower == NULL || greater == NULL) {
+      // Free memory and stop here
+      GSetFree(&lower);
+      GSetFree(&greater);
+      GSetFree(&res);
+      GSetFree(&s);
+      return NULL;
+    }
+    // Declare a variable to memorize the pivot, which is equal
+    // to the sort value of the first element of the set
+    float pivot = s->_head->_sortVal;
+    // Pop the pivot and put it in the result
+    void *data = GSetPop(s);
+    GSetAppend(res, data);
+    res->_head->_sortVal = pivot;
+    // Pop all the elements one by one from the set
+    while (s->_nbElem != 0) {
+      // Declare a variable to memorize the sort value of the head
+      // element
+      float val = s->_head->_sortVal;
+      // Pop the head element
+      data = GSetPop(s);
+      // If the poped element has a sort value lower than the pivot
+      if (val < pivot) {
+        // Insert it in the lower set
+        GSetAppend(lower, data);
+        // Copy the sort value
+        lower->_tail->_sortVal = val;
+      // Else, the poped element has a sort value greater then or 
+      // equal to the pivot
+      } else {
+        // Insert it in the greater set
+        GSetAppend(greater, data);
+        // Copy the sort value
+        greater->_tail->_sortVal = val;
+      }
+    }
+    // Sort the two half
+    GSet *sortedLower = GSetSortRec(lower);
+    GSet *sortedGreater = GSetSortRec(greater);
+    if (sortedLower == NULL || sortedGreater == NULL) {
+      // Free memory and stop here
+      GSetFree(&lower);
+      GSetFree(&greater);
+      GSetFree(&sortedLower);
+      GSetFree(&sortedGreater);
+      GSetFree(&res);
+      GSetFree(&s);
+      return NULL;
+    }
+    // Merge back the sorted two half and the pivot
+    GSetMerge(&sortedLower, &res);
+    GSetMerge(&sortedLower, &sortedGreater);
+    res = sortedLower;
+  }
+  return res;
+}
+
+// Merge the GSet '*r' at the end of the GSet '*s'
+// '*r' and '*s' can be empty
+// After calling this function (*r == null) and *r is freed
+// Do nothing if arguments are invalid
+void GSetMerge(GSet **s, GSet **r) {
+  // Check arguments
+  if (s == NULL || r == NULL || *r == NULL)
+    return;
+  // If the set s is empty
+  if (*s == NULL || (*s)->_head == NULL) {
+    GSetFree(s);
+    *s = *r;
+    *r = NULL;
+  // Else, if the set r is empty
+  } else if ((*r)->_head == NULL) {
+    GSetFree(r);
+  // Else, s and r are both not empty
+  } else {
+    // Add r to the tail of s
+    (*s)->_tail->_next = (*r)->_head;
+    // Add s to the head of r
+    (*r)->_head->_prev = (*s)->_tail;
+    // Update the tail of s
+    (*s)->_tail = (*r)->_tail;
+    // Update the number of element of s
+    (*s)->_nbElem += (*r)->_nbElem;
+    // Free memory used by r
+    free(*r);
+    // Set r to null
+    *r = NULL;
+  }
+}
+
+// Split the GSet 's' at the GSetElem 'e'
+// 'e' must be and element of 's'
+// Return a new GSet starting with 'e', or NULL if memory allocation 
+// failed or arguments are invalid
+GSet* GSetSplit(GSet *s, GSetElem *e) {
+  // Check arguments
+  if (s == NULL || e == NULL)
+    return NULL;
+  // Check that e is an element of s
+  // Declare a variable to count element before e in s
+  int nb = 0;
+  // If e is not the head of s 
+  if (s->_head != e) {
+    GSetElem *ptr = e;
+    // While there is an element before e
+    do {
+      // Increment the number of element
+      ++nb;
+      // Move to the previous element
+      ptr = ptr->_prev;
+    } while (ptr != NULL && ptr != s->_head);
+    // If we have reached and element without previous element, this
+    // element is not the head of S, menaing e is not in the set s
+    if (ptr == NULL) {
+      // Stop here
+      return NULL;
+    }
+  }
+  // Allocate memory for the result
+  GSet *res = GSetCreate();
+  // If we could allocate memory
+  if (res != NULL) {
+    // Set the head of res
+    res->_head = e;
+    // Set the tail of res
+    res->_tail = s->_tail;
+    // Set the number of element of res
+    res->_nbElem = s->_nbElem - nb;
+    // Set the tail of s
+    s->_tail = e->_prev;
+    // Set the number of element of s
+    s->_nbElem = nb;
+    // If s is empty
+    if (nb == 0) {
+      // Update head
+      s->_head = NULL;
+    // Else, s is not empty
+    } else {
+      // Disconnect the tail of s
+      s->_tail->_next = NULL;
+    }
+    // Disconnect the head of res
+    res->_head->_prev = NULL;
+  }
+  // Return the result
+  return res;
+}

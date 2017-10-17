@@ -5,6 +5,9 @@
 // ================= Include ==================
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+#include <string.h>
 
 // ================= Define ==================
 
@@ -38,7 +41,7 @@ typedef struct GSet {
 // Function to create a new GSet,
 // Return a pointer toward the new GSet, or null if it couldn't
 // create the GSet
-GSet* GSetCreate();
+GSet* GSetCreate(void);
 
 // Function to clone a GSet,
 // Return a pointer toward the new GSet, or null if it couldn't
@@ -116,6 +119,12 @@ void GSetRemoveAll(GSet *s, void *data);
 // Return null if arguments are invalid
 void* GSetGet(GSet *s, int iElem);
 
+// Function to get the element at the 'iElem'-th position of the GSet
+// without removing it
+// Return the GSetElem
+// Return null if arguments are invalid
+GSetElem* GSetGetElem(GSet *s, int iElem);
+
 // Function to get the index of the first element of the GSet
 // which point to 'data'
 // Return -1 if arguments are invalid or 'data' is not in the GSet
@@ -125,5 +134,22 @@ int GSetGetIndexFirst(GSet *s, void *data);
 // which point to 'data'
 // Return -1 if arguments are invalid or 'data' is not in the GSet
 int GSetGetIndexLast(GSet *s, void *data);
+
+// Function to sort the element of the gset in increasing order of 
+// _sortVal
+// Do nothing if arguments are invalid or the sort failed
+void GSetSort(GSet *s);
+
+// Merge the GSet '*r' at the end of the GSet '*s'
+// '*r' and '*s' can be empty
+// After calling this function (*r == null) and *r is freed
+// Do nothing if arguments are invalid
+void GSetMerge(GSet **s, GSet **r);
+
+// Split the GSet 's' at the GSetElem 'e'
+// 'e' must be and element of 's'
+// Return a new GSet starting with 'e', ot NULL if memory allocation 
+// failed or arguments are invalid
+GSet* GSetSplit(GSet *s, GSetElem *e);
 
 #endif

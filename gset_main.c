@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "gset.h"
+
+#define rnd() (float)(rand())/(float)(RAND_MAX)
 
 struct Test {
   int v;
@@ -15,6 +18,10 @@ void TestPrint(void *t, FILE *stream) {
 }
 
 int main(int argc, char **argv) {
+  // Initialize the random generator
+  time_t seed = time(NULL);
+  srandom(seed);
+
   GSet *theSet = GSetCreate();
   fprintf(stdout, "Created the set, nb elem : %d\n", theSet->_nbElem);
   struct Test data[4];
@@ -86,11 +93,48 @@ int main(int argc, char **argv) {
   }
   fprintf(stdout, "\n");
 
+  fprintf(stdout, "Split the set at 1:\n");
+  GSetElem *splitElem = GSetGetElem(theSet, 4);
+  GSet *split = GSetSplit(theSet, splitElem);
+  GSetPrint(theSet, stdout, TestPrint, ", ");
+  fprintf(stdout, " and ");
+  GSetPrint(split, stdout, TestPrint, ", ");
+  fprintf(stdout, "\n");
+
+  fprintf(stdout, "Merge back the set:\n");
+  GSetMerge(&theSet, &split);
+  GSetPrint(theSet, stdout, TestPrint, ", ");
+  fprintf(stdout, "\n");
+  
+
   GSet *clone = GSetClone(theSet);
   fprintf(stdout, "Clone the set and print it:\n");
   GSetPrint(clone, stdout, &TestPrint, (char*)", ");
   fprintf(stdout, "\n");
   GSetFree(&clone);
+
+  fprintf(stdout, "Sort the elements, before:\n");
+  GSetElem *elem = theSet->_head;
+  while (elem != NULL) {
+    elem->_sortVal = rnd();
+    fprintf(stdout, "%.3f,", elem->_sortVal);
+    elem = elem->_next;
+  }
+  fprintf(stdout, "\n");
+  GSetSort(theSet);
+  fprintf(stdout, "Sort the elements, after:\n");
+  elem = theSet->_head;
+  while (elem != NULL) {
+    fprintf(stdout, "%.3f,", elem->_sortVal);
+    elem = elem->_next;
+  }
+  fprintf(stdout, "\n");
+  for (int i = 0; i < theSet->_nbElem; ++i) {
+    struct Test *p = (struct Test *)GSetGet(theSet, i);
+    TestPrint(p, stdout);
+    fprintf(stdout, ", ");
+  }
+  fprintf(stdout, "\n");
 
   GSetRemove(theSet, 7);
   GSetRemove(theSet, 1);
