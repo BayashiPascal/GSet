@@ -17,5 +17,7 @@ gset.o : gset.c gset.h Makefile
 	gcc -c gset.c $(OPTIONS)
 
 install: 
-	cp gset.h ../Install; cp gset.o ../Install
+	cp gset.h ../Include; cp gset.o ../Include
 	
+valgrind :
+	valgrind -v --track-origins=yes --leak-check=full --gen-suppressions=yes --show-leak-kinds=all ./gset

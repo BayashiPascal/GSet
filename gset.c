@@ -506,7 +506,7 @@ int GSetGetIndexLast(GSet *s, void *data) {
 // Function to sort the element of the gset in increasing order of 
 // _sortVal
 // Do nothing if arguments are invalid or the sort failed
-GSet* GSetSortRec(GSet *s);
+GSet* GSetSortRec(GSet **s);
 void GSetSort(GSet *s) {
   // If the arguments are invalid, do nothing
   if (s == NULL) return;
@@ -515,60 +515,56 @@ void GSetSort(GSet *s) {
   // to still have the original set to give it back to the user
   GSet *clone = GSetClone(s);
   // Create recursively the sorted set
-  GSet* res = GSetSortRec(clone);
-  // Free the memory used by the clone
-  GSetFree(&clone);
+  GSet* res = GSetSortRec(&clone);
   // If we could sort the set
   if (res != NULL) {
     // Update the original set with the result one
+    GSetFlush(s);
     memcpy(s, res, sizeof(GSet));
     // Free the memory used by the result set
     free(res);
     res = NULL;
   }
 }
-GSet* GSetSortRec(GSet *s) {
+GSet* GSetSortRec(GSet **s) {
   // If the arguments are invalid, do nothing
-  if (s == NULL) return NULL;
+  if (s == NULL || *s == NULL) return NULL;
   // Declare a variable for the result
-  GSet *res = GSetCreate();
-  // If we couldn't allocate memory
-  if (res == NULL)
-    // Stop here
-    return NULL;
+  GSet *res = NULL;
   // If the set contains no element or one element
-  if (s->_nbElem == 0 || s->_nbElem == 1) {
+  if ((*s)->_nbElem == 0 || (*s)->_nbElem == 1) {
     // Return the set
-    return s;
+    res = *s;
   // Else, the set contains several elements
   } else {
     // Create two sets, one for elements lower than the pivot
     // one for elements greater or equal than the pivot
     GSet *lower = GSetCreate();
     GSet *greater = GSetCreate();
+    res = GSetCreate();
     // If we coudln't allocate memory
-    if (lower == NULL || greater == NULL) {
+    if (lower == NULL || greater == NULL || res == NULL) {
       // Free memory and stop here
       GSetFree(&lower);
       GSetFree(&greater);
       GSetFree(&res);
-      GSetFree(&s);
+      GSetFree(s);
       return NULL;
     }
     // Declare a variable to memorize the pivot, which is equal
     // to the sort value of the first element of the set
-    float pivot = s->_head->_sortVal;
+    float pivot = (*s)->_head->_sortVal;
     // Pop the pivot and put it in the result
-    void *data = GSetPop(s);
+    void *data = GSetPop(*s);
     GSetAppend(res, data);
     res->_head->_sortVal = pivot;
     // Pop all the elements one by one from the set
-    while (s->_nbElem != 0) {
+    while ((*s)->_nbElem != 0) {
       // Declare a variable to memorize the sort value of the head
       // element
-      float val = s->_head->_sortVal;
+      float val = (*s)->_head->_sortVal;
       // Pop the head element
-      data = GSetPop(s);
+      data = GSetPop(*s);
       // If the poped element has a sort value lower than the pivot
       if (val < pivot) {
         // Insert it in the lower set
@@ -584,17 +580,17 @@ GSet* GSetSortRec(GSet *s) {
         greater->_tail->_sortVal = val;
       }
     }
+    // At the end of the loop the original set is empty and we 
+    // don't need it anymore
+    GSetFree(s);
     // Sort the two half
-    GSet *sortedLower = GSetSortRec(lower);
-    GSet *sortedGreater = GSetSortRec(greater);
+    GSet *sortedLower = GSetSortRec(&lower);
+    GSet *sortedGreater = GSetSortRec(&greater);
     if (sortedLower == NULL || sortedGreater == NULL) {
       // Free memory and stop here
-      GSetFree(&lower);
-      GSetFree(&greater);
       GSetFree(&sortedLower);
       GSetFree(&sortedGreater);
       GSetFree(&res);
-      GSetFree(&s);
       return NULL;
     }
     // Merge back the sorted two half and the pivot
@@ -602,6 +598,7 @@ GSet* GSetSortRec(GSet *s) {
     GSetMerge(&sortedLower, &sortedGreater);
     res = sortedLower;
   }
+  // Return the result
   return res;
 }
 
