@@ -192,11 +192,8 @@ void GSetInsert(GSet *s, void* data, int iElem) {
   if (s == NULL || data == NULL || iElem < 0) return;
   // If iElem is greater than the number of elements, append
   // elements pointing toward null data to fill in the gap
-  int nbAddElement = iElem - s->_nbElem - 1;
-  while (nbAddElement > 0) {
+  while (iElem > s->_nbElem)
     GSetAppend(s, NULL);
-    nbAddElement--;
-  }
   // If iElem is in the list of element or at the tail
   if (iElem <= s->_nbElem + 1) {
     // If the insert position is the head
@@ -204,7 +201,7 @@ void GSetInsert(GSet *s, void* data, int iElem) {
       // Push the data
       GSetPush(s, data);
     // Else, if the insert position is the tail
-    } else if (iElem == s->_nbElem + 1) {
+    } else if (iElem == s->_nbElem) {
       // Append data
       GSetAppend(s, data);
     // Else, the insert position is inside the list

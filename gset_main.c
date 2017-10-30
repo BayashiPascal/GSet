@@ -106,7 +106,6 @@ int main(int argc, char **argv) {
   GSetPrint(theSet, stdout, TestPrint, ", ");
   fprintf(stdout, "\n");
   
-
   GSet *clone = GSetClone(theSet);
   fprintf(stdout, "Clone the set and print it:\n");
   GSetPrint(clone, stdout, &TestPrint, (char*)", ");
@@ -160,6 +159,11 @@ int main(int argc, char **argv) {
     fprintf(stdout, ", ");
   }
   fprintf(stdout, "\n");
+
+  fprintf(stdout, "Empty the set\n");
+  GSetFlush(theSet);
+  GSetInsert(theSet, &(data[0]), 0);
+  
 
   GSetFree(&theSet);
 }

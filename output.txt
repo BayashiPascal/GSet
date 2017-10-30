@@ -13,12 +13,22 @@ Append back and drop elements :
 Add sort [2,3,1] and get elements :
 3, 2, 1, 
 Insert 0 at 0, 2, 8 and get elements :
-0, 3, 0, 2, 1, (null), (null), 0, 
+0, 3, 0, 2, 1, (null), (null), (null), 0, 
+Split the set at 1:
+0, 3, 0, 2 and 1, (null), (null), (null), 0
+Merge back the set:
+0, 3, 0, 2, 1, (null), (null), (null), 0
 Clone the set and print it:
-0, 3, 0, 2, 1, (null), (null), 0
+0, 3, 0, 2, 1, (null), (null), (null), 0
+Sort the elements, before:
+0.772,0.949,0.832,0.116,0.035,0.115,0.731,0.843,0.214,
+Sort the elements, after:
+0.035,0.115,0.116,0.214,0.731,0.772,0.832,0.843,0.949,
+1, (null), 2, 0, (null), 0, 0, (null), 3, 
 Remove at 7,1,0 and get elements :
-0, 2, 1, (null), (null), 
-Index of first null data : 3
-Index of last null data : 4
+2, 0, (null), 0, 0, 3, 
+Index of first null data : 2
+Index of last null data : 2
 Delete all null and get elements :
-0, 2, 1, 
+2, 0, 0, 0, 3, 
+Empty the set
