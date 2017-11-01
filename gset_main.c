@@ -75,7 +75,15 @@ int main(int argc, char **argv) {
   GSetAddSort(theSet, &(data[2]), data[2].v);
   GSetAddSort(theSet, &(data[3]), data[3].v);
   GSetAddSort(theSet, &(data[1]), data[1].v);
-  fprintf(stdout, "Add sort [2,3,1] and get elements :\n");
+  fprintf(stdout, "Add sort (decreasing) [2,3,1] and get elements :\n");
+  for (int i = 0; i < theSet->_nbElem; ++i) {
+    struct Test *p = (struct Test *)GSetGet(theSet, i);
+    fprintf(stdout, "%d, ", p->v);
+  }
+  fprintf(stdout, "\n");
+
+  GSetSwitch(theSet, 0, 2);
+  fprintf(stdout, "Switch 1st and 3rd elements:\n");
   for (int i = 0; i < theSet->_nbElem; ++i) {
     struct Test *p = (struct Test *)GSetGet(theSet, i);
     fprintf(stdout, "%d, ", p->v);
@@ -159,11 +167,6 @@ int main(int argc, char **argv) {
     fprintf(stdout, ", ");
   }
   fprintf(stdout, "\n");
-
-  fprintf(stdout, "Empty the set\n");
-  GSetFlush(theSet);
-  GSetInsert(theSet, &(data[0]), 0);
-  
 
   GSetFree(&theSet);
 }

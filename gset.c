@@ -689,3 +689,25 @@ GSet* GSetSplit(GSet *s, GSetElem *e) {
   // Return the result
   return res;
 }
+
+// Switch the 'iElem'-th and 'jElem'-th element of the set
+// Do nothing if arguments are invalid
+void GSetSwitch(GSet *s, int iElem, int jElem) {
+  // Check arguments
+  if (s == NULL || iElem < 0 || iElem >= s->_nbElem ||
+    jElem < 0 || jElem >= s->_nbElem || iElem == jElem)
+    return;
+  // Get the two elements
+  GSetElem *iPtr = GSetGetElem(s, iElem);
+  GSetElem *jPtr = GSetGetElem(s, jElem);
+  // If we could get the two elements
+  if (iPtr != NULL && jPtr != NULL) {
+    // Switch the elements
+    float v = iPtr->_sortVal;
+    iPtr->_sortVal = jPtr->_sortVal;
+    jPtr->_sortVal = v;
+    void *dat = iPtr->_data;
+    iPtr->_data = jPtr->_data;
+    jPtr->_data = dat;
+  }
+}

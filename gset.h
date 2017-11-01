@@ -152,4 +152,8 @@ void GSetMerge(GSet **s, GSet **r);
 // failed or arguments are invalid
 GSet* GSetSplit(GSet *s, GSetElem *e);
 
+// Switch the 'iElem'-th and 'jElem'-th element of the set
+// Do nothing if arguments are invalid
+void GSetSwitch(GSet *s, int iElem, int jElem);
+
 #endif
