@@ -101,6 +101,12 @@ void* GSetDrop(GSet *s);
 // Return null if arguments are invalid
 void* GSetRemove(GSet *s, int iElem);
 
+// Function to remove the element 'elem' of the GSet
+// Return the data pointed to by the removed element
+// The GSetElem is freed and *elem == NULL after calling this function
+// Return null if arguments are invalid
+void* GSetRemoveElem(GSet *s, GSetElem **elem);
+
 // Function to remove the first element of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 void GSetRemoveFirst(GSet *s, void *data);

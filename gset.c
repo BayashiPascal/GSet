@@ -325,6 +325,34 @@ void* GSetRemove(GSet *s, int iElem) {
   return ret;
 }
 
+// Function to remove the element 'elem' of the GSet
+// Return the data pointed to by the removed element
+// The GSetElem is freed and *elem == NULL after calling this function
+// Return null if arguments are invalid
+void* GSetRemoveElem(GSet *s, GSetElem **elem) {
+  // If the arguments are invalid, return null
+  if (s == NULL || elem == NULL || *elem == NULL) return NULL;
+  // Variable to memorize the return value
+  void *ret = NULL;
+  // Memorize the data at iElem-th position
+  ret = (*elem)->_data;
+  // Remove the element
+  if ((*elem)->_next != NULL) (*elem)->_next->_prev = (*elem)->_prev;
+  if ((*elem)->_prev != NULL) (*elem)->_prev->_next = (*elem)->_next;
+  if (s->_head == (*elem)) s->_head = (*elem)->_next;
+  if (s->_tail == (*elem)) s->_tail = (*elem)->_prev;
+  (*elem)->_next = NULL;
+  (*elem)->_prev = NULL;
+  (*elem)->_data = NULL;
+  free((*elem));
+  *elem = NULL;
+  // Decrement the number of elements
+  --(s->_nbElem);
+  // Return the data
+  return ret;
+}
+
+
 // Function to remove the first element of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 void GSetRemoveFirst(GSet *s, void *data) {
