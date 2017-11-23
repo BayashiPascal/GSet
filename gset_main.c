@@ -17,6 +17,12 @@ void TestPrint(void *t, FILE *stream) {
   }
 }
 
+void TestApply(void *t, void *p) {
+  struct Test *data = (struct Test*)t;
+  struct Test *param = (struct Test*)p;
+  printf("applying %d on %d\n", param->v, data->v);
+}
+
 int main(int argc, char **argv) {
   // Initialize the random generator
   time_t seed = time(NULL);
@@ -167,6 +173,33 @@ int main(int argc, char **argv) {
     fprintf(stdout, ", ");
   }
   fprintf(stdout, "\n");
+
+  fprintf(stdout, "Test iterator forward\n");
+  GSetIterForward *iterf = GSetIterForwardCreate(theSet);
+  do {
+    struct Test *p = (struct Test *)GSetIterGet(iterf);
+    TestPrint(p, stdout);
+    fprintf(stdout, ", ");
+  } while (GSetIterStep(iterf) == true);
+  fprintf(stdout, "\n");
+
+  fprintf(stdout, "Apply a function on all elements\n");
+  struct Test param;
+  param.v = 2;
+  GSetIterApply(iterf, TestApply, &param);
+  fprintf(stdout, "\n");
+  GSetIterFree(&iterf);
+
+  fprintf(stdout, "Test iterator backward\n");
+  GSetIterBackward *iterb = GSetIterBackwardCreate(theSet);
+  do {
+    GSetElem *e = GSetIterGetElem(iterb);
+    struct Test *p = (struct Test *)(e->_data);
+    TestPrint(p, stdout);
+    fprintf(stdout, ", ");
+  } while (GSetIterStep(iterb) == true);
+  fprintf(stdout, "\n");
+  GSetIterFree(&iterb);
 
   GSetFree(&theSet);
 }

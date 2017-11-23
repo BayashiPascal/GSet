@@ -739,3 +739,318 @@ void GSetSwitch(GSet *s, int iElem, int jElem) {
     jPtr->_data = dat;
   }
 }
+
+// Create a new GSetIterForward for the GSet 'set'
+// The iterator is reset upon creation
+// Return NULL if memory couldn't be allocated
+GSetIterForward* GSetIterForwardCreate(GSet *set) {
+  // Check argument
+  if (set == NULL)
+    return NULL;
+  // Allocate memory
+  GSetIterForward *ret = 
+    (GSetIterForward*)malloc(sizeof(GSetIterForward));
+  // If we could allocate memory
+  if (ret != NULL) {
+    // Set properties
+    ret->_set = set;
+    ret->_curElem = set->_head;
+  }
+  // Return the new iterator
+  return ret;
+}
+
+// Create a new GSetIterBackward for the GSet 'set'
+// The iterator is reset upon creation
+// Return NULL if memory couldn't be allocated
+GSetIterBackward* GSetIterBackwardCreate(GSet *set) {
+  // Check argument
+  if (set == NULL)
+    return NULL;
+  // Allocate memory
+  GSetIterBackward *ret = 
+    (GSetIterBackward*)malloc(sizeof(GSetIterBackward));
+  // If we could allocate memory
+  if (ret != NULL) {
+    // Set properties
+    ret->_set = set;
+    ret->_curElem = set->_tail;
+  }
+  // Return the new iterator
+  return ret;
+}
+
+// Free the memory used by a GSetIterForward (not by its atached GSet)
+// Do nothing if arguments are invalid
+void GSetIterForwardFree(GSetIterForward **that) {
+  // Check arguments
+  if (that == NULL || *that == NULL)
+    return;
+  (*that)->_set = NULL;
+  (*that)->_curElem = NULL;
+  free(*that);
+  *that = NULL;
+}
+
+// Free the memory used by a GSetIterBackward (not by its atached GSet)
+// Do nothing if arguments are invalid
+void GSetIterBackwardFree(GSetIterBackward **that) {
+  // Check arguments
+  if (that == NULL || *that == NULL)
+    return;
+  (*that)->_set = NULL;
+  (*that)->_curElem = NULL;
+  free(*that);
+  *that = NULL;
+}
+
+// Clone a GSetIterForward
+// Return NULL if arguments are invalid or memory allocation failed
+GSetIterForward* GSetIterForwardClone(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Create the clone
+  GSetIterForward *ret = GSetIterForwardCreate(that->_set);
+  // If we could allocate memory
+  if (ret != NULL) {
+    ret->_curElem = that->_curElem;
+  }
+  // return the clone
+  return ret;
+}
+
+// Clone a GSetIterBackward
+// Return NULL if arguments are invalid or memory allocation failed
+GSetIterBackward* GSetIterBackwardClone(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Create the clone
+  GSetIterBackward *ret = GSetIterBackwardCreate(that->_set);
+  // If we could allocate memory
+  if (ret != NULL) {
+    ret->_curElem = that->_curElem;
+  }
+  // return the clone
+  return ret;
+}
+
+// Reset the GSetIterForward to its starting position
+// Do nothing if arguments are invalid
+void GSetIterForwardReset(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return;
+  // Step
+  that->_curElem = that->_set->_head;
+}
+
+// Reset the GSetIterBackward to its starting position
+// Do nothing if arguments are invalid
+void GSetIterBackwardReset(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return;
+  // Step
+  that->_curElem = that->_set->_tail;
+}
+
+// Step the GSetIterForward
+// Return false if arguments are invalid or we couldn't step
+// Return true else
+bool GSetIterForwardStep(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  // Step
+  if (that->_curElem->_next != NULL)
+    that->_curElem = that->_curElem->_next;
+  else
+    return false;
+  return true;
+}
+
+// Step the GSetIterBackward
+// Return false if arguments are invalid or we couldn't step
+// Return true else
+bool GSetIterBackwardStep(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  // Step
+  if (that->_curElem->_prev != NULL)
+    that->_curElem = that->_curElem->_prev;
+  else
+    return false;
+  return true;
+}
+
+// Apply a function to all elements of the GSet of the GSetIterForward
+// The iterator is first reset, then the function is apply sequencially
+// using the Step funciton of the iterator
+// Do nothing if arguments are invalid
+// The applied function takes to void* arguments: 'data' is the _data
+// property of the nodes, 'param' is a hook to allow the user to pass
+// parameters to the function through a user-defined structure
+void GSetIterForwardApply(GSetIterForward *that, 
+  void(*fun)(void *data, void *param), void *param) {
+  // Check arguments
+  if (that == NULL || fun == NULL)
+    return;
+  // Reset the iterator
+  GSetIterReset(that);
+  // If the set is not empty
+  if (that->_curElem != NULL) {
+    // Loop on element
+    do {
+      // Apply the user function
+      fun(that->_curElem->_data, param);
+    } while (GSetIterStep(that) == true);
+  }
+}
+
+// Apply a function to all elements of the GSet of the GSetIterBackward
+// The iterator is first reset, then the function is apply sequencially
+// using the Step funciton of the iterator
+// Do nothing if arguments are invalid
+// The applied function takes to void* arguments: 'data' is the _data
+// property of the nodes, 'param' is a hook to allow the user to pass
+// parameters to the function through a user-defined structure
+void GSetIterBackwardApply(GSetIterBackward *that, 
+  void(*fun)(void *data, void *param), void *param) {
+  // Check arguments
+  if (that == NULL || fun == NULL)
+    return;
+  // Reset the iterator
+  GSetIterReset(that);
+  // If the set is not empty
+  if (that->_curElem != NULL) {
+    // Loop on element
+    do {
+      // Apply the user function
+      fun(that->_curElem->_data, param);
+    } while (GSetIterStep(that) == true);
+  }
+}
+
+// Return true if the iterator is at the start of the elements (from
+// its point of view, not the order in the GSet)
+// Return false if arguments are invalid
+// Return false else
+bool GSetIterForwardIsFirst(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  if (that->_curElem == that->_set->_head)
+    return true;
+  else
+    return false;
+}
+
+// Return true if the iterator is at the start of the elements (from
+// its point of view, not the order in the GSet)
+// Return false if arguments are invalid
+// Return false else
+bool GSetIterBackwardIsFirst(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  if (that->_curElem == that->_set->_tail)
+    return true;
+  else
+    return false;
+}
+
+// Return true if the iterator is at the end of the elements (from
+// its point of view, not the order in the GSet)
+// Return false if arguments are invalid
+// Return false else
+bool GSetIterForwardIsLast(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  if (that->_curElem == that->_set->_tail)
+    return true;
+  else
+    return false;
+}
+
+// Return true if the iterator is at the end of the elements (from
+// its point of view, not the order in the GSet)
+// Return false if arguments are invalid
+// Return false else
+bool GSetIterBackwardIsLast(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return false;
+  if (that->_curElem == that->_set->_head)
+    return true;
+  else
+    return false;
+}
+
+// Change the attached set of the iterator, and reset it
+// Do nothing if argument is invalid
+void GSetIterForwardSetGSet(GSetIterForward *that, GSet *set) {
+  // Check arguments
+  if (that == NULL || set == NULL)
+    return;
+  // Set the GSet
+  that->_set = set;
+  // Reset the iterator
+  GSetIterReset(that);
+}
+
+// Change the attached set of the iterator, and reset it
+// Do nothing if argument is invalid
+void GSetIterBackwardSetGSet(GSetIterBackward *that, GSet *set) {
+  // Check arguments
+  if (that == NULL || set == NULL)
+    return;
+  // Set the GSet
+  that->_set = set;
+  // Reset the iterator
+  GSetIterReset(that);
+}
+
+// Return the data currently pointed to by the iterator
+// Return null if arguments are invalid
+void* GSetIterForwardGet(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Return the data
+  return that->_curElem->_data;
+}
+
+// Return the data currently pointed to by the iterator
+// Return null if arguments are invalid
+void* GSetIterBackwardGet(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Return the data
+  return that->_curElem->_data;
+}
+
+// Return the element currently pointed to by the iterator
+// Return null if arguments are invalid
+GSetElem* GSetIterForwardGetElem(GSetIterForward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Return the data
+  return that->_curElem;
+}
+
+// Return the element currently pointed to by the iterator
+// Return null if arguments are invalid
+GSetElem* GSetIterBackwardGetElem(GSetIterBackward *that) {
+  // Check argument
+  if (that == NULL)
+    return NULL;
+  // Return the data
+  return that->_curElem;
+}
+
