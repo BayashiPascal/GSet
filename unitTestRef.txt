@@ -1,0 +1,51 @@
+UnitTestGSetCreateFree OK
+UnitTestGSetClone OK
+UnitTestGSetFlush OK
+1, 2, 3, 4, 5
+UnitTestGSetPrint OK
+5
+4, 5
+3, 4, 5
+2, 3, 4, 5
+1, 2, 3, 4, 5
+2, 3, 4, 5
+3, 4, 5
+4, 5
+5
+
+5
+5, 4
+5, 4, 3
+5, 4, 3, 2
+5, 4, 3, 2, 1
+5, 4, 3, 2
+5, 4, 3
+5, 4
+5
+
+UnitTestGSetPushPopAppendDrop OK
+UnitTestGSetAddSort OK
+UnitTestGSetInsertRemove OK
+UnitTestGSetNbElemGet OK
+UnitTestGSetGetIndex OK
+UnitTestGSetSort OK
+UnitTestGSetSplitMerge OK
+UnitTestGSetSwitch OK
+UnitTestGSet OK
+UnitTestGSetIteratorForwardCreateFree OK
+UnitTestGSetIteratorForwardClone OK
+UnitTestGSetIteratorForwardReset OK
+UnitTestGSetIteratorForwardStepGetGetElem OK
+UnitTestGSetIteratorForwardApply OK
+UnitTestGSetIteratorForwardIsFirstIsLast OK
+UnitTestGSetIteratorForwardSetGSet OK
+UnitTestGSetIteratorForward OK
+UnitTestGSetIteratorBackwardCreateFree OK
+UnitTestGSetIteratorBackwardClone OK
+UnitTestGSetIteratorBackwardReset OK
+UnitTestGSetIteratorBackwardStepGetGetElem OK
+UnitTestGSetIteratorBackwardApply OK
+UnitTestGSetIteratorBackwardIsFirstIsLast OK
+UnitTestGSetIteratorBackwardSetGSet OK
+UnitTestGSetIteratorBackward OK
+UnitTestAll OK

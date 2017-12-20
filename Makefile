@@ -1,23 +1,41 @@
-OPTIONS_DEBUG=-ggdb -g3 -Wall
-OPTIONS_RELEASE=-O3
-OPTIONS=$(OPTIONS_RELEASE)
+#directory
+PBERRDIR=../PBErr
 
-all : gset
+# Build mode
+# 0: development (max safety, no optimisation)
+# 1: release (min safety, optimisation)
+# 2: fast and furious (no safety, optimisation)
+BUILDMODE=1
 
-clean:
-	rm *.o gset
-	
-gset : gset_main.o gset.o Makefile
-	gcc gset_main.o gset.o $(OPTIONS) -o gset -lm 
+include $(PBERRDIR)/Makefile.inc
 
-gset_main.o : gset.h gset_main.c Makefile
-	gcc -c gset_main.c $(OPTIONS)
+INCPATH=-I./ -I$(PBERRDIR)/
+BUILDOPTIONS=$(BUILDPARAM) $(INCPATH)
 
-gset.o : gset.c gset.h Makefile
-	gcc -c gset.c $(OPTIONS)
+# compiler
+COMPILER=gcc
 
-install: 
-	cp gset.h ../Include; cp gset.o ../Include
-	
+#rules
+all : main
+
+main: main.o pberr.o gset.o Makefile 
+	$(COMPILER) main.o pberr.o gset.o $(LINKOPTIONS) -o main
+
+main.o : main.c $(PBERRDIR)/pberr.h gset.h gset-inline.c Makefile
+	$(COMPILER) $(BUILDOPTIONS) -c main.c
+
+gset.o : gset.c gset.h gset-inline.c Makefile
+	$(COMPILER) $(BUILDOPTIONS) -c gset.c
+
+pberr.o : $(PBERRDIR)/pberr.c $(PBERRDIR)/pberr.h Makefile
+	$(COMPILER) $(BUILDOPTIONS) -c $(PBERRDIR)/pberr.c
+
+clean : 
+	rm -rf *.o main
+
 valgrind :
-	valgrind -v --track-origins=yes --leak-check=full --gen-suppressions=yes --show-leak-kinds=all ./gset
+	valgrind -v --track-origins=yes --leak-check=full --gen-suppressions=yes --show-leak-kinds=all ./main
+	
+unitTest :
+	main > unitTest.txt; diff unitTest.txt unitTestRef.txt
+
