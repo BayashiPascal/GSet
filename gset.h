@@ -13,55 +13,55 @@
 
 // ================= Generic functions ==================
 
-#define GSetIterFree(I) _Generic((I), \
+#define GSetIterFree(IterRef) _Generic(IterRef, \
   GSetIterForward**: GSetIterForwardFree, \
   GSetIterBackward**: GSetIterBackwardFree, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(IterRef)
 
-#define GSetIterClone(I) _Generic((I), \
+#define GSetIterClone(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardClone, \
   GSetIterBackward*: GSetIterBackwardClone, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterReset(I) _Generic((I), \
+#define GSetIterReset(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardReset, \
   GSetIterBackward*: GSetIterBackwardReset, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterStep(I) _Generic((I), \
+#define GSetIterStep(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardStep, \
   GSetIterBackward*: GSetIterBackwardStep, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterApply(I, F, P) _Generic((I), \
+#define GSetIterApply(Iter, Fun, Param) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardApply, \
   GSetIterBackward*: GSetIterBackwardApply, \
-  default: PBErrInvalidPolymorphism)(I, F, P)
+  default: PBErrInvalidPolymorphism)(Iter, Fun, Param)
 
-#define GSetIterIsFirst(I) _Generic((I), \
+#define GSetIterIsFirst(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardIsFirst, \
   GSetIterBackward*: GSetIterBackwardIsFirst, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterIsLast(I) _Generic((I), \
+#define GSetIterIsLast(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardIsLast, \
   GSetIterBackward*: GSetIterBackwardIsLast, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterSetGSet(I, S) _Generic((I), \
+#define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardSetGSet, \
   GSetIterBackward*: GSetIterBackwardSetGSet, \
-  default: PBErrInvalidPolymorphism)(I, S)
+  default: PBErrInvalidPolymorphism)(Iter, Set)
 
-#define GSetIterGet(I) _Generic((I), \
+#define GSetIterGet(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGet, \
   GSetIterBackward*: GSetIterBackwardGet, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
-#define GSetIterGetElem(I) _Generic((I), \
+#define GSetIterGetElem(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGetElem, \
   GSetIterBackward*: GSetIterBackwardGetElem, \
-  default: PBErrInvalidPolymorphism)(I)
+  default: PBErrInvalidPolymorphism)(Iter)
 
 // ================= Data structures ===================
 
