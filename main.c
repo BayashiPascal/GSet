@@ -13,7 +13,7 @@
 #define rnd() (float)(rand())/(float)(RAND_MAX)
 
 void UnitTestGSetCreateFree() {
-  GSet *set = GSetCreate();
+  GSet* set = GSetCreate();
   if (set == NULL) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "set is null");
@@ -73,7 +73,7 @@ void UnitTestGSetClone() {
   GSet set = GSetCreateStatic();
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
-  GSet *clone = GSetClone(&set);
+  GSet* clone = GSetClone(&set);
   if (clone->_nbElem != 5) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetClone NOK");
@@ -95,7 +95,7 @@ void UnitTestGSetClone() {
 }
 
 void UnitTestGSetFlush() {
-  GSet *set = GSetCreate();
+  GSet* set = GSetCreate();
   for (int i = 5; i--;)
     GSetPush(set, NULL);
   GSetFlush(set);
@@ -118,7 +118,7 @@ void UnitTestGSetFlush() {
   printf("UnitTestGSetFlush OK\n");
 }
 
-void printData(void *data, FILE *stream) {
+void printData(void* data, FILE* stream) {
   fprintf(stream, "%d", *(int*)data);
 }
 
@@ -379,7 +379,7 @@ void UnitTestGSetSplitMerge() {
     GSetPush(&set, a + i);
   for (int i = 5; i--;)
     GSetAppend(&set, a + i);
-  GSet *split = GSetSplit(&set, GSetGetElem(&set, 5));
+  GSet* split = GSetSplit(&set, GSetGetElem(&set, 5));
   if (split->_nbElem != 5 || set._nbElem != 5) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetSplit NOK");
@@ -464,7 +464,7 @@ void UnitTestGSetIteratorForwardCreateFree() {
   GSet set = GSetCreateStatic();
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
-  GSetIterForward *iter = GSetIterForwardCreate(&set);
+  GSetIterForward* iter = GSetIterForwardCreate(&set);
   if (iter->_set != &set || iter->_curElem != set._head) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardCreateFree NOK");
@@ -492,7 +492,7 @@ void UnitTestGSetIteratorForwardClone() {
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
   GSetIterForward iter = GSetIterForwardCreateStatic(&set);
-  GSetIterForward *iterb = GSetIterClone(&iter);
+  GSetIterForward* iterb = GSetIterClone(&iter);
   if (iter._set != iterb->_set || iter._curElem != iterb->_curElem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardClone NOK");
@@ -526,7 +526,7 @@ void UnitTestGSetIteratorForwardStepGetGetElem() {
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
   GSetIterForward iter = GSetIterForwardCreateStatic(&set);
-  GSetElem *elem = set._head->_next;
+  GSetElem* elem = set._head->_next;
   GSetIterStep(&iter);
   if (iter._curElem != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
@@ -550,7 +550,7 @@ void UnitTestGSetIteratorForwardStepGetGetElem() {
   printf("UnitTestGSetIteratorForwardStepGetGetElem OK\n");
 }
 
-void FunInc(void *data, void *param) {
+void FunInc(void* data, void* param) {
   while (param != param);
   ++(*(int*)data);
 }
@@ -639,7 +639,7 @@ void UnitTestGSetIteratorBackwardCreateFree() {
   GSet set = GSetCreateStatic();
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
-  GSetIterBackward *iter = GSetIterBackwardCreate(&set);
+  GSetIterBackward* iter = GSetIterBackwardCreate(&set);
   if (iter->_set != &set || iter->_curElem != set._tail) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardCreateFree NOK");
@@ -667,7 +667,7 @@ void UnitTestGSetIteratorBackwardClone() {
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
   GSetIterBackward iter = GSetIterBackwardCreateStatic(&set);
-  GSetIterBackward *iterb = GSetIterClone(&iter);
+  GSetIterBackward* iterb = GSetIterClone(&iter);
   if (iter._set != iterb->_set || iter._curElem != iterb->_curElem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardClone NOK");
@@ -701,7 +701,7 @@ void UnitTestGSetIteratorBackwardStepGetGetElem() {
   for (int i = 5; i--;)
     GSetPush(&set, a + i);
   GSetIterBackward iter = GSetIterBackwardCreateStatic(&set);
-  GSetElem *elem = set._tail->_prev;
+  GSetElem* elem = set._tail->_prev;
   GSetIterStep(&iter);
   if (iter._curElem != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;

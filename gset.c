@@ -12,7 +12,7 @@
 // Return a pointer toward the new GSet
 GSet* GSetCreate(void) {
   // Allocate memory for the GSet
-  GSet *s = PBErrMalloc(GSetErr, sizeof(GSet));
+  GSet* s = PBErrMalloc(GSetErr, sizeof(GSet));
   // Set the pointer to head and tail, and the number of element
   s->_head = NULL;
   s->_tail = NULL;
@@ -23,7 +23,7 @@ GSet* GSetCreate(void) {
 
 // Function to clone a GSet,
 // Return a pointer toward the new GSet
-GSet* GSetClone(GSet *that) {
+GSet* GSetClone(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -32,9 +32,9 @@ GSet* GSetClone(GSet *that) {
   }
 #endif
   // Create the clone
-  GSet *c = GSetCreate();
+  GSet* c = GSetCreate();
   // Set a pointer to the head of the set
-  GSetElem *ptr = that->_head;
+  GSetElem* ptr = that->_head;
   // While the pointer is not at the end of the set
   while (ptr != NULL) {
     // Append the data of the current pointer to the clone
@@ -49,7 +49,7 @@ GSet* GSetClone(GSet *that) {
 }
 
 // Function to free the memory used by the GSet
-void GSetFree(GSet **that) {
+void GSetFree(GSet** that) {
   if (that == NULL || *that == NULL) return;
   // Empty the GSet
   GSetFlush(*that);
@@ -64,8 +64,8 @@ void GSetFree(GSet **that) {
 // the elements, and print 'sep' between each element
 // If printData is null, print the pointer value instead
 // Do nothing if arguments are invalid
-void GSetPrint(GSet *that, FILE* stream, 
-  void(*printData)(void *data, FILE *stream), char *sep) {
+void GSetPrint(GSet* that, FILE* stream, 
+  void(*printData)(void* data, FILE* stream), char* sep) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -84,7 +84,7 @@ void GSetPrint(GSet *that, FILE* stream,
   }
 #endif
   // Set a pointer to the head element
-  GSetElem *p = that->_head;
+  GSetElem* p = that->_head;
   // While the pointer hasn't reach the end
   while (p != NULL) {
     // If there is a print function for the data
@@ -110,7 +110,7 @@ void GSetPrint(GSet *that, FILE* stream,
 
 // Function to insert an element pointing toward 'data' at the 
 // position defined by 'v' sorting the set in increasing order
-void GSetAddSort(GSet *that, void* data, double v) {
+void GSetAddSort(GSet* that, void* data, double v) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -119,7 +119,7 @@ void GSetAddSort(GSet *that, void* data, double v) {
   }
 #endif
   // Allocate memory for the new element
-  GSetElem *e = PBErrMalloc(GSetErr, sizeof(GSetElem));
+  GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
   // Memorize the pointer toward data
   e->_data = data;
   // Memorize the sorting value
@@ -133,7 +133,7 @@ void GSetAddSort(GSet *that, void* data, double v) {
     e->_prev = NULL;
   } else {
     // Set a pointer to the head of the GSet
-    GSetElem *p = that->_head;
+    GSetElem* p = that->_head;
     // While the pointed element has a lower value than the 
     // new element, move the pointer to the next element
     while (p != NULL && p->_sortVal <= v) 
@@ -168,7 +168,7 @@ void GSetAddSort(GSet *that, void* data, double v) {
 // 'iElem'-th position 
 // If 'iElem' is greater than or equal to the number of element
 // in the GSet, elements pointing toward null data are added
-void GSetInsert(GSet *that, void* data, int iElem) {
+void GSetInsert(GSet* that, void* data, int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -198,13 +198,13 @@ void GSetInsert(GSet *that, void* data, int iElem) {
     // Else, the insert position is inside the list
     } else {
       // Allocate memory for the new element
-      GSetElem *e = PBErrMalloc(GSetErr, sizeof(GSetElem));
+      GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
       // Memorize the pointer toward data
       e->_data = data;
       // By default set the sorting value to 0.0
       e->_sortVal = 0.0;
       // Set a pointer toward the head of the GSet
-      GSetElem *p = that->_head;
+      GSetElem* p = that->_head;
       // Move the pointer to the iElem-th element
       for (int i = iElem; i > 0 && p != NULL; --i, p = p->_next);
       // Insert the element before the pointer
@@ -221,8 +221,8 @@ void GSetInsert(GSet *that, void* data, int iElem) {
 // Function to sort the element of the gset in increasing order of 
 // _sortVal
 // Do nothing if arguments are invalid or the sort failed
-static GSet* GSetSortRec(GSet **s);
-void GSetSort(GSet *that) {
+static GSet* GSetSortRec(GSet** s);
+void GSetSort(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -231,7 +231,7 @@ void GSetSort(GSet *that) {
   }
 #endif
   // Create a clone of the original set
-  GSet *clone = GSetClone(that);
+  GSet* clone = GSetClone(that);
   // Create recursively the sorted set
   GSet* res = GSetSortRec(&clone);
   // If we could sort the set
@@ -244,9 +244,9 @@ void GSetSort(GSet *that) {
     res = NULL;
   }
 }
-GSet* GSetSortRec(GSet **s) {
+GSet* GSetSortRec(GSet** s) {
   // Declare a variable for the result
-  GSet *res = NULL;
+  GSet* res = NULL;
   // If the set contains no element or one element
   if ((*s)->_nbElem == 0 || (*s)->_nbElem == 1) {
     // Return the set
@@ -255,14 +255,14 @@ GSet* GSetSortRec(GSet **s) {
   } else {
     // Create two sets, one for elements lower than the pivot
     // one for elements greater or equal than the pivot
-    GSet *lower = GSetCreate();
-    GSet *greater = GSetCreate();
+    GSet* lower = GSetCreate();
+    GSet* greater = GSetCreate();
     res = GSetCreate();
     // Declare a variable to memorize the pivot, which is equal
     // to the sort value of the first element of the set
     float pivot = (*s)->_head->_sortVal;
     // Pop the pivot and put it in the result
-    void *data = GSetPop(*s);
+    void* data = GSetPop(*s);
     GSetAppend(res, data);
     res->_head->_sortVal = pivot;
     // Pop all the elements one by one from the set
@@ -291,8 +291,8 @@ GSet* GSetSortRec(GSet **s) {
     // don't need it anymore
     GSetFree(s);
     // Sort the two half
-    GSet *sortedLower = GSetSortRec(&lower);
-    GSet *sortedGreater = GSetSortRec(&greater);
+    GSet* sortedLower = GSetSortRec(&lower);
+    GSet* sortedGreater = GSetSortRec(&greater);
     // Merge back the sorted two halves and the pivot
     GSetMerge(sortedLower, res);
     GSetMerge(sortedLower, sortedGreater);
@@ -306,7 +306,7 @@ GSet* GSetSortRec(GSet **s) {
 
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterForward* GSetIterForwardCreate(GSet *set) {
+GSetIterForward* GSetIterForwardCreate(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -315,7 +315,7 @@ GSetIterForward* GSetIterForwardCreate(GSet *set) {
   }
 #endif
   // Allocate memory
-  GSetIterForward *ret = 
+  GSetIterForward* ret = 
     PBErrMalloc(GSetErr, sizeof(GSetIterForward));
   // Set properties
   ret->_set = set;
@@ -326,7 +326,7 @@ GSetIterForward* GSetIterForwardCreate(GSet *set) {
 
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterBackward* GSetIterBackwardCreate(GSet *set) {
+GSetIterBackward* GSetIterBackwardCreate(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -335,7 +335,7 @@ GSetIterBackward* GSetIterBackwardCreate(GSet *set) {
   }
 #endif
   // Allocate memory
-  GSetIterBackward *ret = 
+  GSetIterBackward* ret = 
     PBErrMalloc(GSetErr, sizeof(GSetIterBackward));
   // Set properties
   ret->_set = set;
@@ -346,7 +346,7 @@ GSetIterBackward* GSetIterBackwardCreate(GSet *set) {
 
 // Free the memory used by a GSetIterForward (not by its attached GSet)
 // Do nothing if arguments are invalid
-void GSetIterForwardFree(GSetIterForward **that) {
+void GSetIterForwardFree(GSetIterForward** that) {
   // Check arguments
   if (that == NULL || *that == NULL)
     return;
@@ -358,7 +358,7 @@ void GSetIterForwardFree(GSetIterForward **that) {
 
 // Free the memory used by a GSetIterBackward (not by its attached GSet)
 // Do nothing if arguments are invalid
-void GSetIterBackwardFree(GSetIterBackward **that) {
+void GSetIterBackwardFree(GSetIterBackward** that) {
   // Check arguments
   if (that == NULL || *that == NULL)
     return;
@@ -369,7 +369,7 @@ void GSetIterBackwardFree(GSetIterBackward **that) {
 }
 
 // Clone a GSetIterForward
-GSetIterForward* GSetIterForwardClone(GSetIterForward *that) {
+GSetIterForward* GSetIterForwardClone(GSetIterForward* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -378,14 +378,14 @@ GSetIterForward* GSetIterForwardClone(GSetIterForward *that) {
   }
 #endif
   // Create the clone
-  GSetIterForward *ret = GSetIterForwardCreate(that->_set);
+  GSetIterForward* ret = GSetIterForwardCreate(that->_set);
   ret->_curElem = that->_curElem;
   // return the clone
   return ret;
 }
 
 // Clone a GSetIterBackward
-GSetIterBackward* GSetIterBackwardClone(GSetIterBackward *that) {
+GSetIterBackward* GSetIterBackwardClone(GSetIterBackward* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -394,7 +394,7 @@ GSetIterBackward* GSetIterBackwardClone(GSetIterBackward *that) {
   }
 #endif
   // Create the clone
-  GSetIterBackward *ret = GSetIterBackwardCreate(that->_set);
+  GSetIterBackward* ret = GSetIterBackwardCreate(that->_set);
   ret->_curElem = that->_curElem;
   // return the clone
   return ret;
