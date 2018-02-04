@@ -63,6 +63,11 @@
   GSetIterBackward*: GSetIterBackwardGetElem, \
   default: PBErrInvalidPolymorphism)(Iter)
 
+#define GSetIterRemoveElem(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardRemoveElem, \
+  GSetIterBackward*: GSetIterBackwardRemoveElem, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
 // ================= Data structures ===================
 
 // Structure of one element of the GSet
@@ -447,6 +452,28 @@ GSetElem* GSetIterForwardGetElem(GSetIterForward* that);
 inline
 #endif 
 GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that);
+
+// Remove the element currently pointed to by the iterator
+// The iterator is moved forward to the next element
+// Return false if we couldn't move
+// Return true else
+// It's the responsibility of the user to delete the content of the 
+// element prior to calling this function
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterForwardRemoveElem(GSetIterForward* that);
+
+// Remove the element currently pointed to by the iterator
+// The iterator is moved backward to the next element
+// Return false if we couldn't move
+// Return true else
+// It's the responsibility of the user to delete the content of the 
+// element prior to calling this function
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterBackwardRemoveElem(GSetIterBackward* that);
 
 // ================ Inliner ====================
 
