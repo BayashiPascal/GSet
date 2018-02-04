@@ -737,7 +737,7 @@ bool GSetIterForwardStep(GSetIterForward* that) {
   }
 #endif
   // Step
-  if (that->_curElem->_next != NULL)
+  if (that->_curElem != NULL && that->_curElem->_next != NULL)
     that->_curElem = that->_curElem->_next;
   else
     return false;
@@ -759,7 +759,7 @@ bool GSetIterBackwardStep(GSetIterBackward* that) {
   }
 #endif
   // Step
-  if (that->_curElem->_prev != NULL)
+  if (that->_curElem != NULL && that->_curElem->_prev != NULL)
     that->_curElem = that->_curElem->_prev;
   else
     return false;
@@ -1039,3 +1039,56 @@ int GSetNbElem(GSet* that) {
   // Return the data
   return that->_nbElem;
 }
+
+// Remove the element currently pointed to by the iterator
+// The iterator is moved forward to the next element
+// Return false if we couldn't move
+// Return true else
+// It's the responsibility of the user to delete the content of the 
+// element prior to calling this function
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterForwardRemoveElem(GSetIterForward* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  GSetElem *next = that->_curElem->_next;
+  GSetRemoveElem(that->_set, &(that->_curElem));
+  that->_curElem = next;
+  if (next != NULL)
+    return true;
+  else 
+    return false;
+}
+
+// Remove the element currently pointed to by the iterator
+// The iterator is moved backward to the next element
+// Return false if we couldn't move
+// Return true else
+// It's the responsibility of the user to delete the content of the 
+// element prior to calling this function
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterBackwardRemoveElem(GSetIterBackward* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  GSetElem *prev = that->_curElem->_prev;
+  GSetRemoveElem(that->_set, &(that->_curElem));
+  that->_curElem = prev;
+  if (prev != NULL)
+    return true;
+  else 
+    return false;
+}
+
