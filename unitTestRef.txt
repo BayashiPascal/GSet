@@ -31,6 +31,7 @@ UnitTestGSetGetIndex OK
 UnitTestGSetSort OK
 UnitTestGSetSplitMerge OK
 UnitTestGSetSwitch OK
+UnitTestGSetMoveElem OK
 UnitTestGSet OK
 UnitTestGSetIteratorForwardCreateFree OK
 UnitTestGSetIteratorForwardClone OK
@@ -39,6 +40,7 @@ UnitTestGSetIteratorForwardStepGetGetElem OK
 UnitTestGSetIteratorForwardApply OK
 UnitTestGSetIteratorForwardIsFirstIsLast OK
 UnitTestGSetIteratorForwardSetGSet OK
+UnitTestGSetIteratorForwardRemoveElem OK
 UnitTestGSetIteratorForward OK
 UnitTestGSetIteratorBackwardCreateFree OK
 UnitTestGSetIteratorBackwardClone OK

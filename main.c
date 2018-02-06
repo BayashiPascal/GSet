@@ -443,6 +443,51 @@ void UnitTestGSetSwitch() {
   printf("UnitTestGSetSwitch OK\n");
 }
 
+void UnitTestGSetMoveElem() {
+  int a[5] = {1, 2, 3, 4, 5};
+  GSet set = GSetCreateStatic();
+  for (int i = 5; i--;)
+    GSetPush(&set, a + i);
+  GSetMoveElem(&set, 3, 1);
+  int checka[5] = {1, 4, 2, 3, 5};
+  for (int i = 5; i--;) {
+    if (checka[i] != *((int*)GSetGet(&set, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetMoveElem NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetMoveElem(&set, 1, 3);
+  int checkb[5] = {1, 2, 3, 4, 5};
+  for (int i = 5; i--;) {
+    if (checkb[i] != *((int*)GSetGet(&set, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetMoveElem NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetMoveElem(&set, 0, 3);
+  int checkc[5] = {2, 3, 4, 1, 5};
+  for (int i = 5; i--;) {
+    if (checkc[i] != *((int*)GSetGet(&set, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetMoveElem NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetMoveElem(&set, 4, 1);
+  int checkd[5] = {2, 5, 3, 4, 1};
+  for (int i = 5; i--;) {
+    if (checkd[i] != *((int*)GSetGet(&set, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetMoveElem NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetFlush(&set);
+  printf("UnitTestGSetMoveElem OK\n");
+}
+
 void UnitTestGSet() {
   UnitTestGSetCreateFree();
   UnitTestGSetClone();
@@ -456,6 +501,7 @@ void UnitTestGSet() {
   UnitTestGSetSort();
   UnitTestGSetSplitMerge();
   UnitTestGSetSwitch();
+  UnitTestGSetMoveElem();
   printf("UnitTestGSet OK\n");
 }
 
@@ -623,6 +669,42 @@ void UnitTestGSetIteratorForwardSetGSet() {
   printf("UnitTestGSetIteratorForwardSetGSet OK\n");
 }
 
+void UnitTestGSetIteratorForwardRemoveElem() {
+  int a[3] = {1, 2, 3};
+  GSet set = GSetCreateStatic();
+  for (int i = 3; i--;)
+    GSetPush(&set, a + i);
+  GSetIterForward iter = GSetIterForwardCreateStatic(&set);
+  GSetIterStep(&iter);
+  if (GSetIterRemoveElem(&iter) == false) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetNbElem(&set) != 2) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (iter._curElem != set._head->_next) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetIterRemoveElem(&iter) == true) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetNbElem(&set) != 1) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  GSetFlush(&set);
+  printf("UnitTestGSetIteratorForwardRemoveElem OK\n");
+}
+
 void UnitTestGSetIteratorForward() {
   UnitTestGSetIteratorForwardCreateFree();
   UnitTestGSetIteratorForwardClone();
@@ -631,6 +713,7 @@ void UnitTestGSetIteratorForward() {
   UnitTestGSetIteratorForwardApply();
   UnitTestGSetIteratorForwardIsFirstIsLast();
   UnitTestGSetIteratorForwardSetGSet();
+  UnitTestGSetIteratorForwardRemoveElem();
   printf("UnitTestGSetIteratorForward OK\n");
 }
 
@@ -791,6 +874,42 @@ void UnitTestGSetIteratorBackwardSetGSet() {
   GSetFlush(&set);
   GSetFlush(&setb);
   printf("UnitTestGSetIteratorBackwardSetGSet OK\n");
+}
+
+void UnitTestGSetIteratorBackwardRemoveElem() {
+  int a[3] = {1, 2, 3};
+  GSet set = GSetCreateStatic();
+  for (int i = 3; i--;)
+    GSetPush(&set, a + i);
+  GSetIterBackward iter = GSetIterBackwardCreateStatic(&set);
+  GSetIterStep(&iter);
+  if (GSetIterRemoveElem(&iter) == false) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetNbElem(&set) != 2) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (iter._curElem != set._head) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetIterRemoveElem(&iter) == true) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetNbElem(&set) != 1) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardRemoveElem NOK");
+    PBErrCatch(GSetErr);
+  }
+  GSetFlush(&set);
+  printf("UnitTestGSetIteratorBackwardRemoveElem OK\n");
 }
 
 void UnitTestGSetIteratorBackward() {

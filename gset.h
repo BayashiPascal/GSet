@@ -161,6 +161,8 @@ void GSetAddSort(GSet* that, void* data, double v);
 // 'iElem'-th position 
 // If 'iElem' is greater than or equal to the number of element
 // in the GSet, elements pointing toward null data are added
+// If the data is inserted inside the set, the current elements from
+// the iElem-th elem are pushed 
 void GSetInsert(GSet* that, void* data, int iElem);
 
 // Function to insert an element pointing toward 'data' at the 
@@ -474,6 +476,9 @@ bool GSetIterForwardRemoveElem(GSetIterForward* that);
 inline
 #endif 
 bool GSetIterBackwardRemoveElem(GSetIterBackward* that);
+
+// Move the 'iElem'-th element to the 'pos' index in the GSet
+void GSetMoveElem(GSet* that, int iElem, int pos);
 
 // ================ Inliner ====================
 
