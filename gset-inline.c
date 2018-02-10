@@ -485,49 +485,49 @@ GSetElem* GSetGetLastElem(GSet* that, void* data) {
   return p;
 }
 
-// Merge the GSet 'r' at the end of the GSet 's'
-// 'r' and 's' can be empty
-// After calling this function r is empty 
+// Merge the GSet 'set' at the end of the GSet 'that'
+// 'that' and 'set' can be empty
+// After calling this function 'set' is empty 
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetMerge(GSet* s, GSet* r) {
+void GSetMerge(GSet* that, GSet* set) {
 #if BUILDMODE == 0
-  if (s == NULL) {
+  if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'*s' is null");
+    sprintf(GSetErr->_msg, "'that' is null");
     PBErrCatch(GSetErr);
   }
-  if (r == NULL) {
+  if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'*r' is null");
+    sprintf(GSetErr->_msg, "'set' is null");
     PBErrCatch(GSetErr);
   }
 #endif
-  // If the set r is not empty
-  if (r->_nbElem != 0) {
-    // If the set s is empty
-    if (s->_nbElem == 0) {
-      // Copy r into s
-      memcpy(s, r, sizeof(GSet));
-      // Empty r
-      r->_head = NULL;
-      r->_tail = NULL;
-      r->_nbElem = 0;
-    // Else, if the set s is not empty
+  // If 'set' is not empty
+  if (set->_nbElem != 0) {
+    // If 'that' is empty
+    if (that->_nbElem == 0) {
+      // Copy 'set' into 'that'
+      memcpy(that, set, sizeof(GSet));
+      // Empty 'set'
+      set->_head = NULL;
+      set->_tail = NULL;
+      set->_nbElem = 0;
+    // Else, if 'that' is not empty
     } else {
-      // Add r to the tail of s
-      s->_tail->_next = r->_head;
-      // Add s to the head of r
-      r->_head->_prev = s->_tail;
-      // Update the tail of s
-      s->_tail = r->_tail;
-      // Update the number of element of s
-      s->_nbElem += r->_nbElem;
-      // Empty r
-      r->_head = NULL;
-      r->_tail = NULL;
-      r->_nbElem = 0;
+      // Add 'set' to the tail of 'that'
+      that->_tail->_next = set->_head;
+      // Add 'that' to the head of 'set'
+      set->_head->_prev = that->_tail;
+      // Update the tail of 'that'
+      that->_tail = set->_tail;
+      // Update the number of element of 'that'
+      that->_nbElem += set->_nbElem;
+      // Empty 'set'
+      set->_head = NULL;
+      set->_tail = NULL;
+      set->_nbElem = 0;
     }
   }
 }
@@ -1092,3 +1092,67 @@ bool GSetIterBackwardRemoveElem(GSetIterBackward* that) {
     return false;
 }
 
+// Append the element of the GSet 'set' at the end of the GSet 'that'
+// 'that' and 'set' can be empty
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetAppendSet(GSet* that, GSet* set) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (set == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'set' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // If there are elements in the set to append
+  if (GSetNbElem(set) > 0) {
+    // Declare an iterator on the set to append
+    GSetIterForward iter = GSetIterForwardCreateStatic(set);
+    // Loop on element to append
+    do {
+      // Get the data to append
+      void* data = GSetIterGet(&iter);
+      // Append the data to the end of the set
+      GSetAppend(that, data);
+    } while (GSetIterStep(&iter));
+  }
+}
+
+// Append the element of the GSet 'that' at the end of the GSet 'set'
+// Elements are kept sorted
+// 'that' and 'set' can be empty
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetAppendSortedSet(GSet* that, GSet* set) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (set == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'set' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // If there are elements in the set to append
+  if (GSetNbElem(set) > 0) {
+    // Declare an iterator on the set to append
+    GSetIterForward iter = GSetIterForwardCreateStatic(set);
+    // Loop on element to append
+    do {
+      // Get the element to append
+      GSetElem* elem = GSetIterGetElem(&iter);
+      // Append the data of the element according to the sorting value
+      GSetAddSort(that, elem->_data, elem->_sortVal);
+    } while (GSetIterStep(&iter));
+  }
+}

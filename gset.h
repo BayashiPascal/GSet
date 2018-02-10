@@ -274,13 +274,13 @@ GSetElem* GSetGetLastElem(GSet* that, void* data);
 // _sortVal
 void GSetSort(GSet* that);
 
-// Merge the GSet 'r' at the end of the GSet 's'
-// 'r' and 's' can be empty
-// After calling this function r is empty 
+// Merge the GSet 'set' at the end of the GSet 'that'
+// 'that' and 'set' can be empty
+// After calling this function 'set' is empty 
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetMerge(GSet* s, GSet* r);
+void GSetMerge(GSet* that, GSet* set);
 
 // Split the GSet at the GSetElem 'e'
 // 'e' must be and element of the set
@@ -292,6 +292,21 @@ void GSetMerge(GSet* s, GSet* r);
 inline
 #endif 
 GSet* GSetSplit(GSet* that, GSetElem* e);
+
+// Append the element of the GSet 'set' at the end of the GSet 'that'
+// 'that' and 'set' can be empty
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetAppendSet(GSet* that, GSet* set);
+
+// Append the element of the GSet 'that' at the end of the GSet 'set'
+// Elements are kept sorted
+// 'that' and 'set' can be empty
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetAppendSortedSet(GSet* that, GSet* set);
 
 // Switch the 'iElem'-th and 'jElem'-th element of the set
 #if BUILDMODE != 0

@@ -488,6 +488,41 @@ void UnitTestGSetMoveElem() {
   printf("UnitTestGSetMoveElem OK\n");
 }
 
+void UnitTestGSetMergeSet() {
+  int a[5] = {1, 2, 3, 4, 5};
+  GSet setA = GSetCreateStatic();
+  for (int i = 3; i--;)
+    GSetPush(&setA, a + i);
+  GSet setB = GSetCreateStatic();
+  for (int i = 2; i--;)
+    GSetPush(&setB, a + i + 3);
+  GSetAppendSet(&setA, &setB);
+  for (int i = 5; i--;) {
+    if (a[i] != *((int*)GSetGet(&setA, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetAppendSet NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetFlush(&setA);
+  GSetFlush(&setB);
+  for (int i = 3; i--;)
+    GSetAddSort(&setB, a + i, i);
+  for (int i = 2; i--;)
+    GSetAddSort(&setA, a + i + 3, i + 3);
+  GSetAppendSortedSet(&setA, &setB);
+  for (int i = 5; i--;) {
+    if (a[i] != *((int*)GSetGet(&setA, i))) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetAppendSortedSet NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  GSetFlush(&setA);
+  GSetFlush(&setB);
+  printf("UnitTestGSetMergeSet OK\n");
+}
+
 void UnitTestGSet() {
   UnitTestGSetCreateFree();
   UnitTestGSetClone();
@@ -502,6 +537,7 @@ void UnitTestGSet() {
   UnitTestGSetSplitMerge();
   UnitTestGSetSwitch();
   UnitTestGSetMoveElem();
+  UnitTestGSetMergeSet();
   printf("UnitTestGSet OK\n");
 }
 

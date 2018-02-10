@@ -32,6 +32,7 @@ UnitTestGSetSort OK
 UnitTestGSetSplitMerge OK
 UnitTestGSetSwitch OK
 UnitTestGSetMoveElem OK
+UnitTestGSetMergeSet OK
 UnitTestGSet OK
 UnitTestGSetIteratorForwardCreateFree OK
 UnitTestGSetIteratorForwardClone OK
