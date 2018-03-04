@@ -49,7 +49,7 @@ GSet* GSetClone(GSet* that) {
 }
 
 // Function to free the memory used by the GSet
-void GSetFree(GSet** that) {
+void _GSetFree(GSet** that) {
   if (that == NULL || *that == NULL) return;
   // Empty the GSet
   GSetFlush(*that);
@@ -64,7 +64,7 @@ void GSetFree(GSet** that) {
 // the elements, and print 'sep' between each element
 // If printData is null, print the pointer value instead
 // Do nothing if arguments are invalid
-void GSetPrint(GSet* that, FILE* stream, 
+void _GSetPrint(GSet* that, FILE* stream, 
   void(*printData)(void* data, FILE* stream), char* sep) {
 #if BUILDMODE == 0
   if (that == NULL) {
@@ -110,7 +110,7 @@ void GSetPrint(GSet* that, FILE* stream,
 
 // Function to insert an element pointing toward 'data' at the 
 // position defined by 'v' sorting the set in increasing order
-void GSetAddSort(GSet* that, void* data, double v) {
+void _GSetAddSort(GSet* that, void* data, double v) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -170,7 +170,7 @@ void GSetAddSort(GSet* that, void* data, double v) {
 // in the GSet, elements pointing toward null data are added
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
-void GSetInsert(GSet* that, void* data, int iElem) {
+void _GSetInsert(GSet* that, void* data, int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -224,7 +224,7 @@ void GSetInsert(GSet* that, void* data, int iElem) {
 // _sortVal
 // Do nothing if arguments are invalid or the sort failed
 static GSet* GSetSortRec(GSet** s);
-void GSetSort(GSet* that) {
+void _GSetSort(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -306,9 +306,50 @@ GSet* GSetSortRec(GSet** s) {
   return res;
 }
 
+// Move the 'iElem'-th element to the 'pos' index in the GSet
+void _GSetMoveElem(GSet* that, int iElem, int pos) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GenBrushErr->_type = PBErrTypeNullPointer;
+    sprintf(GenBrushErr->_msg, "'that' is null");
+    PBErrCatch(GenBrushErr);
+  }
+  if (iElem < 0 || iElem >= GSetNbElem(that)) {
+    GenBrushErr->_type = PBErrTypeInvalidArg;
+    sprintf(GenBrushErr->_msg, "'iElem' is invalid (0<=%d<%d)",
+      iElem, GSetNbElem(that));
+    PBErrCatch(GenBrushErr);
+  }
+  if (pos < 0 || pos >= GSetNbElem(that)) {
+    GenBrushErr->_type = PBErrTypeInvalidArg;
+    sprintf(GenBrushErr->_msg, "'pos' is invalid (0<=%d<%d)",
+      pos, GSetNbElem(that));
+    PBErrCatch(GenBrushErr);
+  }
+#endif
+  // If the origin and destination position are the same
+  // there is nothing to do
+  if (iElem == pos)
+    return;
+  // Get a pointer to the mmoved element
+  GSetElem* elem = GSetGetElem(that, iElem);
+  //Declare two variables to memorize the sort value and data
+  // of the moved element
+  float sortVal = elem->_sortVal;
+  void* data = elem->_data;
+  // Remove the moved element
+  GSetRemove(that, iElem);
+  // Insert  new element
+  GSetInsert(that, data, pos);
+  // Get a pointer to the newly inserted element
+  elem = GSetGetElem(that, pos);
+  // Correct the sorted value with the original value
+  elem->_sortVal = sortVal;
+}
+
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterForward* GSetIterForwardCreate(GSet* set) {
+GSetIterForward* _GSetIterForwardCreate(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -328,7 +369,7 @@ GSetIterForward* GSetIterForwardCreate(GSet* set) {
 
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterBackward* GSetIterBackwardCreate(GSet* set) {
+GSetIterBackward* _GSetIterBackwardCreate(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -402,43 +443,3 @@ GSetIterBackward* GSetIterBackwardClone(GSetIterBackward* that) {
   return ret;
 }
 
-// Move the 'iElem'-th element to the 'pos' index in the GSet
-void GSetMoveElem(GSet* that, int iElem, int pos) {
-#if BUILDMODE == 0
-  if (that == NULL) {
-    GenBrushErr->_type = PBErrTypeNullPointer;
-    sprintf(GenBrushErr->_msg, "'that' is null");
-    PBErrCatch(GenBrushErr);
-  }
-  if (iElem < 0 || iElem >= GSetNbElem(that)) {
-    GenBrushErr->_type = PBErrTypeInvalidArg;
-    sprintf(GenBrushErr->_msg, "'iElem' is invalid (0<=%d<%d)",
-      iElem, GSetNbElem(that));
-    PBErrCatch(GenBrushErr);
-  }
-  if (pos < 0 || pos >= GSetNbElem(that)) {
-    GenBrushErr->_type = PBErrTypeInvalidArg;
-    sprintf(GenBrushErr->_msg, "'pos' is invalid (0<=%d<%d)",
-      pos, GSetNbElem(that));
-    PBErrCatch(GenBrushErr);
-  }
-#endif
-  // If the origin and destination position are the same
-  // there is nothing to do
-  if (iElem == pos)
-    return;
-  // Get a pointer to the mmoved element
-  GSetElem* elem = GSetGetElem(that, iElem);
-  //Declare two variables to memorize the sort value and data
-  // of the moved element
-  float sortVal = elem->_sortVal;
-  void* data = elem->_data;
-  // Remove the moved element
-  GSetRemove(that, iElem);
-  // Insert  new element
-  GSetInsert(that, data, pos);
-  // Get a pointer to the newly inserted element
-  elem = GSetGetElem(that, pos);
-  // Correct the sorted value with the original value
-  elem->_sortVal = sortVal;
-}

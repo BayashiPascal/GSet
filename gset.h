@@ -9,65 +9,6 @@
 #include <string.h>
 #include "pberr.h"
 
-// ================= Define ==================
-
-// ================= Generic functions ==================
-
-#define GSetIterFree(IterRef) _Generic(IterRef, \
-  GSetIterForward**: GSetIterForwardFree, \
-  GSetIterBackward**: GSetIterBackwardFree, \
-  default: PBErrInvalidPolymorphism)(IterRef)
-
-#define GSetIterClone(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardClone, \
-  GSetIterBackward*: GSetIterBackwardClone, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterReset(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardReset, \
-  GSetIterBackward*: GSetIterBackwardReset, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterStep(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardStep, \
-  GSetIterBackward*: GSetIterBackwardStep, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterApply(Iter, Fun, Param) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardApply, \
-  GSetIterBackward*: GSetIterBackwardApply, \
-  default: PBErrInvalidPolymorphism)(Iter, Fun, Param)
-
-#define GSetIterIsFirst(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardIsFirst, \
-  GSetIterBackward*: GSetIterBackwardIsFirst, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterIsLast(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardIsLast, \
-  GSetIterBackward*: GSetIterBackwardIsLast, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardSetGSet, \
-  GSetIterBackward*: GSetIterBackwardSetGSet, \
-  default: PBErrInvalidPolymorphism)(Iter, Set)
-
-#define GSetIterGet(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardGet, \
-  GSetIterBackward*: GSetIterBackwardGet, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterGetElem(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardGetElem, \
-  GSetIterBackward*: GSetIterBackwardGetElem, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterRemoveElem(Iter) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardRemoveElem, \
-  GSetIterBackward*: GSetIterBackwardRemoveElem, \
-  default: PBErrInvalidPolymorphism)(Iter)
-
 // ================= Data structures ===================
 
 // Structure of one element of the GSet
@@ -125,25 +66,25 @@ GSet GSetCreateStatic(void);
 GSet* GSetClone(GSet* that);
 
 // Function to free the memory used by the GSet
-void GSetFree(GSet** s);
+void _GSetFree(GSet** s);
 
 // Function to empty the GSet
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetFlush(GSet* that);
+void _GSetFlush(GSet* that);
 
 // Return the number of element in the set
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetNbElem(GSet* that);
+int _GSetNbElem(GSet* that);
 
 // Function to print a GSet
 // Use the function 'printData' to print the data pointed to by 
 // the elements, and print 'sep' between each element
 // If printData is null, print the pointer value instead
-void GSetPrint(GSet* that, FILE* stream, 
+void _GSetPrint(GSet* that, FILE* stream, 
   void(*printData)(void* data, FILE* stream), char* sep);
 
 // Function to insert an element pointing toward 'data' at the 
@@ -151,11 +92,11 @@ void GSetPrint(GSet* that, FILE* stream,
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetPush(GSet* that, void* data);
+void _GSetPush(GSet* that, void* data);
 
 // Function to insert an element pointing toward 'data' at the 
 // position defined by 'v' sorting the set in increasing order
-void GSetAddSort(GSet* that, void* data, double v);
+void _GSetAddSort(GSet* that, void* data, double v);
 
 // Function to insert an element pointing toward 'data' at the 
 // 'iElem'-th position 
@@ -163,14 +104,14 @@ void GSetAddSort(GSet* that, void* data, double v);
 // in the GSet, elements pointing toward null data are added
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
-void GSetInsert(GSet* that, void* data, int iElem);
+void _GSetInsert(GSet* that, void* data, int iElem);
 
 // Function to insert an element pointing toward 'data' at the 
 // tail of the GSet
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppend(GSet* that, void* data);
+void _GSetAppend(GSet* that, void* data);
 
 // Function to remove the element at the head of the GSet
 // Return the data pointed to by the removed element, or null if the 
@@ -178,7 +119,7 @@ void GSetAppend(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetPop(GSet* that);
+void* _GSetPop(GSet* that);
 
 // Function to remove the element at the tail of the GSet
 // Return the data pointed to by the removed element, or null if the 
@@ -186,14 +127,14 @@ void* GSetPop(GSet* that);
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetDrop(GSet* that);
+void* _GSetDrop(GSet* that);
 
 // Function to remove the element at the 'iElem'-th position of the GSet
 // Return the data pointed to by the removed element
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetRemove(GSet* that, int iElem);
+void* _GSetRemove(GSet* that, int iElem);
 
 // Function to remove the element 'elem' of the GSet
 // Return the data pointed to by the removed element
@@ -201,42 +142,42 @@ void* GSetRemove(GSet* that, int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetRemoveElem(GSet* that, GSetElem** elem);
+void* _GSetRemoveElem(GSet* that, GSetElem** elem);
 
 // Function to remove the first element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveFirst(GSet* that, void* data);
+void _GSetRemoveFirst(GSet* that, void* data);
 
 // Function to remove the last element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveLast(GSet* that, void* data);
+void _GSetRemoveLast(GSet* that, void* data);
 
 // Function to remove all the selement of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveAll(GSet* that, void* data);
+void _GSetRemoveAll(GSet* that, void* data);
 
 // Function to get the data at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetGet(GSet* that, int iElem);
+void* _GSetGet(GSet* that, int iElem);
 
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetElem(GSet* that, int iElem);
+GSetElem* _GSetGetElem(GSet* that, int iElem);
 
 // Function to get the index of the first element of the GSet
 // which point to 'data'
@@ -244,7 +185,7 @@ GSetElem* GSetGetElem(GSet* that, int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetGetIndexFirst(GSet* that, void* data);
+int _GSetGetIndexFirst(GSet* that, void* data);
 
 // Function to get the index of the last element of the GSet
 // which point to 'data'
@@ -252,7 +193,7 @@ int GSetGetIndexFirst(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetGetIndexLast(GSet* that, void* data);
+int _GSetGetIndexLast(GSet* that, void* data);
 
 // Function to get the first element of the GSet
 // which point to 'data'
@@ -260,7 +201,7 @@ int GSetGetIndexLast(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetFirstElem(GSet* that, void* data);
+GSetElem* _GSetGetFirstElem(GSet* that, void* data);
 
 // Function to get the last element of the GSet
 // which point to 'data'
@@ -268,11 +209,11 @@ GSetElem* GSetGetFirstElem(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetLastElem(GSet* that, void* data);
+GSetElem* _GSetGetLastElem(GSet* that, void* data);
 
 // Function to sort the element of the gset in increasing order of 
 // _sortVal
-void GSetSort(GSet* that);
+void _GSetSort(GSet* that);
 
 // Merge the GSet 'set' at the end of the GSet 'that'
 // 'that' and 'set' can be empty
@@ -280,7 +221,7 @@ void GSetSort(GSet* that);
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetMerge(GSet* that, GSet* set);
+void _GSetMerge(GSet* that, GSet* set);
 
 // Split the GSet at the GSetElem 'e'
 // 'e' must be and element of the set
@@ -291,14 +232,14 @@ void GSetMerge(GSet* that, GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSet* GSetSplit(GSet* that, GSetElem* e);
+GSet* _GSetSplit(GSet* that, GSetElem* e);
 
 // Append the element of the GSet 'set' at the end of the GSet 'that'
 // 'that' and 'set' can be empty
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppendSet(GSet* that, GSet* set);
+void _GSetAppendSet(GSet* that, GSet* set);
 
 // Append the element of the GSet 'that' at the end of the GSet 'set'
 // Elements are kept sorted
@@ -306,13 +247,13 @@ void GSetAppendSet(GSet* that, GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppendSortedSet(GSet* that, GSet* set);
+void _GSetAppendSortedSet(GSet* that, GSet* set);
 
 // Switch the 'iElem'-th and 'jElem'-th element of the set
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetSwitch(GSet* that, int iElem, int jElem);
+void _GSetSwitch(GSet* that, int iElem, int jElem);
 
 // Set the sort value of the GSetElem 'that' to 'v'
 #if BUILDMODE != 0
@@ -320,21 +261,24 @@ inline
 #endif 
 void GSetElemSetSortVal(GSetElem* that, float v);
 
+// Move the 'iElem'-th element to the 'pos' index in the GSet
+void _GSetMoveElem(GSet* that, int iElem, int pos);
+
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterForward* GSetIterForwardCreate(GSet* set);
+GSetIterForward* _GSetIterForwardCreate(GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterForward GSetIterForwardCreateStatic(GSet* set);
+GSetIterForward _GSetIterForwardCreateStatic(GSet* set);
 
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterBackward* GSetIterBackwardCreate(GSet* set);
+GSetIterBackward* _GSetIterBackwardCreate(GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterBackward GSetIterBackwardCreateStatic(GSet* set);
+GSetIterBackward _GSetIterBackwardCreateStatic(GSet* set);
 
 // Free the memory used by a GSetIterForward (not by its attached GSet)
 // Do nothing if arguments are invalid
@@ -492,8 +436,316 @@ inline
 #endif 
 bool GSetIterBackwardRemoveElem(GSetIterBackward* that);
 
-// Move the 'iElem'-th element to the 'pos' index in the GSet
-void GSetMoveElem(GSet* that, int iElem, int pos);
+// ================= Typed GSet ==================
+
+#ifndef VecFloat
+  typedef struct VecFloat VecFloat;
+#endif
+#ifndef VecFloat2D
+  typedef struct VecFloat2D VecFloat2D;
+#endif
+#ifndef VecFloat3D
+  typedef struct VecFloat3D VecFloat3D;
+#endif
+typedef struct GSetVecFloat {GSet _set;} GSetVecFloat;
+#define GSetVecFloatCreate() ((GSetVecFloat*)GSetCreate())
+inline GSetVecFloat GSetVecFloatCreateStatic(void) 
+  {GSetVecFloat ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* that)
+  {return (GSetVecFloat*)GSetClone((GSet*)that);}
+
+// ================= Generic functions ==================
+
+#define GSetFree(Set) _Generic(Set, \
+  GSet**: _GSetFree, \
+  GSetVecFloat**: _GSetFree, \
+  default: PBErrInvalidPolymorphism)((GSet**)(Set))
+
+#define GSetPush(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetPush), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetPush, \
+    VecFloat2D*: _GSetPush, \
+    VecFloat3D*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetAddSort(Set, Data, Value) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetAddSort), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetAddSort, \
+    VecFloat2D*: _GSetAddSort, \
+    VecFloat3D*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
+
+#define GSetInsert(Set, Data, Pos) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetInsert), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetInsert, \
+    VecFloat2D*: _GSetInsert, \
+    VecFloat3D*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
+
+#define GSetAppend(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetAppend), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetAppend, \
+    VecFloat2D*: _GSetAppend, \
+    VecFloat3D*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetRemoveFirst(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetRemoveFirst), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetRemoveFirst, \
+    VecFloat2D*: _GSetRemoveFirst, \
+    VecFloat3D*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetRemoveLast(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetRemoveLast), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetRemoveLast, \
+    VecFloat2D*: _GSetRemoveLast, \
+    VecFloat3D*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetRemoveAll(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetRemoveAll), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetRemoveAll, \
+    VecFloat2D*: _GSetRemoveAll, \
+    VecFloat3D*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetGetIndexFirst(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetGetIndexFirst), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetIndexFirst, \
+    VecFloat2D*: _GSetGetIndexFirst, \
+    VecFloat3D*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetGetIndexLast(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetGetIndexLast), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetIndexLast, \
+    VecFloat2D*: _GSetGetIndexLast, \
+    VecFloat3D*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetGetFirstElem(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetGetFirstElem), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetFirstElem, \
+    VecFloat2D*: _GSetGetFirstElem, \
+    VecFloat3D*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetGetLastElem(Set, Data) _Generic(Set, \
+  GSet*: _Generic(Data, \
+    default: _GSetGetLastElem), \
+  GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetLastElem, \
+    VecFloat2D*: _GSetGetLastElem, \
+    VecFloat3D*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
+
+#define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
+  GSet*: _GSetPrint, \
+  GSetVecFloat*: _GSetPrint, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
+
+#define GSetFlush(Set) _Generic(Set, \
+  GSet*: _GSetFlush, \
+  GSetVecFloat*: _GSetFlush, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+
+#define GSetNbElem(Set) _Generic(Set, \
+  GSet*: _GSetNbElem, \
+  GSetVecFloat*: _GSetNbElem, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+
+#define GSetPop(Set) _Generic(Set, \
+  GSet*: _GSetPop, \
+  GSetVecFloat*: _GSetPop, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+
+#define GSetDrop(Set) _Generic(Set, \
+  GSet*: _GSetDrop, \
+  GSetVecFloat*: _GSetDrop, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+
+#define GSetRemove(Set, Pos) _Generic(Set, \
+  GSet*: _GSetRemove, \
+  GSetVecFloat*: _GSetRemove, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
+
+#define GSetRemoveElem(Set, Elem) _Generic(Set, \
+  GSet*: _GSetRemoveElem, \
+  GSetVecFloat*: _GSetRemoveElem, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
+
+#define GSetGet(Set, Pos) _Generic(Set, \
+  GSet*: _GSetGet, \
+  GSetVecFloat*: _GSetGet, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
+
+#define GSetGetElem(Set, Pos) _Generic(Set, \
+  GSet*: _GSetGetElem, \
+  GSetVecFloat*: _GSetGetElem, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
+
+#define GSetSort(Set) _Generic(Set, \
+  GSet*: _GSetSort, \
+  GSetVecFloat*: _GSetSort, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+
+#define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
+  GSet*: _Generic(MergedSet, \
+    GSet*: _GSetMerge, \
+    GSetVecFloat*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecFloat*: _Generic(MergedSet, \
+    GSet*: _GSetMerge, \
+    GSetVecFloat*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
+    (GSet*)(MergedSet))
+
+#define GSetSplit(Set, Elem) _Generic(Set, \
+  GSet*: _GSetSplit, \
+  GSetVecFloat*: _GSetSplit, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
+
+#define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
+  GSet*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSet, \
+    GSetVecFloat*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecFloat*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSet, \
+    GSetVecFloat*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
+    (GSet*)(AppendSet))
+
+#define GSetAppendSortedSet(IntoSet, AppendSet) _Generic(IntoSet, \
+  GSet*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSortedSet, \
+    GSetVecFloat*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecFloat*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSortedSet, \
+    GSetVecFloat*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
+    (GSet*)(AppendSet))
+
+#define GSetSwitch(Set, PosA, PosB) _Generic(Set, \
+  GSet*: _GSetSwitch, \
+  GSetVecFloat*: _GSetSwitch, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
+
+#define GSetMoveElem(Set, From, To) _Generic(Set, \
+  GSet*: _GSetMoveElem, \
+  GSetVecFloat*: _GSetMoveElem, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
+
+#define GSetIterForwardCreate(Set) _Generic(Set, \
+  GSet*: _GSetIterForwardCreate, \
+  GSetVecFloat*: _GSetIterForwardCreate, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  
+#define GSetIterForwardCreateStatic(Set) _Generic(Set, \
+  GSet*: _GSetIterForwardCreateStatic, \
+  GSetVecFloat*: _GSetIterForwardCreateStatic, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  
+#define GSetIterBackwardCreate(Set) _Generic(Set, \
+  GSet*: _GSetIterBackwardCreate, \
+  GSetVecFloat*: _GSetIterBackwardCreate, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  
+#define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
+  GSet*: _GSetIterBackwardCreateStatic, \
+  GSetVecFloat*: _GSetIterBackwardCreateStatic, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  
+#define GSetIterFree(IterRef) _Generic(IterRef, \
+  GSetIterForward**: GSetIterForwardFree, \
+  GSetIterBackward**: GSetIterBackwardFree, \
+  default: PBErrInvalidPolymorphism)(IterRef)
+
+#define GSetIterClone(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardClone, \
+  GSetIterBackward*: GSetIterBackwardClone, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterReset(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardReset, \
+  GSetIterBackward*: GSetIterBackwardReset, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterStep(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardStep, \
+  GSetIterBackward*: GSetIterBackwardStep, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterApply(Iter, Fun, Param) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardApply, \
+  GSetIterBackward*: GSetIterBackwardApply, \
+  default: PBErrInvalidPolymorphism)(Iter, Fun, Param)
+
+#define GSetIterIsFirst(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardIsFirst, \
+  GSetIterBackward*: GSetIterBackwardIsFirst, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterIsLast(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardIsLast, \
+  GSetIterBackward*: GSetIterBackwardIsLast, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardSetGSet, \
+  GSetIterBackward*: GSetIterBackwardSetGSet, \
+  default: PBErrInvalidPolymorphism)(Iter, Set)
+
+#define GSetIterGet(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardGet, \
+  GSetIterBackward*: GSetIterBackwardGet, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterGetElem(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardGetElem, \
+  GSetIterBackward*: GSetIterBackwardGetElem, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterRemoveElem(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardRemoveElem, \
+  GSetIterBackward*: GSetIterBackwardRemoveElem, \
+  default: PBErrInvalidPolymorphism)(Iter)
 
 // ================ Inliner ====================
 

@@ -1,4 +1,4 @@
- // ============ GSET-INLINE.C ================
+// *************** GSET-INLINE.C ***************
 
 // ================ Functions implementation ====================
 
@@ -17,7 +17,7 @@ GSet GSetCreateStatic(void) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetFlush(GSet* that) {
+void _GSetFlush(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -35,7 +35,7 @@ void GSetFlush(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetPush(GSet* that, void* data) {
+void _GSetPush(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -66,7 +66,7 @@ void GSetPush(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppend(GSet* that, void* data) {
+void _GSetAppend(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -95,7 +95,7 @@ void GSetAppend(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetPop(GSet* that) {
+void* _GSetPop(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -126,7 +126,7 @@ void* GSetPop(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetDrop(GSet* that) {
+void* _GSetDrop(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -157,7 +157,7 @@ void* GSetDrop(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetRemoveElem(GSet* that, GSetElem** elem) {
+void* _GSetRemoveElem(GSet* that, GSetElem** elem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -204,7 +204,7 @@ void* GSetRemoveElem(GSet* that, GSetElem** elem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveFirst(GSet* that, void* data) {
+void _GSetRemoveFirst(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -225,7 +225,7 @@ void GSetRemoveFirst(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveLast(GSet* that, void* data) {
+void _GSetRemoveLast(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -246,7 +246,7 @@ void GSetRemoveLast(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetRemove(GSet* that, int iElem) {
+void* _GSetRemove(GSet* that, int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -292,7 +292,7 @@ void* GSetRemove(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetRemoveAll(GSet* that, void* data) {
+void _GSetRemoveAll(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -325,7 +325,7 @@ void GSetRemoveAll(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetGet(GSet* that, int iElem) {
+void* _GSetGet(GSet* that, int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -354,7 +354,7 @@ void* GSetGet(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetElem(GSet* that, int iElem) {
+GSetElem* _GSetGetElem(GSet* that, int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -384,7 +384,7 @@ GSetElem* GSetGetElem(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetGetIndexFirst(GSet* that, void* data) {
+int _GSetGetIndexFirst(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -415,7 +415,7 @@ int GSetGetIndexFirst(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetGetIndexLast(GSet* that, void* data) {
+int _GSetGetIndexLast(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -443,7 +443,7 @@ int GSetGetIndexLast(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetFirstElem(GSet* that, void* data) {
+GSetElem* _GSetGetFirstElem(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -467,7 +467,7 @@ GSetElem* GSetGetFirstElem(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetGetLastElem(GSet* that, void* data) {
+GSetElem* _GSetGetLastElem(GSet* that, void* data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -491,7 +491,7 @@ GSetElem* GSetGetLastElem(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetMerge(GSet* that, GSet* set) {
+void _GSetMerge(GSet* that, GSet* set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -541,7 +541,7 @@ void GSetMerge(GSet* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSet* GSetSplit(GSet* that, GSetElem* e) {
+GSet* _GSetSplit(GSet* that, GSetElem* e) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -603,7 +603,7 @@ GSet* GSetSplit(GSet* that, GSetElem* e) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetSwitch(GSet* that, int iElem, int jElem) {
+void _GSetSwitch(GSet* that, int iElem, int jElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -655,7 +655,7 @@ void GSetElemSetSortVal(GSetElem* that, float v) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterForward GSetIterForwardCreateStatic(GSet* set) {
+GSetIterForward _GSetIterForwardCreateStatic(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -674,7 +674,7 @@ GSetIterForward GSetIterForwardCreateStatic(GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterBackward GSetIterBackwardCreateStatic(GSet* set) {
+GSetIterBackward _GSetIterBackwardCreateStatic(GSet* set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1028,7 +1028,7 @@ GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-int GSetNbElem(GSet* that) {
+int _GSetNbElem(GSet* that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1097,7 +1097,7 @@ bool GSetIterBackwardRemoveElem(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppendSet(GSet* that, GSet* set) {
+void _GSetAppendSet(GSet* that, GSet* set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1130,7 +1130,7 @@ void GSetAppendSet(GSet* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetAppendSortedSet(GSet* that, GSet* set) {
+void _GSetAppendSortedSet(GSet* that, GSet* set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
