@@ -620,7 +620,7 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
 #define GSetGet(Set, Pos) _Generic(Set, \
   GSet*: _GSetGet, \
   GSetVecFloat*: _GSetVecFloatGet, \
-  default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
+  default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
   GSet*: _GSetGetElem, \
