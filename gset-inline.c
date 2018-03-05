@@ -349,6 +349,44 @@ void* _GSetGet(GSet* that, int iElem) {
   return ret;
 }
 
+// Function to get the data at first position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetFirst(GSet* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Set a pointer for the return value
+  void* ret = that->_head->_data;
+  // Return the data
+  return ret;
+}
+
+// Function to get the data at last position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetLast(GSet* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Set a pointer for the return value
+  void* ret = that->_tail->_data;
+  // Return the data
+  return ret;
+}
+
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0

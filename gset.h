@@ -172,6 +172,20 @@ inline
 #endif 
 void* _GSetGet(GSet* that, int iElem);
 
+// Function to get the data at first position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetFirst(GSet* that);
+
+// Function to get the data at last position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetLast(GSet* that);
+
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
@@ -455,6 +469,10 @@ inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* that)
   {return (GSetVecFloat*)GSetClone((GSet*)that);}
 inline VecFloat* _GSetVecFloatGet(GSetVecFloat* that, int iElem)
   {return (VecFloat*)_GSetGet((GSet*)that, iElem);}
+inline VecFloat* _GSetVecFloatGetFirst(GSetVecFloat* that)
+  {return (VecFloat*)_GSetGetFirst((GSet*)that);}
+inline VecFloat* _GSetVecFloatGetLast(GSetVecFloat* that)
+  {return (VecFloat*)_GSetGetLast((GSet*)that);}
 inline VecFloat* _GSetVecFloatPop(GSetVecFloat* that)
   {return (VecFloat*)_GSetPop((GSet*)that);}
 inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* that)
@@ -621,6 +639,16 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
   GSet*: _GSetGet, \
   GSetVecFloat*: _GSetVecFloatGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
+
+#define GSetGetFirst(Set) _Generic(Set, \
+  GSet*: _GSetGetFirst, \
+  GSetVecFloat*: _GSetVecFloatGetFirst, \
+  default: PBErrInvalidPolymorphism)(Set)
+
+#define GSetGetLast(Set) _Generic(Set, \
+  GSet*: _GSetGetLast, \
+  GSetVecFloat*: _GSetVecFloatGetLast, \
+  default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
   GSet*: _GSetGetElem, \
