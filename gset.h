@@ -453,6 +453,17 @@ inline GSetVecFloat GSetVecFloatCreateStatic(void)
   {GSetVecFloat ret = {._set=GSetCreateStatic()}; return ret;}
 inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* that)
   {return (GSetVecFloat*)GSetClone((GSet*)that);}
+inline VecFloat* _GSetVecFloatGet(GSetVecFloat* that, int iElem)
+  {return (VecFloat*)_GSetGet((GSet*)that, iElem);}
+inline VecFloat* _GSetVecFloatPop(GSetVecFloat* that)
+  {return (VecFloat*)_GSetPop((GSet*)that);}
+inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* that)
+  {return (VecFloat*)_GSetDrop((GSet*)that);}
+inline VecFloat* _GSetVecFloatRemove(GSetVecFloat* that, int iElem)
+  {return (VecFloat*)_GSetRemove((GSet*)that, iElem);}
+inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that, 
+  GSetElem** elem)
+  {return (VecFloat*)_GSetRemoveElem((GSet*)that, elem);}
 
 // ================= Generic functions ==================
 
@@ -588,27 +599,27 @@ inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* that)
 
 #define GSetPop(Set) _Generic(Set, \
   GSet*: _GSetPop, \
-  GSetVecFloat*: _GSetPop, \
+  GSetVecFloat*: _GSetVecFloatPop, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetDrop(Set) _Generic(Set, \
   GSet*: _GSetDrop, \
-  GSetVecFloat*: _GSetDrop, \
+  GSetVecFloat*: _GSetVecFloatDrop, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
   GSet*: _GSetRemove, \
-  GSetVecFloat*: _GSetRemove, \
+  GSetVecFloat*: _GSetVecFloatRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
   GSet*: _GSetRemoveElem, \
-  GSetVecFloat*: _GSetRemoveElem, \
+  GSetVecFloat*: _GSetVecFloatRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
   GSet*: _GSetGet, \
-  GSetVecFloat*: _GSetGet, \
+  GSetVecFloat*: _GSetVecFloatGet, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
