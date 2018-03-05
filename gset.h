@@ -517,12 +517,64 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
   GSetElem** elem)
   {return (VecShort*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef BCurve
+  typedef struct BCurve BCurve;
+#endif
+typedef struct GSetBCurve {GSet _set;} GSetBCurve;
+#define GSetBCurveCreate() ((GSetBCurve*)GSetCreate())
+inline GSetBCurve GSetBCurveCreateStatic(void) 
+  {GSetBCurve ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetBCurve* GSetBCurveClone(GSetBCurve* that)
+  {return (GSetBCurve*)GSetClone((GSet*)that);}
+inline BCurve* _GSetBCurveGet(GSetBCurve* that, int iElem)
+  {return (BCurve*)_GSetGet((GSet*)that, iElem);}
+inline BCurve* _GSetBCurveGetFirst(GSetBCurve* that)
+  {return (BCurve*)_GSetGetFirst((GSet*)that);}
+inline BCurve* _GSetBCurveGetLast(GSetBCurve* that)
+  {return (BCurve*)_GSetGetLast((GSet*)that);}
+inline BCurve* _GSetBCurvePop(GSetBCurve* that)
+  {return (BCurve*)_GSetPop((GSet*)that);}
+inline BCurve* _GSetBCurveDrop(GSetBCurve* that)
+  {return (BCurve*)_GSetDrop((GSet*)that);}
+inline BCurve* _GSetBCurveRemove(GSetBCurve* that, int iElem)
+  {return (BCurve*)_GSetRemove((GSet*)that, iElem);}
+inline BCurve* _GSetBCurveRemoveElem(GSetBCurve* that, 
+  GSetElem** elem)
+  {return (BCurve*)_GSetRemoveElem((GSet*)that, elem);}
+
+#ifndef SCurve
+  typedef struct SCurve SCurve;
+#endif
+typedef struct GSetSCurve {GSet _set;} GSetSCurve;
+#define GSetSCurveCreate() ((GSetSCurve*)GSetCreate())
+inline GSetSCurve GSetSCurveCreateStatic(void) 
+  {GSetSCurve ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetSCurve* GSetSCurveClone(GSetSCurve* that)
+  {return (GSetSCurve*)GSetClone((GSet*)that);}
+inline SCurve* _GSetSCurveGet(GSetSCurve* that, int iElem)
+  {return (SCurve*)_GSetGet((GSet*)that, iElem);}
+inline SCurve* _GSetSCurveGetFirst(GSetSCurve* that)
+  {return (SCurve*)_GSetGetFirst((GSet*)that);}
+inline SCurve* _GSetSCurveGetLast(GSetSCurve* that)
+  {return (SCurve*)_GSetGetLast((GSet*)that);}
+inline SCurve* _GSetSCurvePop(GSetSCurve* that)
+  {return (SCurve*)_GSetPop((GSet*)that);}
+inline SCurve* _GSetSCurveDrop(GSetSCurve* that)
+  {return (SCurve*)_GSetDrop((GSet*)that);}
+inline SCurve* _GSetSCurveRemove(GSetSCurve* that, int iElem)
+  {return (SCurve*)_GSetRemove((GSet*)that, iElem);}
+inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that, 
+  GSetElem** elem)
+  {return (SCurve*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
   GSet**: _GSetFree, \
   GSetVecFloat**: _GSetFree, \
   GSetVecShort**: _GSetFree, \
+  BCurve**: _GSetFree, \
+  SCurve**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -538,6 +590,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort2D*: _GSetPush, \
     VecShort3D*: _GSetPush, \
     VecShort4D*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -555,6 +613,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetAddSort, \
     VecShort4D*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -570,6 +634,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort2D*: _GSetInsert, \
     VecShort3D*: _GSetInsert, \
     VecShort4D*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -587,6 +657,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetAppend, \
     VecShort4D*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -602,6 +678,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort2D*: _GSetRemoveFirst, \
     VecShort3D*: _GSetRemoveFirst, \
     VecShort4D*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -619,6 +701,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetRemoveLast, \
     VecShort4D*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -634,6 +722,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort2D*: _GSetRemoveAll, \
     VecShort3D*: _GSetRemoveAll, \
     VecShort4D*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -651,6 +745,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetGetIndexFirst, \
     VecShort4D*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -666,6 +766,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort2D*: _GSetGetIndexLast, \
     VecShort3D*: _GSetGetIndexLast, \
     VecShort4D*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -683,6 +789,12 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetGetFirstElem, \
     VecShort4D*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -699,78 +811,108 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     VecShort3D*: _GSetGetLastElem, \
     VecShort4D*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
   GSet*: _GSetPrint, \
   GSetVecFloat*: _GSetPrint, \
   GSetVecShort*: _GSetPrint, \
+  GSetBCurve*: _GSetPrint, \
+  GSetSCurve*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
   GSet*: _GSetFlush, \
   GSetVecFloat*: _GSetFlush, \
   GSetVecShort*: _GSetFlush, \
+  GSetBCurve*: _GSetFlush, \
+  GSetSCurve*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
   GSet*: _GSetNbElem, \
   GSetVecFloat*: _GSetNbElem, \
   GSetVecShort*: _GSetNbElem, \
+  GSetBCurve*: _GSetNbElem, \
+  GSetSCurve*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
   GSet*: _GSetPop, \
   GSetVecFloat*: _GSetVecFloatPop, \
-  GSetVecShort*: _GSetVecFloatPop, \
+  GSetVecShort*: _GSetVecShortPop, \
+  GSetBCurve*: _GSetBCurvePop, \
+  GSetSCurve*: _GSetSCurvePop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
   GSet*: _GSetDrop, \
   GSetVecFloat*: _GSetVecFloatDrop, \
-  GSetVecShort*: _GSetVecFloatDrop, \
+  GSetVecShort*: _GSetVecShortDrop, \
+  GSetBCurve*: _GSetBCurveDrop, \
+  GSetSCurve*: _GSetSCurveDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
   GSet*: _GSetRemove, \
   GSetVecFloat*: _GSetVecFloatRemove, \
-  GSetVecShort*: _GSetVecFloatRemove, \
+  GSetVecShort*: _GSetVecShortRemove, \
+  GSetBCurve*: _GSetBCurveRemove, \
+  GSetSCurve*: _GSetSCurveRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
   GSet*: _GSetRemoveElem, \
   GSetVecFloat*: _GSetVecFloatRemoveElem, \
-  GSetVecShort*: _GSetVecFloatRemoveElem, \
+  GSetVecShort*: _GSetVecShortRemoveElem, \
+  GSetBCurve*: _GSetBCurveRemoveElem, \
+  GSetSCurve*: _GSetSCurveRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
   GSet*: _GSetGet, \
   GSetVecFloat*: _GSetVecFloatGet, \
-  GSetVecShort*: _GSetVecFloatGet, \
+  GSetVecShort*: _GSetVecShortGet, \
+  GSetBCurve*: _GSetBCurveGet, \
+  GSetSCurve*: _GSetSCurveGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
   GSet*: _GSetGetFirst, \
   GSetVecFloat*: _GSetVecFloatGetFirst, \
-  GSetVecShort*: _GSetVecFloatGetFirst, \
+  GSetVecShort*: _GSetVecShortGetFirst, \
+  GSetBCurve*: _GSetBCurveGetFirst, \
+  GSetSCurve*: _GSetSCurveGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
   GSet*: _GSetGetLast, \
   GSetVecFloat*: _GSetVecFloatGetLast, \
-  GSetVecShort*: _GSetVecFloatGetLast, \
+  GSetVecShort*: _GSetVecShortGetLast, \
+  GSetBCurve*: _GSetBCurveGetLast, \
+  GSetSCurve*: _GSetSCurveGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
   GSet*: _GSetGetElem, \
   GSetVecFloat*: _GSetGetElem, \
   GSetVecShort*: _GSetGetElem, \
+  GSetBCurve*: _GSetGetElem, \
+  GSetSCurve*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
   GSet*: _GSetSort, \
   GSetVecFloat*: _GSetSort, \
   GSetVecShort*: _GSetSort, \
+  GSetBCurve*: _GSetSort, \
+  GSetSCurve*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -778,16 +920,20 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     GSet*: _GSetMerge, \
     GSetVecFloat*: _GSetMerge, \
     GSetVecShort*: _GSetMerge, \
+    GSetBCurve*: _GSetMerge, \
+    GSetSCurve*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(MergedSet, \
-    GSet*: _GSetMerge, \
     GSetVecFloat*: _GSetMerge, \
-    GSetVecShort*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   GSetVecShort*: _Generic(MergedSet, \
-    GSet*: _GSetMerge, \
     GSetVecFloat*: _GSetMerge, \
-    GSetVecShort*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(MergedSet, \
+    GSetBCurve*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(MergedSet, \
+    GSetSCurve*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
@@ -796,6 +942,8 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
   GSet*: _GSetSplit, \
   GSetVecFloat*: _GSetSplit, \
   GSetVecShort*: _GSetSplit, \
+  GSetBCurve*: _GSetSplit, \
+  GSetSCurve*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -803,16 +951,20 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     GSet*: _GSetAppendSet, \
     GSetVecFloat*: _GSetAppendSet, \
     GSetVecShort*: _GSetAppendSet, \
+    GSetBCurve*: _GSetAppendSet, \
+    GSetSCurve*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
-    GSet*: _GSetAppendSet, \
     GSetVecFloat*: _GSetAppendSet, \
-    GSetVecShort*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecShort*: _Generic(AppendSet, \
-    GSet*: _GSetAppendSet, \
-    GSetVecFloat*: _GSetAppendSet, \
     GSetVecShort*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(AppendSet, \
+    GSetBCurve*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(AppendSet, \
+    GSetSCurve*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -822,16 +974,20 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
     GSet*: _GSetAppendSortedSet, \
     GSetVecFloat*: _GSetAppendSortedSet, \
     GSetVecShort*: _GSetAppendSortedSet, \
+    GSetBCurve*: _GSetAppendSortedSet, \
+    GSetSCurve*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
-    GSet*: _GSetAppendSortedSet, \
     GSetVecFloat*: _GSetAppendSortedSet, \
-    GSetVecShort*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecShort*: _Generic(AppendSet, \
-    GSet*: _GSetAppendSortedSet, \
-    GSetVecFloat*: _GSetAppendSortedSet, \
     GSetVecShort*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetBCurve*: _Generic(AppendSet, \
+    GSetBCurve*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSCurve*: _Generic(AppendSet, \
+    GSetSCurve*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -840,36 +996,48 @@ inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that,
   GSet*: _GSetSwitch, \
   GSetVecFloat*: _GSetSwitch, \
   GSetVecShort*: _GSetSwitch, \
+  GSetBCurve*: _GSetSwitch, \
+  GSetSCurve*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
   GSet*: _GSetMoveElem, \
   GSetVecFloat*: _GSetMoveElem, \
   GSetVecShort*: _GSetMoveElem, \
+  GSetBCurve*: _GSetMoveElem, \
+  GSetSCurve*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreate, \
   GSetVecFloat*: _GSetIterForwardCreate, \
   GSetVecShort*: _GSetIterForwardCreate, \
+  GSetBCurve*: _GSetIterForwardCreate, \
+  GSetSCurve*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreateStatic, \
   GSetVecFloat*: _GSetIterForwardCreateStatic, \
   GSetVecShort*: _GSetIterForwardCreateStatic, \
+  GSetBCurve*: _GSetIterForwardCreateStatic, \
+  GSetSCurve*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreate, \
   GSetVecFloat*: _GSetIterBackwardCreate, \
   GSetVecShort*: _GSetIterBackwardCreate, \
+  GSetBCurve*: _GSetIterBackwardCreate, \
+  GSetSCurve*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreateStatic, \
   GSetVecFloat*: _GSetIterBackwardCreateStatic, \
   GSetVecShort*: _GSetIterBackwardCreateStatic, \
+  GSetBCurve*: _GSetIterBackwardCreateStatic, \
+  GSetSCurve*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterFree(IterRef) _Generic(IterRef, \
