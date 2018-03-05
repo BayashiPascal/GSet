@@ -567,14 +567,49 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetElem** elem)
   {return (SCurve*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef Shapoid
+  typedef struct Shapoid Shapoid;
+#endif
+#ifndef Facoid
+  typedef struct Facoid Facoid;
+#endif
+#ifndef Spheroid
+  typedef struct Spheroid Spheroid;
+#endif
+#ifndef Pyramidoid
+  typedef struct Pyramidoid Pyramidoid;
+#endif
+typedef struct GSetShapoid {GSet _set;} GSetShapoid;
+#define GSetShapoidCreate() ((GSetShapoid*)GSetCreate())
+inline GSetShapoid GSetShapoidCreateStatic(void) 
+  {GSetShapoid ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetShapoid* GSetShapoidClone(GSetShapoid* that)
+  {return (GSetShapoid*)GSetClone((GSet*)that);}
+inline Shapoid* _GSetShapoidGet(GSetShapoid* that, int iElem)
+  {return (Shapoid*)_GSetGet((GSet*)that, iElem);}
+inline Shapoid* _GSetShapoidGetFirst(GSetShapoid* that)
+  {return (Shapoid*)_GSetGetFirst((GSet*)that);}
+inline Shapoid* _GSetShapoidGetLast(GSetShapoid* that)
+  {return (Shapoid*)_GSetGetLast((GSet*)that);}
+inline Shapoid* _GSetShapoidPop(GSetShapoid* that)
+  {return (Shapoid*)_GSetPop((GSet*)that);}
+inline Shapoid* _GSetShapoidDrop(GSetShapoid* that)
+  {return (Shapoid*)_GSetDrop((GSet*)that);}
+inline Shapoid* _GSetShapoidRemove(GSetShapoid* that, int iElem)
+  {return (Shapoid*)_GSetRemove((GSet*)that, iElem);}
+inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that, 
+  GSetElem** elem)
+  {return (Shapoid*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
   GSet**: _GSetFree, \
   GSetVecFloat**: _GSetFree, \
   GSetVecShort**: _GSetFree, \
-  BCurve**: _GSetFree, \
-  SCurve**: _GSetFree, \
+  GSetBCurve**: _GSetFree, \
+  GSetSCurve**: _GSetFree, \
+  GSetShapoid**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -596,6 +631,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetPush, \
+    Facoid*: _GSetPush, \
+    Pyramidoid*: _GSetPush, \
+    Spheroid*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -619,6 +660,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetAddSort, \
+    Facoid*: _GSetAddSort, \
+    Pyramidoid*: _GSetAddSort, \
+    Spheroid*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -640,6 +687,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetInsert, \
+    Facoid*: _GSetInsert, \
+    Pyramidoid*: _GSetInsert, \
+    Spheroid*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -663,6 +716,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetAppend, \
+    Facoid*: _GSetAppend, \
+    Pyramidoid*: _GSetAppend, \
+    Spheroid*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -684,6 +743,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetRemoveFirst, \
+    Facoid*: _GSetRemoveFirst, \
+    Pyramidoid*: _GSetRemoveFirst, \
+    Spheroid*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -707,6 +772,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetRemoveLast, \
+    Facoid*: _GSetRemoveLast, \
+    Pyramidoid*: _GSetRemoveLast, \
+    Spheroid*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -728,6 +799,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetRemoveAll, \
+    Facoid*: _GSetRemoveAll, \
+    Pyramidoid*: _GSetRemoveAll, \
+    Spheroid*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -751,6 +828,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetIndexFirst, \
+    Facoid*: _GSetGetIndexFirst, \
+    Pyramidoid*: _GSetGetIndexFirst, \
+    Spheroid*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -772,6 +855,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetIndexLast, \
+    Facoid*: _GSetGetIndexLast, \
+    Pyramidoid*: _GSetGetIndexLast, \
+    Spheroid*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -795,6 +884,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetFirstElem, \
+    Facoid*: _GSetGetFirstElem, \
+    Pyramidoid*: _GSetGetFirstElem, \
+    Spheroid*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -817,6 +912,12 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetLastElem, \
+    Facoid*: _GSetGetLastElem, \
+    Pyramidoid*: _GSetGetLastElem, \
+    Spheroid*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
@@ -825,6 +926,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetPrint, \
   GSetBCurve*: _GSetPrint, \
   GSetSCurve*: _GSetPrint, \
+  GSetShapoid*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -833,6 +935,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetFlush, \
   GSetBCurve*: _GSetFlush, \
   GSetSCurve*: _GSetFlush, \
+  GSetShapoid*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -841,6 +944,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetNbElem, \
   GSetBCurve*: _GSetNbElem, \
   GSetSCurve*: _GSetNbElem, \
+  GSetShapoid*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -849,6 +953,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortPop, \
   GSetBCurve*: _GSetBCurvePop, \
   GSetSCurve*: _GSetSCurvePop, \
+  GSetShapoid*: _GSetSCurvePop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -857,6 +962,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortDrop, \
   GSetBCurve*: _GSetBCurveDrop, \
   GSetSCurve*: _GSetSCurveDrop, \
+  GSetShapoid*: _GSetSCurveDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -865,6 +971,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortRemove, \
   GSetBCurve*: _GSetBCurveRemove, \
   GSetSCurve*: _GSetSCurveRemove, \
+  GSetShapoid*: _GSetSCurveRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -873,6 +980,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortRemoveElem, \
   GSetBCurve*: _GSetBCurveRemoveElem, \
   GSetSCurve*: _GSetSCurveRemoveElem, \
+  GSetShapoid*: _GSetSCurveRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -881,6 +989,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortGet, \
   GSetBCurve*: _GSetBCurveGet, \
   GSetSCurve*: _GSetSCurveGet, \
+  GSetShapoid*: _GSetSCurveGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -889,6 +998,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortGetFirst, \
   GSetBCurve*: _GSetBCurveGetFirst, \
   GSetSCurve*: _GSetSCurveGetFirst, \
+  GSetShapoid*: _GSetSCurveGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -897,6 +1007,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetVecShortGetLast, \
   GSetBCurve*: _GSetBCurveGetLast, \
   GSetSCurve*: _GSetSCurveGetLast, \
+  GSetShapoid*: _GSetSCurveGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
@@ -905,6 +1016,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetGetElem, \
   GSetBCurve*: _GSetGetElem, \
   GSetSCurve*: _GSetGetElem, \
+  GSetShapoid*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -913,6 +1025,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetSort, \
   GSetBCurve*: _GSetSort, \
   GSetSCurve*: _GSetSort, \
+  GSetShapoid*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -922,6 +1035,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     GSetVecShort*: _GSetMerge, \
     GSetBCurve*: _GSetMerge, \
     GSetSCurve*: _GSetMerge, \
+    GSetShapoid*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(MergedSet, \
     GSetVecFloat*: _GSetMerge, \
@@ -935,6 +1049,9 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(MergedSet, \
     GSetSCurve*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(MergedSet, \
+    GSetShapoid*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
 
@@ -944,6 +1061,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetSplit, \
   GSetBCurve*: _GSetSplit, \
   GSetSCurve*: _GSetSplit, \
+  GSetShapoid*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -953,6 +1071,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     GSetVecShort*: _GSetAppendSet, \
     GSetBCurve*: _GSetAppendSet, \
     GSetSCurve*: _GSetAppendSet, \
+    GSetShapoid*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
     GSetVecFloat*: _GSetAppendSet, \
@@ -965,6 +1084,9 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(AppendSet, \
     GSetSCurve*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(AppendSet, \
+    GSetShapoid*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -976,6 +1098,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
     GSetVecShort*: _GSetAppendSortedSet, \
     GSetBCurve*: _GSetAppendSortedSet, \
     GSetSCurve*: _GSetAppendSortedSet, \
+    GSetShapoid*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
     GSetVecFloat*: _GSetAppendSortedSet, \
@@ -989,6 +1112,9 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetSCurve*: _Generic(AppendSet, \
     GSetSCurve*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
+  GSetShapoid*: _Generic(AppendSet, \
+    GSetShapoid*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
 
@@ -998,6 +1124,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetSwitch, \
   GSetBCurve*: _GSetSwitch, \
   GSetSCurve*: _GSetSwitch, \
+  GSetShapoid*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -1006,6 +1133,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetMoveElem, \
   GSetBCurve*: _GSetMoveElem, \
   GSetSCurve*: _GSetMoveElem, \
+  GSetShapoid*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
@@ -1014,6 +1142,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetIterForwardCreate, \
   GSetBCurve*: _GSetIterForwardCreate, \
   GSetSCurve*: _GSetIterForwardCreate, \
+  GSetShapoid*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -1022,6 +1151,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetIterForwardCreateStatic, \
   GSetBCurve*: _GSetIterForwardCreateStatic, \
   GSetSCurve*: _GSetIterForwardCreateStatic, \
+  GSetShapoid*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -1030,6 +1160,7 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetIterBackwardCreate, \
   GSetBCurve*: _GSetIterBackwardCreate, \
   GSetSCurve*: _GSetIterBackwardCreate, \
+  GSetShapoid*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -1038,8 +1169,28 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetVecShort*: _GSetIterBackwardCreateStatic, \
   GSetBCurve*: _GSetIterBackwardCreateStatic, \
   GSetSCurve*: _GSetIterBackwardCreateStatic, \
+  GSetShapoid*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
+#define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
+  GSetIterForward*: _Generic(Set, \
+    GSet*: GSetIterForwardSetGSet, \
+    GSetVecFloat*: GSetIterForwardSetGSet, \
+    GSetVecShort*: GSetIterForwardSetGSet, \
+    GSetBCurve*: GSetIterForwardSetGSet, \
+    GSetSCurve*: GSetIterForwardSetGSet, \
+    GSetShapoid*: GSetIterForwardSetGSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetIterBackward*: _Generic(Set, \
+    GSet*: GSetIterBackwardSetGSet, \
+    GSetVecFloat*: GSetIterBackwardSetGSet, \
+    GSetVecShort*: GSetIterBackwardSetGSet, \
+    GSetBCurve*: GSetIterBackwardSetGSet, \
+    GSetSCurve*: GSetIterBackwardSetGSet, \
+    GSetShapoid*: GSetIterBackwardSetGSet, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
+
 #define GSetIterFree(IterRef) _Generic(IterRef, \
   GSetIterForward**: GSetIterForwardFree, \
   GSetIterBackward**: GSetIterBackwardFree, \
@@ -1074,23 +1225,6 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   GSetIterForward*: GSetIterForwardIsLast, \
   GSetIterBackward*: GSetIterBackwardIsLast, \
   default: PBErrInvalidPolymorphism)(Iter)
-
-#define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
-  GSetIterForward*: _Generic(Set, \
-    GSet*: GSetIterForwardSetGSet, \
-    GSetVecFloat*: GSetIterForwardSetGSet, \
-    GSetVecShort*: GSetIterForwardSetGSet, \
-    GSetBCurve*: GSetIterForwardSetGSet, \
-    GSetSCurve*: GSetIterForwardSetGSet, \
-    default: PBErrInvalidPolymorphism), \
-  GSetIterBackward*: _Generic(Set, \
-    GSet*: GSetIterBackwardSetGSet, \
-    GSetVecFloat*: GSetIterBackwardSetGSet, \
-    GSetVecShort*: GSetIterBackwardSetGSet, \
-    GSetBCurve*: GSetIterBackwardSetGSet, \
-    GSetSCurve*: GSetIterBackwardSetGSet, \
-    default: PBErrInvalidPolymorphism), \
-  default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
 #define GSetIterGet(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGet, \
