@@ -483,11 +483,46 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
   GSetElem** elem)
   {return (VecFloat*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef VecShort
+  typedef struct VecShort VecShort;
+#endif
+#ifndef VecShort2D
+  typedef struct VecShort2D VecShort2D;
+#endif
+#ifndef VecShort3D
+  typedef struct VecShort3D VecShort3D;
+#endif
+#ifndef VecShort4D
+  typedef struct VecShort4D VecShort4D;
+#endif
+typedef struct GSetVecShort {GSet _set;} GSetVecShort;
+#define GSetVecShortCreate() ((GSetVecShort*)GSetCreate())
+inline GSetVecShort GSetVecShortCreateStatic(void) 
+  {GSetVecShort ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetVecShort* GSetVecShortClone(GSetVecShort* that)
+  {return (GSetVecShort*)GSetClone((GSet*)that);}
+inline VecShort* _GSetVecShortGet(GSetVecShort* that, int iElem)
+  {return (VecShort*)_GSetGet((GSet*)that, iElem);}
+inline VecShort* _GSetVecShortGetFirst(GSetVecShort* that)
+  {return (VecShort*)_GSetGetFirst((GSet*)that);}
+inline VecShort* _GSetVecShortGetLast(GSetVecShort* that)
+  {return (VecShort*)_GSetGetLast((GSet*)that);}
+inline VecShort* _GSetVecShortPop(GSetVecShort* that)
+  {return (VecShort*)_GSetPop((GSet*)that);}
+inline VecShort* _GSetVecShortDrop(GSetVecShort* that)
+  {return (VecShort*)_GSetDrop((GSet*)that);}
+inline VecShort* _GSetVecShortRemove(GSetVecShort* that, int iElem)
+  {return (VecShort*)_GSetRemove((GSet*)that, iElem);}
+inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that, 
+  GSetElem** elem)
+  {return (VecShort*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
   GSet**: _GSetFree, \
   GSetVecFloat**: _GSetFree, \
+  GSetVecShort**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -497,6 +532,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat*: _GSetPush, \
     VecFloat2D*: _GSetPush, \
     VecFloat3D*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetPush, \
+    VecShort2D*: _GSetPush, \
+    VecShort3D*: _GSetPush, \
+    VecShort4D*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -508,6 +549,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetAddSort, \
     VecFloat3D*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetAddSort, \
+    VecShort2D*: _GSetAddSort, \
+    VecShort3D*: _GSetAddSort, \
+    VecShort4D*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -517,6 +564,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat*: _GSetInsert, \
     VecFloat2D*: _GSetInsert, \
     VecFloat3D*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetInsert, \
+    VecShort2D*: _GSetInsert, \
+    VecShort3D*: _GSetInsert, \
+    VecShort4D*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -528,6 +581,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetAppend, \
     VecFloat3D*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetAppend, \
+    VecShort2D*: _GSetAppend, \
+    VecShort3D*: _GSetAppend, \
+    VecShort4D*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -537,6 +596,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat*: _GSetRemoveFirst, \
     VecFloat2D*: _GSetRemoveFirst, \
     VecFloat3D*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetRemoveFirst, \
+    VecShort2D*: _GSetRemoveFirst, \
+    VecShort3D*: _GSetRemoveFirst, \
+    VecShort4D*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -548,6 +613,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetRemoveLast, \
     VecFloat3D*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetRemoveLast, \
+    VecShort2D*: _GSetRemoveLast, \
+    VecShort3D*: _GSetRemoveLast, \
+    VecShort4D*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -557,6 +628,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat*: _GSetRemoveAll, \
     VecFloat2D*: _GSetRemoveAll, \
     VecFloat3D*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetRemoveAll, \
+    VecShort2D*: _GSetRemoveAll, \
+    VecShort3D*: _GSetRemoveAll, \
+    VecShort4D*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -568,6 +645,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetGetIndexFirst, \
     VecFloat3D*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetIndexFirst, \
+    VecShort2D*: _GSetGetIndexFirst, \
+    VecShort3D*: _GSetGetIndexFirst, \
+    VecShort4D*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -577,6 +660,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat*: _GSetGetIndexLast, \
     VecFloat2D*: _GSetGetIndexLast, \
     VecFloat3D*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetIndexLast, \
+    VecShort2D*: _GSetGetIndexLast, \
+    VecShort3D*: _GSetGetIndexLast, \
+    VecShort4D*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -588,6 +677,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetGetFirstElem, \
     VecFloat3D*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetFirstElem, \
+    VecShort2D*: _GSetGetFirstElem, \
+    VecShort3D*: _GSetGetFirstElem, \
+    VecShort4D*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -598,76 +693,101 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
     VecFloat2D*: _GSetGetLastElem, \
     VecFloat3D*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetLastElem, \
+    VecShort2D*: _GSetGetLastElem, \
+    VecShort3D*: _GSetGetLastElem, \
+    VecShort4D*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
   GSet*: _GSetPrint, \
   GSetVecFloat*: _GSetPrint, \
+  GSetVecShort*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
   GSet*: _GSetFlush, \
   GSetVecFloat*: _GSetFlush, \
+  GSetVecShort*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
   GSet*: _GSetNbElem, \
   GSetVecFloat*: _GSetNbElem, \
+  GSetVecShort*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
   GSet*: _GSetPop, \
   GSetVecFloat*: _GSetVecFloatPop, \
+  GSetVecShort*: _GSetVecFloatPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
   GSet*: _GSetDrop, \
   GSetVecFloat*: _GSetVecFloatDrop, \
+  GSetVecShort*: _GSetVecFloatDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
   GSet*: _GSetRemove, \
   GSetVecFloat*: _GSetVecFloatRemove, \
+  GSetVecShort*: _GSetVecFloatRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
   GSet*: _GSetRemoveElem, \
   GSetVecFloat*: _GSetVecFloatRemoveElem, \
+  GSetVecShort*: _GSetVecFloatRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
   GSet*: _GSetGet, \
   GSetVecFloat*: _GSetVecFloatGet, \
+  GSetVecShort*: _GSetVecFloatGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
   GSet*: _GSetGetFirst, \
   GSetVecFloat*: _GSetVecFloatGetFirst, \
+  GSetVecShort*: _GSetVecFloatGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
   GSet*: _GSetGetLast, \
   GSetVecFloat*: _GSetVecFloatGetLast, \
+  GSetVecShort*: _GSetVecFloatGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
   GSet*: _GSetGetElem, \
   GSetVecFloat*: _GSetGetElem, \
+  GSetVecShort*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
   GSet*: _GSetSort, \
   GSetVecFloat*: _GSetSort, \
+  GSetVecShort*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
   GSet*: _Generic(MergedSet, \
     GSet*: _GSetMerge, \
     GSetVecFloat*: _GSetMerge, \
+    GSetVecShort*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(MergedSet, \
     GSet*: _GSetMerge, \
     GSetVecFloat*: _GSetMerge, \
+    GSetVecShort*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(MergedSet, \
+    GSet*: _GSetMerge, \
+    GSetVecFloat*: _GSetMerge, \
+    GSetVecShort*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
@@ -675,16 +795,24 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
 #define GSetSplit(Set, Elem) _Generic(Set, \
   GSet*: _GSetSplit, \
   GSetVecFloat*: _GSetSplit, \
+  GSetVecShort*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
   GSet*: _Generic(AppendSet, \
     GSet*: _GSetAppendSet, \
     GSetVecFloat*: _GSetAppendSet, \
+    GSetVecShort*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
     GSet*: _GSetAppendSet, \
     GSetVecFloat*: _GSetAppendSet, \
+    GSetVecShort*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSet, \
+    GSetVecFloat*: _GSetAppendSet, \
+    GSetVecShort*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -693,10 +821,17 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
   GSet*: _Generic(AppendSet, \
     GSet*: _GSetAppendSortedSet, \
     GSetVecFloat*: _GSetAppendSortedSet, \
+    GSetVecShort*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   GSetVecFloat*: _Generic(AppendSet, \
     GSet*: _GSetAppendSortedSet, \
     GSetVecFloat*: _GSetAppendSortedSet, \
+    GSetVecShort*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetVecShort*: _Generic(AppendSet, \
+    GSet*: _GSetAppendSortedSet, \
+    GSetVecFloat*: _GSetAppendSortedSet, \
+    GSetVecShort*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -704,31 +839,37 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
 #define GSetSwitch(Set, PosA, PosB) _Generic(Set, \
   GSet*: _GSetSwitch, \
   GSetVecFloat*: _GSetSwitch, \
+  GSetVecShort*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
   GSet*: _GSetMoveElem, \
   GSetVecFloat*: _GSetMoveElem, \
+  GSetVecShort*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreate, \
   GSetVecFloat*: _GSetIterForwardCreate, \
+  GSetVecShort*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreateStatic, \
   GSetVecFloat*: _GSetIterForwardCreateStatic, \
+  GSetVecShort*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreate, \
   GSetVecFloat*: _GSetIterBackwardCreate, \
+  GSetVecShort*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreateStatic, \
   GSetVecFloat*: _GSetIterBackwardCreateStatic, \
+  GSetVecShort*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterFree(IterRef) _Generic(IterRef, \
