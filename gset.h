@@ -600,12 +600,12 @@ inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that,
 #define GSetPop(Set) _Generic(Set, \
   GSet*: _GSetPop, \
   GSetVecFloat*: _GSetVecFloatPop, \
-  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
   GSet*: _GSetDrop, \
   GSetVecFloat*: _GSetVecFloatDrop, \
-  default: PBErrInvalidPolymorphism)((GSet*)(Set))
+  default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
   GSet*: _GSetRemove, \
