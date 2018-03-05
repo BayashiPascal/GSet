@@ -953,7 +953,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetVecShort*: _GSetVecShortPop, \
   GSetBCurve*: _GSetBCurvePop, \
   GSetSCurve*: _GSetSCurvePop, \
-  GSetShapoid*: _GSetSCurvePop, \
+  GSetShapoid*: _GSetShapoidPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
