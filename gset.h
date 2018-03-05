@@ -1076,9 +1076,21 @@ inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that,
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
-  GSetIterForward*: GSetIterForwardSetGSet, \
-  GSetIterBackward*: GSetIterBackwardSetGSet, \
-  default: PBErrInvalidPolymorphism)(Iter, Set)
+  GSetIterForward*: _Generic(Set, \
+    GSet*: GSetIterForwardSetGSet, \
+    GSetVecFloat*: GSetIterForwardSetGSet, \
+    GSetVecShort*: GSetIterForwardSetGSet, \
+    GSetBCurve*: GSetIterForwardSetGSet, \
+    GSetSCurve*: GSetIterForwardSetGSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetIterBackward*: _Generic(Set, \
+    GSet*: GSetIterBackwardSetGSet, \
+    GSetVecFloat*: GSetIterBackwardSetGSet, \
+    GSetVecShort*: GSetIterBackwardSetGSet, \
+    GSetBCurve*: GSetIterBackwardSetGSet, \
+    GSetSCurve*: GSetIterBackwardSetGSet, \
+    default: PBErrInvalidPolymorphism), \
+  default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
 #define GSetIterGet(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGet, \
