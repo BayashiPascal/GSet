@@ -347,6 +347,32 @@ void _GSetMoveElem(GSet* that, int iElem, int pos) {
   elem->_sortVal = sortVal;
 }
 
+// Return the number of (GSetElem._data=='data') in the GSet 'that'
+int _GSetCount(GSet* that, void* data) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Declare a variable to memorize the result
+  int nb = 0;
+  // If the set is not empty
+  if (GSetNbElem(that) > 0) {
+    // Loop on the set's elements
+    GSetIterForward iter = GSetIterForwardCreateStatic(that);
+    do {
+      // If the current element's data is the searched data
+      if (GSetIterGet(&iter) == data)
+        // Increment the result
+        ++nb;
+    } while (GSetIterStep(&iter));
+  }
+  // return the result
+  return nb;
+}
+
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
 GSetIterForward* _GSetIterForwardCreate(GSet* set) {

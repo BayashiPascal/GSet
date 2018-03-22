@@ -533,6 +533,22 @@ void UnitTestGSetMergeSet() {
   printf("UnitTestGSetMergeSet OK\n");
 }
 
+void UnitTestGSetCount() {
+  int a[5] = {1, 2, 3, 4, 5};
+  GSet set = GSetCreateStatic();
+  for (int i = 5; i--;)
+    for (int j = i; j--;)
+      GSetPush(&set, a + i);
+  for (int i = 5; i--;)
+    if (GSetCount(&set, a + i) != i) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetCount NOK");
+      PBErrCatch(GSetErr);
+    }
+  GSetFlush(&set);
+  printf("UnitTestGSetMergeSet OK\n");
+}
+
 void UnitTestGSet() {
   UnitTestGSetCreateFree();
   UnitTestGSetClone();
@@ -548,6 +564,7 @@ void UnitTestGSet() {
   UnitTestGSetSwitch();
   UnitTestGSetMoveElem();
   UnitTestGSetMergeSet();
+  UnitTestGSetCount();
   printf("UnitTestGSet OK\n");
 }
 

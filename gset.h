@@ -21,6 +21,7 @@ typedef struct GSetElem {
   // Pointer toward the previous element in the GSet
   struct GSetElem* _prev;
   // Value to sort element in the GSet, 0.0 by default
+  // Sorting in increasing value of _sortVal
   float _sortVal;
 } GSetElem;
 
@@ -268,6 +269,9 @@ void _GSetAppendSortedSet(GSet* that, GSet* set);
 inline
 #endif 
 void _GSetSwitch(GSet* that, int iElem, int jElem);
+
+// Return the number of (GSetElem._data=='data') in the GSet 'that'
+int _GSetCount(GSet* that, void* data);
 
 // Set the sort value of the GSetElem 'that' to 'v'
 #if BUILDMODE != 0
@@ -1135,6 +1139,15 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetSCurve*: _GSetMoveElem, \
   GSetShapoid*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
+
+#define GSetCount(Set, Data) _Generic(Set, \
+  GSet*: _GSetCount, \
+  GSetVecFloat*: _GSetCount, \
+  GSetVecShort*: _GSetCount, \
+  GSetBCurve*: _GSetCount, \
+  GSetSCurve*: _GSetCount, \
+  GSetShapoid*: _GSetCount, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreate, \
