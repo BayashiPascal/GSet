@@ -605,6 +605,33 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetElem** elem)
   {return (Shapoid*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef KnapSackPod
+  typedef struct KnapSackPod KnapSackPod;
+#endif
+typedef struct GSetKnapSackPod {GSet _set;} GSetKnapSackPod;
+#define GSetKnapSackPodCreate() ((GSetKnapSackPod*)GSetCreate())
+inline GSetKnapSackPod GSetKnapSackPodCreateStatic(void) 
+  {GSetKnapSackPod ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetKnapSackPod* GSetKnapSackPodClone(GSetKnapSackPod* that)
+  {return (GSetKnapSackPod*)GSetClone((GSet*)that);}
+inline KnapSackPod* _GSetKnapSackPodGet(GSetKnapSackPod* that, 
+  int iElem)
+  {return (KnapSackPod*)_GSetGet((GSet*)that, iElem);}
+inline KnapSackPod* _GSetKnapSackPodGetFirst(GSetKnapSackPod* that)
+  {return (KnapSackPod*)_GSetGetFirst((GSet*)that);}
+inline KnapSackPod* _GSetKnapSackPodGetLast(GSetKnapSackPod* that)
+  {return (KnapSackPod*)_GSetGetLast((GSet*)that);}
+inline KnapSackPod* _GSetKnapSackPodPop(GSetKnapSackPod* that)
+  {return (KnapSackPod*)_GSetPop((GSet*)that);}
+inline KnapSackPod* _GSetKnapSackPodDrop(GSetKnapSackPod* that)
+  {return (KnapSackPod*)_GSetDrop((GSet*)that);}
+inline KnapSackPod* _GSetKnapSackPodRemove(GSetKnapSackPod* that, 
+  int iElem)
+  {return (KnapSackPod*)_GSetRemove((GSet*)that, iElem);}
+inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that, 
+  GSetElem** elem)
+  {return (KnapSackPod*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
@@ -614,6 +641,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve**: _GSetFree, \
   GSetSCurve**: _GSetFree, \
   GSetShapoid**: _GSetFree, \
+  GSetKnapSackPod**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -641,6 +669,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Facoid*: _GSetPush, \
     Pyramidoid*: _GSetPush, \
     Spheroid*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -670,6 +701,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetAddSort, \
     Spheroid*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -697,6 +731,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Facoid*: _GSetInsert, \
     Pyramidoid*: _GSetInsert, \
     Spheroid*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -726,6 +763,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetAppend, \
     Spheroid*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -753,6 +793,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Facoid*: _GSetRemoveFirst, \
     Pyramidoid*: _GSetRemoveFirst, \
     Spheroid*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -782,6 +825,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetRemoveLast, \
     Spheroid*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -809,6 +855,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Facoid*: _GSetRemoveAll, \
     Pyramidoid*: _GSetRemoveAll, \
     Spheroid*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -838,6 +887,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetGetIndexFirst, \
     Spheroid*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -865,6 +917,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Facoid*: _GSetGetIndexLast, \
     Pyramidoid*: _GSetGetIndexLast, \
     Spheroid*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -894,6 +949,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetGetFirstElem, \
     Spheroid*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -922,6 +980,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     Pyramidoid*: _GSetGetLastElem, \
     Spheroid*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
@@ -931,6 +992,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetPrint, \
   GSetSCurve*: _GSetPrint, \
   GSetShapoid*: _GSetPrint, \
+  GSetKnapSackPod*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -940,6 +1002,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetFlush, \
   GSetSCurve*: _GSetFlush, \
   GSetShapoid*: _GSetFlush, \
+  GSetKnapSackPod*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -949,6 +1012,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetNbElem, \
   GSetSCurve*: _GSetNbElem, \
   GSetShapoid*: _GSetNbElem, \
+  GSetKnapSackPod*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -958,6 +1022,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurvePop, \
   GSetSCurve*: _GSetSCurvePop, \
   GSetShapoid*: _GSetShapoidPop, \
+  GSetKnapSackPod*: _GSetShapoidPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -967,6 +1032,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveDrop, \
   GSetSCurve*: _GSetSCurveDrop, \
   GSetShapoid*: _GSetSCurveDrop, \
+  GSetKnapSackPod*: _GSetSCurveDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -976,6 +1042,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveRemove, \
   GSetSCurve*: _GSetSCurveRemove, \
   GSetShapoid*: _GSetSCurveRemove, \
+  GSetKnapSackPod*: _GSetSCurveRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -985,6 +1052,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveRemoveElem, \
   GSetSCurve*: _GSetSCurveRemoveElem, \
   GSetShapoid*: _GSetSCurveRemoveElem, \
+  GSetKnapSackPod*: _GSetSCurveRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -994,6 +1062,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveGet, \
   GSetSCurve*: _GSetSCurveGet, \
   GSetShapoid*: _GSetSCurveGet, \
+  GSetKnapSackPod*: _GSetSCurveGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -1003,6 +1072,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveGetFirst, \
   GSetSCurve*: _GSetSCurveGetFirst, \
   GSetShapoid*: _GSetSCurveGetFirst, \
+  GSetKnapSackPod*: _GSetSCurveGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -1012,6 +1082,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetBCurveGetLast, \
   GSetSCurve*: _GSetSCurveGetLast, \
   GSetShapoid*: _GSetSCurveGetLast, \
+  GSetKnapSackPod*: _GSetSCurveGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
@@ -1021,6 +1092,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetGetElem, \
   GSetSCurve*: _GSetGetElem, \
   GSetShapoid*: _GSetGetElem, \
+  GSetKnapSackPod*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1030,6 +1102,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetSort, \
   GSetSCurve*: _GSetSort, \
   GSetShapoid*: _GSetSort, \
+  GSetKnapSackPod*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -1056,6 +1129,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetShapoid*: _Generic(MergedSet, \
     GSetShapoid*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(MergedSet, \
+    GSetKnapSackPod*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
 
@@ -1066,6 +1142,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetSplit, \
   GSetSCurve*: _GSetSplit, \
   GSetShapoid*: _GSetSplit, \
+  GSetKnapSackPod*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -1091,6 +1168,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(AppendSet, \
     GSetShapoid*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(AppendSet, \
+    GSetKnapSackPod*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -1119,6 +1199,9 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetShapoid*: _Generic(AppendSet, \
     GSetShapoid*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
+  GSetKnapSackPod*: _Generic(AppendSet, \
+    GSetKnapSackPod*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
 
@@ -1129,6 +1212,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetSwitch, \
   GSetSCurve*: _GSetSwitch, \
   GSetShapoid*: _GSetSwitch, \
+  GSetKnapSackPod*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -1138,6 +1222,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetMoveElem, \
   GSetSCurve*: _GSetMoveElem, \
   GSetShapoid*: _GSetMoveElem, \
+  GSetKnapSackPod*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetCount(Set, Data) _Generic(Set, \
@@ -1147,6 +1232,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetCount, \
   GSetSCurve*: _GSetCount, \
   GSetShapoid*: _GSetCount, \
+  GSetKnapSackPod*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
@@ -1156,6 +1242,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetIterForwardCreate, \
   GSetSCurve*: _GSetIterForwardCreate, \
   GSetShapoid*: _GSetIterForwardCreate, \
+  GSetKnapSackPod*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -1165,6 +1252,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetIterForwardCreateStatic, \
   GSetSCurve*: _GSetIterForwardCreateStatic, \
   GSetShapoid*: _GSetIterForwardCreateStatic, \
+  GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -1174,6 +1262,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetIterBackwardCreate, \
   GSetSCurve*: _GSetIterBackwardCreate, \
   GSetShapoid*: _GSetIterBackwardCreate, \
+  GSetKnapSackPod*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -1183,6 +1272,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
   GSetBCurve*: _GSetIterBackwardCreateStatic, \
   GSetSCurve*: _GSetIterBackwardCreateStatic, \
   GSetShapoid*: _GSetIterBackwardCreateStatic, \
+  GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
@@ -1193,6 +1283,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     GSetBCurve*: GSetIterForwardSetGSet, \
     GSetSCurve*: GSetIterForwardSetGSet, \
     GSetShapoid*: GSetIterForwardSetGSet, \
+    GSetKnapSackPod*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
@@ -1201,6 +1292,7 @@ inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that,
     GSetBCurve*: GSetIterBackwardSetGSet, \
     GSetSCurve*: GSetIterBackwardSetGSet, \
     GSetShapoid*: GSetIterBackwardSetGSet, \
+    GSetKnapSackPod*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
