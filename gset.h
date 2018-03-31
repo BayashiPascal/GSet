@@ -1061,8 +1061,8 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetVecShort*: _GSetVecShortGet, \
   GSetBCurve*: _GSetBCurveGet, \
   GSetSCurve*: _GSetSCurveGet, \
-  GSetShapoid*: _GSetSCurveGet, \
-  GSetKnapSackPod*: _GSetSCurveGet, \
+  GSetShapoid*: _GSetShapoidGet, \
+  GSetKnapSackPod*: _GSetKnapSackPodGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
