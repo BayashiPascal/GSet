@@ -1135,7 +1135,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetSCurve*: _GSetSCurveGet, \
   GSetShapoid*: _GSetShapoidGet, \
   GSetKnapSackPod*: _GSetKnapSackPodGet, \
-  GSetPBPhysParticle*: _GSetKnapSackPodGet, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -1144,9 +1144,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetVecShort*: _GSetVecShortGetFirst, \
   GSetBCurve*: _GSetBCurveGetFirst, \
   GSetSCurve*: _GSetSCurveGetFirst, \
-  GSetShapoid*: _GSetSCurveGetFirst, \
-  GSetKnapSackPod*: _GSetSCurveGetFirst, \
-  GSetPBPhysParticle*: _GSetSCurveGetFirst, \
+  GSetShapoid*: _GSetShapoidGetFirst, \
+  GSetKnapSackPod*: _GSetKnapSackPodGetFirst, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -1155,9 +1155,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetVecShort*: _GSetVecShortGetLast, \
   GSetBCurve*: _GSetBCurveGetLast, \
   GSetSCurve*: _GSetSCurveGetLast, \
-  GSetShapoid*: _GSetSCurveGetLast, \
-  GSetKnapSackPod*: _GSetSCurveGetLast, \
-  GSetPBPhysParticle*: _GSetSCurveGetLast, \
+  GSetShapoid*: _GSetShapoidGetLast, \
+  GSetKnapSackPod*: _GSetKnapSackPodGetLast, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
