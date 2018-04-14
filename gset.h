@@ -1090,8 +1090,8 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetBCurve*: _GSetBCurvePop, \
   GSetSCurve*: _GSetSCurvePop, \
   GSetShapoid*: _GSetShapoidPop, \
-  GSetKnapSackPod*: _GSetShapoidPop, \
-  GSetPBPhysParticle*: _GSetShapoidPop, \
+  GSetKnapSackPod*: _GSetKnapSackPodPop, \
+  GSetPBPhysParticle*: _GSetPBPhysParticlePop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1100,9 +1100,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetVecShort*: _GSetVecShortDrop, \
   GSetBCurve*: _GSetBCurveDrop, \
   GSetSCurve*: _GSetSCurveDrop, \
-  GSetShapoid*: _GSetSCurveDrop, \
-  GSetKnapSackPod*: _GSetSCurveDrop, \
-  GSetPBPhysParticle*: _GSetSCurveDrop, \
+  GSetShapoid*: _GSetShapoidDrop, \
+  GSetKnapSackPod*: _GSetKnapSackPodDrop, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1111,9 +1111,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetVecShort*: _GSetVecShortRemove, \
   GSetBCurve*: _GSetBCurveRemove, \
   GSetSCurve*: _GSetSCurveRemove, \
-  GSetShapoid*: _GSetSCurveRemove, \
-  GSetKnapSackPod*: _GSetSCurveRemove, \
-  GSetPBPhysParticle*: _GSetSCurveRemove, \
+  GSetShapoid*: _GSetShapoidRemove, \
+  GSetKnapSackPod*: _GSetKnapSackPodRemove, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1122,9 +1122,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetVecShort*: _GSetVecShortRemoveElem, \
   GSetBCurve*: _GSetBCurveRemoveElem, \
   GSetSCurve*: _GSetSCurveRemoveElem, \
-  GSetShapoid*: _GSetSCurveRemoveElem, \
-  GSetKnapSackPod*: _GSetSCurveRemoveElem, \
-  GSetPBPhysParticle*: _GSetSCurveRemoveElem, \
+  GSetShapoid*: _GSetShapoidRemoveElem, \
+  GSetKnapSackPod*: _GSetKnapSackPodRemoveElem, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
