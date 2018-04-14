@@ -632,6 +632,37 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetElem** elem)
   {return (KnapSackPod*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef PBPhysParticle
+  typedef struct PBPhysParticle PBPhysParticle;
+#endif
+typedef struct GSetPBPhysParticle {GSet _set;} GSetPBPhysParticle;
+#define GSetPBPhysParticleCreate() ((GSetPBPhysParticle*)GSetCreate())
+inline GSetPBPhysParticle GSetPBPhysParticleCreateStatic(void) 
+  {GSetPBPhysParticle ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetPBPhysParticle* GSetPBPhysParticleClone(
+  GSetPBPhysParticle* that)
+  {return (GSetPBPhysParticle*)GSetClone((GSet*)that);}
+inline PBPhysParticle* _GSetPBPhysParticleGet(GSetPBPhysParticle* that, 
+  int iElem)
+  {return (PBPhysParticle*)_GSetGet((GSet*)that, iElem);}
+inline PBPhysParticle* _GSetPBPhysParticleGetFirst(
+  GSetPBPhysParticle* that)
+  {return (PBPhysParticle*)_GSetGetFirst((GSet*)that);}
+inline PBPhysParticle* _GSetPBPhysParticleGetLast(
+  GSetPBPhysParticle* that)
+  {return (PBPhysParticle*)_GSetGetLast((GSet*)that);}
+inline PBPhysParticle* _GSetPBPhysParticlePop(GSetPBPhysParticle* that)
+  {return (PBPhysParticle*)_GSetPop((GSet*)that);}
+inline PBPhysParticle* _GSetPBPhysParticleDrop(GSetPBPhysParticle* that)
+  {return (PBPhysParticle*)_GSetDrop((GSet*)that);}
+inline 
+PBPhysParticle* _GSetPBPhysParticleRemove(GSetPBPhysParticle* that, 
+  int iElem)
+  {return (PBPhysParticle*)_GSetRemove((GSet*)that, iElem);}
+inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
+  GSetPBPhysParticle* that, GSetElem** elem)
+  {return (PBPhysParticle*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
@@ -642,6 +673,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve**: _GSetFree, \
   GSetShapoid**: _GSetFree, \
   GSetKnapSackPod**: _GSetFree, \
+  GSetPBPhysParticle**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -672,6 +704,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -704,6 +739,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -734,6 +772,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -766,6 +807,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -796,6 +840,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -828,6 +875,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -858,6 +908,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -890,6 +943,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -920,6 +976,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -952,6 +1011,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -983,6 +1045,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
@@ -993,6 +1058,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetPrint, \
   GSetShapoid*: _GSetPrint, \
   GSetKnapSackPod*: _GSetPrint, \
+  GSetPBPhysParticle*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -1003,6 +1069,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetFlush, \
   GSetShapoid*: _GSetFlush, \
   GSetKnapSackPod*: _GSetFlush, \
+  GSetPBPhysParticle*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -1013,6 +1080,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetNbElem, \
   GSetShapoid*: _GSetNbElem, \
   GSetKnapSackPod*: _GSetNbElem, \
+  GSetPBPhysParticle*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -1023,6 +1091,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurvePop, \
   GSetShapoid*: _GSetShapoidPop, \
   GSetKnapSackPod*: _GSetShapoidPop, \
+  GSetPBPhysParticle*: _GSetShapoidPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1033,6 +1102,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveDrop, \
   GSetShapoid*: _GSetSCurveDrop, \
   GSetKnapSackPod*: _GSetSCurveDrop, \
+  GSetPBPhysParticle*: _GSetSCurveDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1043,6 +1113,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveRemove, \
   GSetShapoid*: _GSetSCurveRemove, \
   GSetKnapSackPod*: _GSetSCurveRemove, \
+  GSetPBPhysParticle*: _GSetSCurveRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1053,6 +1124,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveRemoveElem, \
   GSetShapoid*: _GSetSCurveRemoveElem, \
   GSetKnapSackPod*: _GSetSCurveRemoveElem, \
+  GSetPBPhysParticle*: _GSetSCurveRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -1063,6 +1135,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveGet, \
   GSetShapoid*: _GSetShapoidGet, \
   GSetKnapSackPod*: _GSetKnapSackPodGet, \
+  GSetPBPhysParticle*: _GSetKnapSackPodGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -1073,6 +1146,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveGetFirst, \
   GSetShapoid*: _GSetSCurveGetFirst, \
   GSetKnapSackPod*: _GSetSCurveGetFirst, \
+  GSetPBPhysParticle*: _GSetSCurveGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -1083,6 +1157,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSCurveGetLast, \
   GSetShapoid*: _GSetSCurveGetLast, \
   GSetKnapSackPod*: _GSetSCurveGetLast, \
+  GSetPBPhysParticle*: _GSetSCurveGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
@@ -1093,6 +1168,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetGetElem, \
   GSetShapoid*: _GSetGetElem, \
   GSetKnapSackPod*: _GSetGetElem, \
+  GSetPBPhysParticle*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1103,6 +1179,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSort, \
   GSetShapoid*: _GSetSort, \
   GSetKnapSackPod*: _GSetSort, \
+  GSetPBPhysParticle*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -1132,6 +1209,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(MergedSet, \
     GSetKnapSackPod*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(MergedSet, \
+    GSetPBPhysParticle*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
 
@@ -1143,6 +1223,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSplit, \
   GSetShapoid*: _GSetSplit, \
   GSetKnapSackPod*: _GSetSplit, \
+  GSetPBPhysParticle*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -1171,6 +1252,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(AppendSet, \
     GSetKnapSackPod*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(AppendSet, \
+    GSetPBPhysParticle*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -1202,6 +1286,9 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetKnapSackPod*: _Generic(AppendSet, \
     GSetKnapSackPod*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
+  GSetPBPhysParticle*: _Generic(AppendSet, \
+    GSetPBPhysParticle*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
 
@@ -1213,6 +1300,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetSwitch, \
   GSetShapoid*: _GSetSwitch, \
   GSetKnapSackPod*: _GSetSwitch, \
+  GSetPBPhysParticle*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -1223,6 +1311,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetMoveElem, \
   GSetShapoid*: _GSetMoveElem, \
   GSetKnapSackPod*: _GSetMoveElem, \
+  GSetPBPhysParticle*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetCount(Set, Data) _Generic(Set, \
@@ -1233,6 +1322,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetCount, \
   GSetShapoid*: _GSetCount, \
   GSetKnapSackPod*: _GSetCount, \
+  GSetPBPhysParticle*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
@@ -1243,6 +1333,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetIterForwardCreate, \
   GSetShapoid*: _GSetIterForwardCreate, \
   GSetKnapSackPod*: _GSetIterForwardCreate, \
+  GSetPBPhysParticle*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -1253,6 +1344,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetIterForwardCreateStatic, \
   GSetShapoid*: _GSetIterForwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
+  GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -1263,6 +1355,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetIterBackwardCreate, \
   GSetShapoid*: _GSetIterBackwardCreate, \
   GSetKnapSackPod*: _GSetIterBackwardCreate, \
+  GSetPBPhysParticle*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -1273,6 +1366,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
   GSetSCurve*: _GSetIterBackwardCreateStatic, \
   GSetShapoid*: _GSetIterBackwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
+  GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
@@ -1284,6 +1378,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     GSetSCurve*: GSetIterForwardSetGSet, \
     GSetShapoid*: GSetIterForwardSetGSet, \
     GSetKnapSackPod*: GSetIterForwardSetGSet, \
+    GSetPBPhysParticle*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
@@ -1293,6 +1388,7 @@ inline KnapSackPod* _GSetKnapSackPodRemoveElem(GSetKnapSackPod* that,
     GSetSCurve*: GSetIterBackwardSetGSet, \
     GSetShapoid*: GSetIterBackwardSetGSet, \
     GSetKnapSackPod*: GSetIterBackwardSetGSet, \
+    GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
