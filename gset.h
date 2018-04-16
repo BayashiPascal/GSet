@@ -663,6 +663,37 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle* that, GSetElem** elem)
   {return (PBPhysParticle*)_GSetRemoveElem((GSet*)that, elem);}
 
+#ifndef GTree
+  typedef struct GTree GTree;
+#endif
+typedef struct GSetGTree {GSet _set;} GSetGTree;
+#define GSetGTreeCreate() ((GSetGTree*)GSetCreate())
+inline GSetGTree GSetGTreeCreateStatic(void) 
+  {GSetGTree ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetGTree* GSetGTreeClone(
+  GSetGTree* that)
+  {return (GSetGTree*)GSetClone((GSet*)that);}
+inline GTree* _GSetGTreeGet(GSetGTree* that, 
+  int iElem)
+  {return (GTree*)_GSetGet((GSet*)that, iElem);}
+inline GTree* _GSetGTreeGetFirst(
+  GSetGTree* that)
+  {return (GTree*)_GSetGetFirst((GSet*)that);}
+inline GTree* _GSetGTreeGetLast(
+  GSetGTree* that)
+  {return (GTree*)_GSetGetLast((GSet*)that);}
+inline GTree* _GSetGTreePop(GSetGTree* that)
+  {return (GTree*)_GSetPop((GSet*)that);}
+inline GTree* _GSetGTreeDrop(GSetGTree* that)
+  {return (GTree*)_GSetDrop((GSet*)that);}
+inline 
+GTree* _GSetGTreeRemove(GSetGTree* that, 
+  int iElem)
+  {return (GTree*)_GSetRemove((GSet*)that, iElem);}
+inline GTree* _GSetGTreeRemoveElem(
+  GSetGTree* that, GSetElem** elem)
+  {return (GTree*)_GSetRemoveElem((GSet*)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
@@ -674,6 +705,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid**: _GSetFree, \
   GSetKnapSackPod**: _GSetFree, \
   GSetPBPhysParticle**: _GSetFree, \
+  GSetGTree**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -707,6 +739,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -742,6 +777,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
 #define GSetInsert(Set, Data, Pos) _Generic(Set, \
@@ -775,6 +813,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -810,6 +851,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveFirst(Set, Data) _Generic(Set, \
@@ -843,6 +887,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -878,6 +925,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -911,6 +961,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -946,6 +999,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -979,6 +1035,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1014,6 +1073,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
@@ -1048,6 +1110,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
@@ -1059,6 +1124,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetPrint, \
   GSetKnapSackPod*: _GSetPrint, \
   GSetPBPhysParticle*: _GSetPrint, \
+  GSetGTree*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -1070,6 +1136,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetFlush, \
   GSetKnapSackPod*: _GSetFlush, \
   GSetPBPhysParticle*: _GSetFlush, \
+  GSetGTree*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -1081,6 +1148,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetNbElem, \
   GSetKnapSackPod*: _GSetNbElem, \
   GSetPBPhysParticle*: _GSetNbElem, \
+  GSetGTree*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -1092,6 +1160,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidPop, \
   GSetKnapSackPod*: _GSetKnapSackPodPop, \
   GSetPBPhysParticle*: _GSetPBPhysParticlePop, \
+  GSetGTree*: _GSetGTreePop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1103,6 +1172,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidDrop, \
   GSetKnapSackPod*: _GSetKnapSackPodDrop, \
   GSetPBPhysParticle*: _GSetPBPhysParticleDrop, \
+  GSetGTree*: _GSetGTreeDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1114,6 +1184,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidRemove, \
   GSetKnapSackPod*: _GSetKnapSackPodRemove, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemove, \
+  GSetGTree*: _GSetGTreeRemove, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1125,6 +1196,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidRemoveElem, \
   GSetKnapSackPod*: _GSetKnapSackPodRemoveElem, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemoveElem, \
+  GSetGTree*: _GSetGTreeRemoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -1136,6 +1208,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidGet, \
   GSetKnapSackPod*: _GSetKnapSackPodGet, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
+  GSetGTree*: _GSetGTreeGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -1147,6 +1220,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidGetFirst, \
   GSetKnapSackPod*: _GSetKnapSackPodGetFirst, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetFirst, \
+  GSetGTree*: _GSetGTreeGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -1158,6 +1232,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetShapoidGetLast, \
   GSetKnapSackPod*: _GSetKnapSackPodGetLast, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetLast, \
+  GSetGTree*: _GSetGTreeGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
@@ -1169,6 +1244,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetGetElem, \
   GSetKnapSackPod*: _GSetGetElem, \
   GSetPBPhysParticle*: _GSetGetElem, \
+  GSetGTree*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1180,6 +1256,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetSort, \
   GSetKnapSackPod*: _GSetSort, \
   GSetPBPhysParticle*: _GSetSort, \
+  GSetGTree*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -1212,6 +1289,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(MergedSet, \
     GSetPBPhysParticle*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(MergedSet, \
+    GSetGTree*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
 
@@ -1224,6 +1304,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetSplit, \
   GSetKnapSackPod*: _GSetSplit, \
   GSetPBPhysParticle*: _GSetSplit, \
+  GSetGTree*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -1255,6 +1336,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(AppendSet, \
     GSetPBPhysParticle*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(AppendSet, \
+    GSetGTree*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -1289,6 +1373,9 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle*: _Generic(AppendSet, \
     GSetPBPhysParticle*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
+  GSetGTree*: _Generic(AppendSet, \
+    GSetGTree*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
 
@@ -1301,6 +1388,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetSwitch, \
   GSetKnapSackPod*: _GSetSwitch, \
   GSetPBPhysParticle*: _GSetSwitch, \
+  GSetGTree*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -1312,6 +1400,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetMoveElem, \
   GSetKnapSackPod*: _GSetMoveElem, \
   GSetPBPhysParticle*: _GSetMoveElem, \
+  GSetGTree*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetCount(Set, Data) _Generic(Set, \
@@ -1323,6 +1412,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetCount, \
   GSetKnapSackPod*: _GSetCount, \
   GSetPBPhysParticle*: _GSetCount, \
+  GSetGTree*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
@@ -1334,6 +1424,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetIterForwardCreate, \
   GSetKnapSackPod*: _GSetIterForwardCreate, \
   GSetPBPhysParticle*: _GSetIterForwardCreate, \
+  GSetGTree*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -1345,6 +1436,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetIterForwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
+  GSetGTree*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -1356,6 +1448,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetIterBackwardCreate, \
   GSetKnapSackPod*: _GSetIterBackwardCreate, \
   GSetPBPhysParticle*: _GSetIterBackwardCreate, \
+  GSetGTree*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -1367,6 +1460,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetShapoid*: _GSetIterBackwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
+  GSetGTree*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
@@ -1379,6 +1473,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     GSetShapoid*: GSetIterForwardSetGSet, \
     GSetKnapSackPod*: GSetIterForwardSetGSet, \
     GSetPBPhysParticle*: GSetIterForwardSetGSet, \
+    GSetGTree*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
@@ -1389,6 +1484,7 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
     GSetShapoid*: GSetIterBackwardSetGSet, \
     GSetKnapSackPod*: GSetIterBackwardSetGSet, \
     GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
+    GSetGTree*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
