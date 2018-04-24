@@ -639,20 +639,23 @@ void UnitTestGSetIteratorForwardStepGetGetElem() {
   GSetIterStep(&iter);
   if (iter._curElem != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorForwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterStep NOK");
     PBErrCatch(GSetErr);
   }
   if (GSetIterGetElem(&iter) != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorForwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterGetElem NOK");
     PBErrCatch(GSetErr);
   }
   if (GSetIterGet(&iter) != a + 1) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorForwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterGet NOK");
+    PBErrCatch(GSetErr);
+  }
+  GSetIterStepBack(&iter);
+  if (iter._curElem != set._head) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetIterStepBack NOK");
     PBErrCatch(GSetErr);
   }
   GSetFlush(&set);
@@ -851,20 +854,23 @@ void UnitTestGSetIteratorBackwardStepGetGetElem() {
   GSetIterStep(&iter);
   if (iter._curElem != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorBackwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterStep NOK");
     PBErrCatch(GSetErr);
   }
   if (GSetIterGetElem(&iter) != elem) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorBackwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterGetElem NOK");
     PBErrCatch(GSetErr);
   }
   if (GSetIterGet(&iter) != a + 3) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, 
-      "UnitTestGSetIteratorBackwardStepGetGetElem NOK");
+    sprintf(GSetErr->_msg, "GSetIterGet NOK");
+    PBErrCatch(GSetErr);
+  }
+  GSetIterStepBack(&iter);
+  if (iter._curElem != set._tail) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetIterStepBack NOK");
     PBErrCatch(GSetErr);
   }
   GSetFlush(&set);

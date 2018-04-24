@@ -340,6 +340,22 @@ inline
 #endif 
 bool GSetIterBackwardStep(GSetIterBackward* that);
 
+// Step back the GSetIterForward
+// Return false if we couldn't step
+// Return true else
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterForwardStepBack(GSetIterForward* that);
+
+// Step back the GSetIterBackward
+// Return false if we couldn't step
+// Return true else
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterBackwardStepBack(GSetIterBackward* that);
+
 // Apply a function to all elements of the GSet of the GSetIterForward
 // The iterator is first reset, then the function is apply sequencially
 // using the Step function of the iterator
@@ -1506,6 +1522,11 @@ inline GTree* _GSetGTreeRemoveElem(
 #define GSetIterStep(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardStep, \
   GSetIterBackward*: GSetIterBackwardStep, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterStepBack(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardStepBack, \
+  GSetIterBackward*: GSetIterBackwardStepBack, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterApply(Iter, Fun, Param) _Generic(Iter, \

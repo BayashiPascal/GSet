@@ -400,7 +400,7 @@ GSetElem* _GSetGetElem(GSet* that, int iElem) {
     PBErrCatch(GSetErr);
   }
   if (iElem < 0 || iElem >= that->_nbElem) {
-    GSetErr->_type = PBErrTypeNullPointer;
+    GSetErr->_type = PBErrTypeInvalidArg;
     sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%d<%d)", 
       iElem, that->_nbElem);
     PBErrCatch(GSetErr);
@@ -804,6 +804,50 @@ bool GSetIterBackwardStep(GSetIterBackward* that) {
   return true;
 }
 
+// Step the GSetIterForward
+// Return false if arguments are invalid or we couldn't step
+// Return true else
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterForwardStepBack(GSetIterForward* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Step back
+  if (that->_curElem != NULL && that->_curElem->_prev != NULL)
+    that->_curElem = that->_curElem->_prev;
+  else
+    return false;
+  return true;
+}
+
+// Step the GSetIterBackward
+// Return false if arguments are invalid or we couldn't step
+// Return true else
+#if BUILDMODE != 0
+inline
+#endif 
+bool GSetIterBackwardStepBack(GSetIterBackward* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Step back
+  if (that->_curElem != NULL && that->_curElem->_next != NULL)
+    that->_curElem = that->_curElem->_next;
+  else
+    return false;
+  return true;
+}
+
 // Apply a function to all elements of the GSet of the GSetIterForward
 // The iterator is first reset, then the function is apply sequencially
 // using the Step function of the iterator
@@ -835,7 +879,7 @@ void GSetIterForwardApply(GSetIterForward* that,
     do {
       // Apply the user function
       fun(that->_curElem->_data, param);
-    } while (GSetIterStep(that) == true);
+    } while (GSetIterStep(that));
 }
 
 // Apply a function to all elements of the GSet of the GSetIterBackward
