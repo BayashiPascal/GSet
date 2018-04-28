@@ -1053,6 +1053,11 @@ void* GSetIterForwardGet(GSetIterForward* that) {
     sprintf(GSetErr->_msg, "'that' is null");
     PBErrCatch(GSetErr);
   }
+  if (that->_curElem == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that->_curElem' is null");
+    PBErrCatch(GSetErr);
+  }
 #endif
   // Return the data
   return that->_curElem->_data;
@@ -1067,6 +1072,11 @@ void* GSetIterBackwardGet(GSetIterBackward* that) {
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
     sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (that->_curElem == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that->_curElem' is null");
     PBErrCatch(GSetErr);
   }
 #endif
