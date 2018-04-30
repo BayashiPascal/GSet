@@ -1289,8 +1289,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodPop, \
   GSetPBPhysParticle*: _GSetPBPhysParticlePop, \
   GSetGTree*: _GSetGTreePop, \
-  GSetStr*: _GSetGTreePop, \
-  GSetGTreeStr*: _GSetGTreePop, \
+  GSetStr*: _GSetStrPop, \
+  GSetGTreeStr*: _GSetGTreeStrPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1303,8 +1303,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodDrop, \
   GSetPBPhysParticle*: _GSetPBPhysParticleDrop, \
   GSetGTree*: _GSetGTreeDrop, \
-  GSetStr*: _GSetGTreeDrop, \
-  GSetGTreeStr*: _GSetGTreeDrop, \
+  GSetStr*: _GSetStrDrop, \
+  GSetGTreeStr*: _GSetGTreeStrDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1317,8 +1317,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodRemove, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemove, \
   GSetGTree*: _GSetGTreeRemove, \
-  GSetStr*: _GSetGTreeRemove, \
-  GSetGTreeStr*: _GSetGTreeRemove, \
+  GSetStr*: _GSetStrRemove, \
+  GSetGTreeStr*: _GSetGTreeStrRemove, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1331,8 +1331,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodRemoveElem, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemoveElem, \
   GSetGTree*: _GSetGTreeRemoveElem, \
-  GSetStr*: _GSetGTreeRemoveElem, \
-  GSetGTreeStr*: _GSetGTreeRemoveElem, \
+  GSetStr*: _GSetStrRemoveElem, \
+  GSetGTreeStr*: _GSetGTreeStrRemoveElem, \
   default: PBErrInvalidPolymorphism)(Set, Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -1345,8 +1345,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodGet, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
   GSetGTree*: _GSetGTreeGet, \
-  GSetStr*: _GSetGTreeGet, \
-  GSetGTreeStr*: _GSetGTreeGet, \
+  GSetStr*: _GSetStrGet, \
+  GSetGTreeStr*: _GSetGTreeStrGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
@@ -1359,8 +1359,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodGetFirst, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetFirst, \
   GSetGTree*: _GSetGTreeGetFirst, \
-  GSetStr*: _GSetGTreeGetFirst, \
-  GSetGTreeStr*: _GSetGTreeGetFirst, \
+  GSetStr*: _GSetStrGetFirst, \
+  GSetGTreeStr*: _GSetGTreeStrGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
@@ -1373,8 +1373,8 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetKnapSackPod*: _GSetKnapSackPodGetLast, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetLast, \
   GSetGTree*: _GSetGTreeGetLast, \
-  GSetStr*: _GSetGTreeGetLast, \
-  GSetGTreeStr*: _GSetGTreeGetLast, \
+  GSetStr*: _GSetStrGetLast, \
+  GSetGTreeStr*: _GSetGTreeStrGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
