@@ -23,7 +23,7 @@ GSet* GSetCreate(void) {
 
 // Function to clone a GSet,
 // Return a pointer toward the new GSet
-GSet* GSetClone(GSet* that) {
+GSet* GSetClone(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -64,8 +64,9 @@ void _GSetFree(GSet** that) {
 // the elements, and print 'sep' between each element
 // If printData is null, print the pointer value instead
 // Do nothing if arguments are invalid
-void _GSetPrint(GSet* that, FILE* stream, 
-  void(*printData)(void* data, FILE* stream), char* sep) {
+void _GSetPrint(GSet* const that, FILE* const stream, 
+  void(*printData)(const void* const data, FILE* const stream), 
+  const char* const sep) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -110,7 +111,8 @@ void _GSetPrint(GSet* that, FILE* stream,
 
 // Function to insert an element pointing toward 'data' at the 
 // position defined by 'v' sorting the set in increasing order
-void _GSetAddSort(GSet* that, void* data, double v) {
+void _GSetAddSort(GSet* const that, void* const data, 
+  const double v) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -170,7 +172,8 @@ void _GSetAddSort(GSet* that, void* data, double v) {
 // in the GSet, elements pointing toward null data are added
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
-void _GSetInsert(GSet* that, void* data, int iElem) {
+void _GSetInsert(GSet* const that, void* const data, 
+  const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -224,7 +227,7 @@ void _GSetInsert(GSet* that, void* data, int iElem) {
 // _sortVal
 // Do nothing if arguments are invalid or the sort failed
 static GSet* GSetSortRec(GSet** s);
-void _GSetSort(GSet* that) {
+void _GSetSort(GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -307,7 +310,7 @@ GSet* GSetSortRec(GSet** s) {
 }
 
 // Move the 'iElem'-th element to the 'pos' index in the GSet
-void _GSetMoveElem(GSet* that, int iElem, int pos) {
+void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GenBrushErr->_type = PBErrTypeNullPointer;
@@ -348,7 +351,7 @@ void _GSetMoveElem(GSet* that, int iElem, int pos) {
 }
 
 // Return the number of (GSetElem._data=='data') in the GSet 'that'
-int _GSetCount(GSet* that, void* data) {
+int _GSetCount(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -375,7 +378,7 @@ int _GSetCount(GSet* that, void* data) {
 
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterForward* _GSetIterForwardCreate(GSet* set) {
+GSetIterForward* _GSetIterForwardCreate(GSet* const set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -395,7 +398,7 @@ GSetIterForward* _GSetIterForwardCreate(GSet* set) {
 
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterBackward* _GSetIterBackwardCreate(GSet* set) {
+GSetIterBackward* _GSetIterBackwardCreate(GSet* const set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -438,7 +441,8 @@ void GSetIterBackwardFree(GSetIterBackward** that) {
 }
 
 // Clone a GSetIterForward
-GSetIterForward* GSetIterForwardClone(GSetIterForward* that) {
+GSetIterForward* GSetIterForwardClone(
+  const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -454,7 +458,8 @@ GSetIterForward* GSetIterForwardClone(GSetIterForward* that) {
 }
 
 // Clone a GSetIterBackward
-GSetIterBackward* GSetIterBackwardClone(GSetIterBackward* that) {
+GSetIterBackward* GSetIterBackwardClone(
+  const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;

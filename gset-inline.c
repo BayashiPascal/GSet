@@ -17,7 +17,7 @@ GSet GSetCreateStatic(void) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetFlush(GSet* that) {
+void _GSetFlush(GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -35,7 +35,7 @@ void _GSetFlush(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetPush(GSet* that, void* data) {
+void _GSetPush(GSet* const that, void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -66,7 +66,7 @@ void _GSetPush(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppend(GSet* that, void* data) {
+void _GSetAppend(GSet* const that, void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -95,7 +95,7 @@ void _GSetAppend(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetPop(GSet* that) {
+void* _GSetPop(GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -126,7 +126,7 @@ void* _GSetPop(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetDrop(GSet* that) {
+void* _GSetDrop(GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -157,7 +157,7 @@ void* _GSetDrop(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemoveElem(GSet* that, GSetElem** elem) {
+void* _GSetRemoveElem(GSet* const that, GSetElem** elem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -204,7 +204,7 @@ void* _GSetRemoveElem(GSet* that, GSetElem** elem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveFirst(GSet* that, void* data) {
+void _GSetRemoveFirst(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -225,7 +225,7 @@ void _GSetRemoveFirst(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveLast(GSet* that, void* data) {
+void _GSetRemoveLast(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -246,7 +246,7 @@ void _GSetRemoveLast(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemove(GSet* that, int iElem) {
+void* _GSetRemove(GSet* const that, const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -292,7 +292,7 @@ void* _GSetRemove(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveAll(GSet* that, void* data) {
+void _GSetRemoveAll(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -325,7 +325,7 @@ void _GSetRemoveAll(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGet(GSet* that, int iElem) {
+void* _GSetGet(const GSet* const that, const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -354,7 +354,7 @@ void* _GSetGet(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetFirst(GSet* that) {
+void* _GSetGetFirst(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -373,7 +373,7 @@ void* _GSetGetFirst(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetLast(GSet* that) {
+void* _GSetGetLast(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -392,7 +392,7 @@ void* _GSetGetLast(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetElem(GSet* that, int iElem) {
+GSetElem* _GSetGetElem(const GSet* const that, const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -422,7 +422,7 @@ GSetElem* _GSetGetElem(GSet* that, int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexFirst(GSet* that, void* data) {
+int _GSetGetIndexFirst(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -453,7 +453,7 @@ int _GSetGetIndexFirst(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexLast(GSet* that, void* data) {
+int _GSetGetIndexLast(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -481,7 +481,8 @@ int _GSetGetIndexLast(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetFirstElem(GSet* that, void* data) {
+GSetElem* _GSetGetFirstElem(const GSet* const that, 
+  const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -505,7 +506,8 @@ GSetElem* _GSetGetFirstElem(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetLastElem(GSet* that, void* data) {
+GSetElem* _GSetGetLastElem(const GSet* const that, 
+  const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -529,7 +531,7 @@ GSetElem* _GSetGetLastElem(GSet* that, void* data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetMerge(GSet* that, GSet* set) {
+void _GSetMerge(GSet* const that, GSet* const set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -579,7 +581,7 @@ void _GSetMerge(GSet* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSet* _GSetSplit(GSet* that, GSetElem* e) {
+GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -641,7 +643,7 @@ GSet* _GSetSplit(GSet* that, GSetElem* e) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetSwitch(GSet* that, int iElem, int jElem) {
+void _GSetSwitch(GSet* const that, const int iElem, const int jElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -677,7 +679,7 @@ void _GSetSwitch(GSet* that, int iElem, int jElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetElemSetSortVal(GSetElem* that, float v) {
+void GSetElemSetSortVal(GSetElem* const that, const float v) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -693,7 +695,7 @@ void GSetElemSetSortVal(GSetElem* that, float v) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterForward _GSetIterForwardCreateStatic(GSet* set) {
+GSetIterForward _GSetIterForwardCreateStatic(GSet* const set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -712,7 +714,7 @@ GSetIterForward _GSetIterForwardCreateStatic(GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterBackward _GSetIterBackwardCreateStatic(GSet* set) {
+GSetIterBackward _GSetIterBackwardCreateStatic(GSet* const set) {
 #if BUILDMODE == 0
   if (set == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -731,7 +733,7 @@ GSetIterBackward _GSetIterBackwardCreateStatic(GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardReset(GSetIterForward* that) {
+void GSetIterForwardReset(GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -748,7 +750,7 @@ void GSetIterForwardReset(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardReset(GSetIterBackward* that) {
+void GSetIterBackwardReset(GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -766,7 +768,7 @@ void GSetIterBackwardReset(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardStep(GSetIterForward* that) {
+bool GSetIterForwardStep(GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -788,7 +790,7 @@ bool GSetIterForwardStep(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardStep(GSetIterBackward* that) {
+bool GSetIterBackwardStep(GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -810,7 +812,7 @@ bool GSetIterBackwardStep(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardStepBack(GSetIterForward* that) {
+bool GSetIterForwardStepBack(GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -832,7 +834,7 @@ bool GSetIterForwardStepBack(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardStepBack(GSetIterBackward* that) {
+bool GSetIterBackwardStepBack(GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -857,7 +859,7 @@ bool GSetIterBackwardStepBack(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardApply(GSetIterForward* that, 
+void GSetIterForwardApply(GSetIterForward* const that, 
   void(*fun)(void* data, void* param), void* param) {
 #if BUILDMODE == 0
   if (that == NULL) {
@@ -891,7 +893,7 @@ void GSetIterForwardApply(GSetIterForward* that,
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardApply(GSetIterBackward* that, 
+void GSetIterBackwardApply(GSetIterBackward* const that, 
   void(*fun)(void* data, void* param), void* param) {
 #if BUILDMODE == 0
   if (that == NULL) {
@@ -922,7 +924,7 @@ void GSetIterBackwardApply(GSetIterBackward* that,
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardIsFirst(GSetIterForward* that) {
+bool GSetIterForwardIsFirst(const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -942,7 +944,7 @@ bool GSetIterForwardIsFirst(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardIsFirst(GSetIterBackward* that) {
+bool GSetIterBackwardIsFirst(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -962,7 +964,7 @@ bool GSetIterBackwardIsFirst(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardIsLast(GSetIterForward* that) {
+bool GSetIterForwardIsLast(const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -982,7 +984,7 @@ bool GSetIterForwardIsLast(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardIsLast(GSetIterBackward* that) {
+bool GSetIterBackwardIsLast(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1000,7 +1002,8 @@ bool GSetIterBackwardIsLast(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardSetGSet(GSetIterForward* that, GSet* set) {
+void GSetIterForwardSetGSet(GSetIterForward* const that, 
+  GSet* const set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1023,7 +1026,8 @@ void GSetIterForwardSetGSet(GSetIterForward* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardSetGSet(GSetIterBackward* that, GSet* set) {
+void GSetIterBackwardSetGSet(GSetIterBackward* const that, 
+  GSet* const set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1046,7 +1050,7 @@ void GSetIterBackwardSetGSet(GSetIterBackward* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetIterForwardGet(GSetIterForward* that) {
+void* GSetIterForwardGet(const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1067,7 +1071,7 @@ void* GSetIterForwardGet(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetIterBackwardGet(GSetIterBackward* that) {
+void* GSetIterBackwardGet(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1088,7 +1092,7 @@ void* GSetIterBackwardGet(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterForwardGetElem(GSetIterForward* that) {
+GSetElem* GSetIterForwardGetElem(const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1104,7 +1108,7 @@ GSetElem* GSetIterForwardGetElem(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that) {
+GSetElem* GSetIterBackwardGetElem(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1120,7 +1124,7 @@ GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetNbElem(GSet* that) {
+int _GSetNbElem(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1141,7 +1145,7 @@ int _GSetNbElem(GSet* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardRemoveElem(GSetIterForward* that) {
+bool GSetIterForwardRemoveElem(GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1167,7 +1171,7 @@ bool GSetIterForwardRemoveElem(GSetIterForward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardRemoveElem(GSetIterBackward* that) {
+bool GSetIterBackwardRemoveElem(GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1189,7 +1193,7 @@ bool GSetIterBackwardRemoveElem(GSetIterBackward* that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppendSet(GSet* that, GSet* set) {
+void _GSetAppendSet(GSet* const that, const GSet* const set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1222,7 +1226,7 @@ void _GSetAppendSet(GSet* that, GSet* set) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppendSortedSet(GSet* that, GSet* set) {
+void _GSetAppendSortedSet(GSet* const that, const GSet* const set) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;

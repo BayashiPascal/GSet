@@ -64,7 +64,7 @@ GSet GSetCreateStatic(void);
 
 // Function to clone a GSet,
 // Return a pointer toward the new GSet
-GSet* GSetClone(GSet* that);
+GSet* GSetClone(const GSet* const that);
 
 // Function to free the memory used by the GSet
 void _GSetFree(GSet** s);
@@ -73,31 +73,33 @@ void _GSetFree(GSet** s);
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetFlush(GSet* that);
+void _GSetFlush(GSet* const that);
 
 // Return the number of element in the set
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetNbElem(GSet* that);
+int _GSetNbElem(const GSet* const that);
 
 // Function to print a GSet
 // Use the function 'printData' to print the data pointed to by 
 // the elements, and print 'sep' between each element
 // If printData is null, print the pointer value instead
-void _GSetPrint(GSet* that, FILE* stream, 
-  void(*printData)(void* data, FILE* stream), char* sep);
+void _GSetPrint(GSet* const that, FILE* const stream, 
+  void(*printData)(const void* const data, FILE* const stream), 
+  const char* const sep);
 
 // Function to insert an element pointing toward 'data' at the 
 // head of the GSet
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetPush(GSet* that, void* data);
+void _GSetPush(GSet* const that, void* const data);
 
 // Function to insert an element pointing toward 'data' at the 
 // position defined by 'v' sorting the set in increasing order
-void _GSetAddSort(GSet* that, void* data, double v);
+void _GSetAddSort(GSet* const that, void* const data, 
+  const double v);
 
 // Function to insert an element pointing toward 'data' at the 
 // 'iElem'-th position 
@@ -105,14 +107,15 @@ void _GSetAddSort(GSet* that, void* data, double v);
 // in the GSet, elements pointing toward null data are added
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
-void _GSetInsert(GSet* that, void* data, int iElem);
+void _GSetInsert(GSet* const that, void* const data, 
+  const int iElem);
 
 // Function to insert an element pointing toward 'data' at the 
 // tail of the GSet
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppend(GSet* that, void* data);
+void _GSetAppend(GSet* const that, void* const data);
 
 // Function to remove the element at the head of the GSet
 // Return the data pointed to by the removed element, or null if the 
@@ -120,7 +123,7 @@ void _GSetAppend(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetPop(GSet* that);
+void* _GSetPop(GSet* const that);
 
 // Function to remove the element at the tail of the GSet
 // Return the data pointed to by the removed element, or null if the 
@@ -128,14 +131,14 @@ void* _GSetPop(GSet* that);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetDrop(GSet* that);
+void* _GSetDrop(GSet* const that);
 
 // Function to remove the element at the 'iElem'-th position of the GSet
 // Return the data pointed to by the removed element
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemove(GSet* that, int iElem);
+void* _GSetRemove(GSet* const that, const int iElem);
 
 // Function to remove the element 'elem' of the GSet
 // Return the data pointed to by the removed element
@@ -143,56 +146,56 @@ void* _GSetRemove(GSet* that, int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemoveElem(GSet* that, GSetElem** elem);
+void* _GSetRemoveElem(GSet* const that, GSetElem** elem);
 
 // Function to remove the first element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveFirst(GSet* that, void* data);
+void _GSetRemoveFirst(GSet* const that, const void* const data);
 
 // Function to remove the last element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveLast(GSet* that, void* data);
+void _GSetRemoveLast(GSet* const that, const void* const data);
 
 // Function to remove all the selement of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetRemoveAll(GSet* that, void* data);
+void _GSetRemoveAll(GSet* const that, const void* const data);
 
 // Function to get the data at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGet(GSet* that, int iElem);
+void* _GSetGet(const GSet* const that, const int iElem);
 
 // Function to get the data at first position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetFirst(GSet* that);
+void* _GSetGetFirst(const GSet* const that);
 
 // Function to get the data at last position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetLast(GSet* that);
+void* _GSetGetLast(const GSet* const that);
 
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetElem(GSet* that, int iElem);
+GSetElem* _GSetGetElem(const GSet* const that, const int iElem);
 
 // Function to get the index of the first element of the GSet
 // which point to 'data'
@@ -200,7 +203,7 @@ GSetElem* _GSetGetElem(GSet* that, int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexFirst(GSet* that, void* data);
+int _GSetGetIndexFirst(const GSet* const that, const void* const data);
 
 // Function to get the index of the last element of the GSet
 // which point to 'data'
@@ -208,7 +211,7 @@ int _GSetGetIndexFirst(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexLast(GSet* that, void* data);
+int _GSetGetIndexLast(const GSet* const that, const void* const data);
 
 // Function to get the first element of the GSet
 // which point to 'data'
@@ -216,7 +219,8 @@ int _GSetGetIndexLast(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetFirstElem(GSet* that, void* data);
+GSetElem* _GSetGetFirstElem(const GSet* const that, 
+  const void* const data);
 
 // Function to get the last element of the GSet
 // which point to 'data'
@@ -224,11 +228,12 @@ GSetElem* _GSetGetFirstElem(GSet* that, void* data);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetLastElem(GSet* that, void* data);
+GSetElem* _GSetGetLastElem(const GSet* const that, 
+  const void* const data);
 
 // Function to sort the element of the gset in increasing order of 
 // _sortVal
-void _GSetSort(GSet* that);
+void _GSetSort(GSet* const that);
 
 // Merge the GSet 'set' at the end of the GSet 'that'
 // 'that' and 'set' can be empty
@@ -236,7 +241,7 @@ void _GSetSort(GSet* that);
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetMerge(GSet* that, GSet* set);
+void _GSetMerge(GSet* const that, GSet* const set);
 
 // Split the GSet at the GSetElem 'e'
 // 'e' must be and element of the set
@@ -247,14 +252,14 @@ void _GSetMerge(GSet* that, GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSet* _GSetSplit(GSet* that, GSetElem* e);
+GSet* _GSetSplit(GSet* const that, GSetElem* const e);
 
 // Append the element of the GSet 'set' at the end of the GSet 'that'
 // 'that' and 'set' can be empty
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppendSet(GSet* that, GSet* set);
+void _GSetAppendSet(GSet* const that, const GSet* const set);
 
 // Append the element of the GSet 'that' at the end of the GSet 'set'
 // Elements are kept sorted
@@ -262,41 +267,41 @@ void _GSetAppendSet(GSet* that, GSet* set);
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetAppendSortedSet(GSet* that, GSet* set);
+void _GSetAppendSortedSet(GSet* const that, const GSet* const set);
 
 // Switch the 'iElem'-th and 'jElem'-th element of the set
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetSwitch(GSet* that, int iElem, int jElem);
+void _GSetSwitch(GSet* const that, const int iElem, const int jElem);
 
 // Return the number of (GSetElem._data=='data') in the GSet 'that'
-int _GSetCount(GSet* that, void* data);
+int _GSetCount(const GSet* const that, const void* const data);
 
 // Set the sort value of the GSetElem 'that' to 'v'
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetElemSetSortVal(GSetElem* that, float v);
+void GSetElemSetSortVal(GSetElem* const that, const float v);
 
 // Move the 'iElem'-th element to the 'pos' index in the GSet
-void _GSetMoveElem(GSet* that, int iElem, int pos);
+void _GSetMoveElem(GSet* const that, const int iElem, const int pos);
 
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterForward* _GSetIterForwardCreate(GSet* set);
+GSetIterForward* _GSetIterForwardCreate(GSet* const set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterForward _GSetIterForwardCreateStatic(GSet* set);
+GSetIterForward _GSetIterForwardCreateStatic(GSet* const set);
 
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
-GSetIterBackward* _GSetIterBackwardCreate(GSet* set);
+GSetIterBackward* _GSetIterBackwardCreate(GSet* const set);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetIterBackward _GSetIterBackwardCreateStatic(GSet* set);
+GSetIterBackward _GSetIterBackwardCreateStatic(GSet* const set);
 
 // Free the memory used by a GSetIterForward (not by its attached GSet)
 // Do nothing if arguments are invalid
@@ -307,22 +312,24 @@ void GSetIterForwardFree(GSetIterForward** that);
 void GSetIterBackwardFree(GSetIterBackward** that);
 
 // Clone a GSetIterForward
-GSetIterForward* GSetIterForwardClone(GSetIterForward* that);
+GSetIterForward* GSetIterForwardClone(
+  const GSetIterForward* const that);
 
 // Clone a GSetIterBackward
-GSetIterBackward* GSetIterBackwardClone(GSetIterBackward* that);
+GSetIterBackward* GSetIterBackwardClone(
+  const GSetIterBackward* const that);
 
 // Reset the GSetIterForward to its starting position
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardReset(GSetIterForward* that);
+void GSetIterForwardReset(GSetIterForward* const that);
 
 // Reset the GSetIterBackward to its starting position
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardReset(GSetIterBackward* that);
+void GSetIterBackwardReset(GSetIterBackward* const that);
 
 // Step the GSetIterForward
 // Return false if we couldn't step
@@ -330,7 +337,7 @@ void GSetIterBackwardReset(GSetIterBackward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardStep(GSetIterForward* that);
+bool GSetIterForwardStep(GSetIterForward* const that);
 
 // Step the GSetIterBackward
 // Return false if we couldn't step
@@ -338,7 +345,7 @@ bool GSetIterForwardStep(GSetIterForward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardStep(GSetIterBackward* that);
+bool GSetIterBackwardStep(GSetIterBackward* const that);
 
 // Step back the GSetIterForward
 // Return false if we couldn't step
@@ -346,7 +353,7 @@ bool GSetIterBackwardStep(GSetIterBackward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardStepBack(GSetIterForward* that);
+bool GSetIterForwardStepBack(GSetIterForward* const that);
 
 // Step back the GSetIterBackward
 // Return false if we couldn't step
@@ -354,7 +361,7 @@ bool GSetIterForwardStepBack(GSetIterForward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardStepBack(GSetIterBackward* that);
+bool GSetIterBackwardStepBack(GSetIterBackward* const that);
 
 // Apply a function to all elements of the GSet of the GSetIterForward
 // The iterator is first reset, then the function is apply sequencially
@@ -365,7 +372,7 @@ bool GSetIterBackwardStepBack(GSetIterBackward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardApply(GSetIterForward* that, 
+void GSetIterForwardApply(GSetIterForward* const that, 
   void(*fun)(void* data, void* param), void* param);
 
 // Apply a function to all elements of the GSet of the GSetIterBackward
@@ -377,7 +384,7 @@ void GSetIterForwardApply(GSetIterForward* that,
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardApply(GSetIterBackward* that, 
+void GSetIterBackwardApply(GSetIterBackward* const that, 
   void(*fun)(void* data, void* param), void* param);
 
 // Return true if the iterator is at the start of the elements (from
@@ -386,7 +393,7 @@ void GSetIterBackwardApply(GSetIterBackward* that,
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardIsFirst(GSetIterForward* that);
+bool GSetIterForwardIsFirst(const GSetIterForward* const that);
 
 // Return true if the iterator is at the start of the elements (from
 // its point of view, not the order in the GSet)
@@ -394,7 +401,7 @@ bool GSetIterForwardIsFirst(GSetIterForward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardIsFirst(GSetIterBackward* that);
+bool GSetIterBackwardIsFirst(const GSetIterBackward* const that);
 
 // Return true if the iterator is at the end of the elements (from
 // its point of view, not the order in the GSet)
@@ -402,7 +409,7 @@ bool GSetIterBackwardIsFirst(GSetIterBackward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardIsLast(GSetIterForward* that);
+bool GSetIterForwardIsLast(const GSetIterForward* const that);
 
 // Return true if the iterator is at the end of the elements (from
 // its point of view, not the order in the GSet)
@@ -410,43 +417,45 @@ bool GSetIterForwardIsLast(GSetIterForward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardIsLast(GSetIterBackward* that);
+bool GSetIterBackwardIsLast(const GSetIterBackward* const that);
 
 // Change the attached set of the iterator, and reset it
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterForwardSetGSet(GSetIterForward* that, GSet* set);
+void GSetIterForwardSetGSet(GSetIterForward* const that, 
+  GSet* const set);
 
 // Change the attached set of the iterator, and reset it
 #if BUILDMODE != 0
 inline
 #endif 
-void GSetIterBackwardSetGSet(GSetIterBackward* that, GSet* set);
+void GSetIterBackwardSetGSet(GSetIterBackward* const that, 
+  GSet* const set);
 
 // Return the data currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetIterForwardGet(GSetIterForward* that);
+void* GSetIterForwardGet(const GSetIterForward* const that);
 
 // Return the data currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-void* GSetIterBackwardGet(GSetIterBackward* that);
+void* GSetIterBackwardGet(const GSetIterBackward* const that);
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterForwardGetElem(GSetIterForward* that);
+GSetElem* GSetIterForwardGetElem(const GSetIterForward* const that);
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that);
+GSetElem* GSetIterBackwardGetElem(const GSetIterBackward* const that);
 
 // Remove the element currently pointed to by the iterator
 // The iterator is moved forward to the next element
@@ -457,7 +466,7 @@ GSetElem* GSetIterBackwardGetElem(GSetIterBackward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterForwardRemoveElem(GSetIterForward* that);
+bool GSetIterForwardRemoveElem(GSetIterForward* const that);
 
 // Remove the element currently pointed to by the iterator
 // The iterator is moved backward to the next element
@@ -468,7 +477,7 @@ bool GSetIterForwardRemoveElem(GSetIterForward* that);
 #if BUILDMODE != 0
 inline
 #endif 
-bool GSetIterBackwardRemoveElem(GSetIterBackward* that);
+bool GSetIterBackwardRemoveElem(GSetIterBackward* const that);
 
 // ================= Typed GSet ==================
 
@@ -485,23 +494,25 @@ typedef struct GSetVecFloat {GSet _set;} GSetVecFloat;
 #define GSetVecFloatCreate() ((GSetVecFloat*)GSetCreate())
 inline GSetVecFloat GSetVecFloatCreateStatic(void) 
   {GSetVecFloat ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* that)
-  {return (GSetVecFloat*)GSetClone((GSet*)that);}
-inline VecFloat* _GSetVecFloatGet(GSetVecFloat* that, int iElem)
-  {return (VecFloat*)_GSetGet((GSet*)that, iElem);}
-inline VecFloat* _GSetVecFloatGetFirst(GSetVecFloat* that)
-  {return (VecFloat*)_GSetGetFirst((GSet*)that);}
-inline VecFloat* _GSetVecFloatGetLast(GSetVecFloat* that)
-  {return (VecFloat*)_GSetGetLast((GSet*)that);}
-inline VecFloat* _GSetVecFloatPop(GSetVecFloat* that)
-  {return (VecFloat*)_GSetPop((GSet*)that);}
-inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* that)
-  {return (VecFloat*)_GSetDrop((GSet*)that);}
-inline VecFloat* _GSetVecFloatRemove(GSetVecFloat* that, int iElem)
-  {return (VecFloat*)_GSetRemove((GSet*)that, iElem);}
-inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* that, 
+inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* const that)
+  {return (GSetVecFloat*)GSetClone((GSet* const)that);}
+inline VecFloat* _GSetVecFloatGet(const GSetVecFloat* const that, 
+  const int iElem)
+  {return (VecFloat*)_GSetGet((GSet* const)that, iElem);}
+inline VecFloat* _GSetVecFloatGetFirst(const GSetVecFloat* const that)
+  {return (VecFloat*)_GSetGetFirst((const GSet* const)that);}
+inline VecFloat* _GSetVecFloatGetLast(const GSetVecFloat* const that)
+  {return (VecFloat*)_GSetGetLast((const GSet* const)that);}
+inline VecFloat* _GSetVecFloatPop(GSetVecFloat* const that)
+  {return (VecFloat*)_GSetPop((GSet* const)that);}
+inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* const that)
+  {return (VecFloat*)_GSetDrop((GSet* const)that);}
+inline VecFloat* _GSetVecFloatRemove(GSetVecFloat* const that, 
+  const int iElem)
+  {return (VecFloat*)_GSetRemove((GSet* const)that, iElem);}
+inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* const that, 
   GSetElem** elem)
-  {return (VecFloat*)_GSetRemoveElem((GSet*)that, elem);}
+  {return (VecFloat*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef VecShort
   typedef struct VecShort VecShort;
@@ -519,23 +530,25 @@ typedef struct GSetVecShort {GSet _set;} GSetVecShort;
 #define GSetVecShortCreate() ((GSetVecShort*)GSetCreate())
 inline GSetVecShort GSetVecShortCreateStatic(void) 
   {GSetVecShort ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetVecShort* GSetVecShortClone(GSetVecShort* that)
-  {return (GSetVecShort*)GSetClone((GSet*)that);}
-inline VecShort* _GSetVecShortGet(GSetVecShort* that, int iElem)
-  {return (VecShort*)_GSetGet((GSet*)that, iElem);}
-inline VecShort* _GSetVecShortGetFirst(GSetVecShort* that)
-  {return (VecShort*)_GSetGetFirst((GSet*)that);}
-inline VecShort* _GSetVecShortGetLast(GSetVecShort* that)
-  {return (VecShort*)_GSetGetLast((GSet*)that);}
-inline VecShort* _GSetVecShortPop(GSetVecShort* that)
-  {return (VecShort*)_GSetPop((GSet*)that);}
-inline VecShort* _GSetVecShortDrop(GSetVecShort* that)
-  {return (VecShort*)_GSetDrop((GSet*)that);}
-inline VecShort* _GSetVecShortRemove(GSetVecShort* that, int iElem)
-  {return (VecShort*)_GSetRemove((GSet*)that, iElem);}
-inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* that, 
+inline GSetVecShort* GSetVecShortClone(const GSetVecShort* const that)
+  {return (GSetVecShort*)GSetClone((const GSet* const)that);}
+inline VecShort* _GSetVecShortGet(const GSetVecShort* const that, 
+  const int iElem)
+  {return (VecShort*)_GSetGet((const GSet* const)that, iElem);}
+inline VecShort* _GSetVecShortGetFirst(const GSetVecShort* const that)
+  {return (VecShort*)_GSetGetFirst((const GSet* const)that);}
+inline VecShort* _GSetVecShortGetLast(const GSetVecShort* const that)
+  {return (VecShort*)_GSetGetLast((const GSet* const)that);}
+inline VecShort* _GSetVecShortPop(GSetVecShort* const that)
+  {return (VecShort*)_GSetPop((GSet* const)that);}
+inline VecShort* _GSetVecShortDrop(GSetVecShort* const that)
+  {return (VecShort*)_GSetDrop((GSet* const)that);}
+inline VecShort* _GSetVecShortRemove(GSetVecShort* const that, 
+  const int iElem)
+  {return (VecShort*)_GSetRemove((GSet* const)that, iElem);}
+inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* const that, 
   GSetElem** elem)
-  {return (VecShort*)_GSetRemoveElem((GSet*)that, elem);}
+  {return (VecShort*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef BCurve
   typedef struct BCurve BCurve;
@@ -544,23 +557,24 @@ typedef struct GSetBCurve {GSet _set;} GSetBCurve;
 #define GSetBCurveCreate() ((GSetBCurve*)GSetCreate())
 inline GSetBCurve GSetBCurveCreateStatic(void) 
   {GSetBCurve ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetBCurve* GSetBCurveClone(GSetBCurve* that)
-  {return (GSetBCurve*)GSetClone((GSet*)that);}
-inline BCurve* _GSetBCurveGet(GSetBCurve* that, int iElem)
-  {return (BCurve*)_GSetGet((GSet*)that, iElem);}
-inline BCurve* _GSetBCurveGetFirst(GSetBCurve* that)
-  {return (BCurve*)_GSetGetFirst((GSet*)that);}
-inline BCurve* _GSetBCurveGetLast(GSetBCurve* that)
-  {return (BCurve*)_GSetGetLast((GSet*)that);}
-inline BCurve* _GSetBCurvePop(GSetBCurve* that)
-  {return (BCurve*)_GSetPop((GSet*)that);}
-inline BCurve* _GSetBCurveDrop(GSetBCurve* that)
-  {return (BCurve*)_GSetDrop((GSet*)that);}
-inline BCurve* _GSetBCurveRemove(GSetBCurve* that, int iElem)
-  {return (BCurve*)_GSetRemove((GSet*)that, iElem);}
-inline BCurve* _GSetBCurveRemoveElem(GSetBCurve* that, 
+inline GSetBCurve* GSetBCurveClone(const GSetBCurve* const that)
+  {return (GSetBCurve*)GSetClone((const GSet* const)that);}
+inline BCurve* _GSetBCurveGet(const GSetBCurve* const that, 
+  const int iElem)
+  {return (BCurve*)_GSetGet((const GSet* const)that, iElem);}
+inline BCurve* _GSetBCurveGetFirst(const GSetBCurve* const that)
+  {return (BCurve*)_GSetGetFirst((const GSet* const)that);}
+inline BCurve* _GSetBCurveGetLast(const GSetBCurve* const that)
+  {return (BCurve*)_GSetGetLast((const GSet* const)that);}
+inline BCurve* _GSetBCurvePop(GSetBCurve* const that)
+  {return (BCurve*)_GSetPop((GSet* const)that);}
+inline BCurve* _GSetBCurveDrop(GSetBCurve* const that)
+  {return (BCurve*)_GSetDrop((GSet* const)that);}
+inline BCurve* _GSetBCurveRemove(GSetBCurve* const that, const int iElem)
+  {return (BCurve*)_GSetRemove((GSet* const)that, iElem);}
+inline BCurve* _GSetBCurveRemoveElem(GSetBCurve* const that, 
   GSetElem** elem)
-  {return (BCurve*)_GSetRemoveElem((GSet*)that, elem);}
+  {return (BCurve*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef SCurve
   typedef struct SCurve SCurve;
@@ -569,23 +583,25 @@ typedef struct GSetSCurve {GSet _set;} GSetSCurve;
 #define GSetSCurveCreate() ((GSetSCurve*)GSetCreate())
 inline GSetSCurve GSetSCurveCreateStatic(void) 
   {GSetSCurve ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetSCurve* GSetSCurveClone(GSetSCurve* that)
-  {return (GSetSCurve*)GSetClone((GSet*)that);}
-inline SCurve* _GSetSCurveGet(GSetSCurve* that, int iElem)
-  {return (SCurve*)_GSetGet((GSet*)that, iElem);}
-inline SCurve* _GSetSCurveGetFirst(GSetSCurve* that)
-  {return (SCurve*)_GSetGetFirst((GSet*)that);}
-inline SCurve* _GSetSCurveGetLast(GSetSCurve* that)
-  {return (SCurve*)_GSetGetLast((GSet*)that);}
-inline SCurve* _GSetSCurvePop(GSetSCurve* that)
-  {return (SCurve*)_GSetPop((GSet*)that);}
-inline SCurve* _GSetSCurveDrop(GSetSCurve* that)
-  {return (SCurve*)_GSetDrop((GSet*)that);}
-inline SCurve* _GSetSCurveRemove(GSetSCurve* that, int iElem)
-  {return (SCurve*)_GSetRemove((GSet*)that, iElem);}
-inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* that, 
+inline GSetSCurve* GSetSCurveClone(const GSetSCurve* const that)
+  {return (GSetSCurve*)GSetClone((const GSet* const)that);}
+inline SCurve* _GSetSCurveGet(const GSetSCurve* const that, 
+  const int iElem)
+  {return (SCurve*)_GSetGet((const GSet* const)that, iElem);}
+inline SCurve* _GSetSCurveGetFirst(const GSetSCurve* const that)
+  {return (SCurve*)_GSetGetFirst((const GSet* const)that);}
+inline SCurve* _GSetSCurveGetLast(const GSetSCurve* const that)
+  {return (SCurve*)_GSetGetLast((const GSet* const)that);}
+inline SCurve* _GSetSCurvePop(GSetSCurve* const that)
+  {return (SCurve*)_GSetPop((GSet* const)that);}
+inline SCurve* _GSetSCurveDrop(GSetSCurve* const that)
+  {return (SCurve*)_GSetDrop((GSet* const)that);}
+inline SCurve* _GSetSCurveRemove(GSetSCurve* const that, 
+  const int iElem)
+  {return (SCurve*)_GSetRemove((GSet* const)that, iElem);}
+inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* const that, 
   GSetElem** elem)
-  {return (SCurve*)_GSetRemoveElem((GSet*)that, elem);}
+  {return (SCurve*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef Shapoid
   typedef struct Shapoid Shapoid;
@@ -603,23 +619,25 @@ typedef struct GSetShapoid {GSet _set;} GSetShapoid;
 #define GSetShapoidCreate() ((GSetShapoid*)GSetCreate())
 inline GSetShapoid GSetShapoidCreateStatic(void) 
   {GSetShapoid ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetShapoid* GSetShapoidClone(GSetShapoid* that)
-  {return (GSetShapoid*)GSetClone((GSet*)that);}
-inline Shapoid* _GSetShapoidGet(GSetShapoid* that, int iElem)
-  {return (Shapoid*)_GSetGet((GSet*)that, iElem);}
-inline Shapoid* _GSetShapoidGetFirst(GSetShapoid* that)
-  {return (Shapoid*)_GSetGetFirst((GSet*)that);}
-inline Shapoid* _GSetShapoidGetLast(GSetShapoid* that)
-  {return (Shapoid*)_GSetGetLast((GSet*)that);}
-inline Shapoid* _GSetShapoidPop(GSetShapoid* that)
-  {return (Shapoid*)_GSetPop((GSet*)that);}
-inline Shapoid* _GSetShapoidDrop(GSetShapoid* that)
-  {return (Shapoid*)_GSetDrop((GSet*)that);}
-inline Shapoid* _GSetShapoidRemove(GSetShapoid* that, int iElem)
-  {return (Shapoid*)_GSetRemove((GSet*)that, iElem);}
-inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* that, 
+inline GSetShapoid* GSetShapoidClone(const GSetShapoid* const that)
+  {return (GSetShapoid*)GSetClone((const GSet* const)that);}
+inline Shapoid* _GSetShapoidGet(const GSetShapoid* const that, 
+  const int iElem)
+  {return (Shapoid*)_GSetGet((const GSet* const)that, iElem);}
+inline Shapoid* _GSetShapoidGetFirst(const GSetShapoid* const that)
+  {return (Shapoid*)_GSetGetFirst((const GSet* const)that);}
+inline Shapoid* _GSetShapoidGetLast(const GSetShapoid* const that)
+  {return (Shapoid*)_GSetGetLast((const GSet* const)that);}
+inline Shapoid* _GSetShapoidPop(GSetShapoid* const that)
+  {return (Shapoid*)_GSetPop((GSet* const)that);}
+inline Shapoid* _GSetShapoidDrop(GSetShapoid* const that)
+  {return (Shapoid*)_GSetDrop((GSet* const)that);}
+inline Shapoid* _GSetShapoidRemove(GSetShapoid* const that, 
+  const int iElem)
+  {return (Shapoid*)_GSetRemove((GSet* const)that, iElem);}
+inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* const that, 
   GSetElem** elem)
-  {return (Shapoid*)_GSetRemoveElem((GSet*)that, elem);}
+  {return (Shapoid*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef KnapSackPod
   typedef struct KnapSackPod KnapSackPod;
@@ -628,25 +646,28 @@ typedef struct GSetKnapSackPod {GSet _set;} GSetKnapSackPod;
 #define GSetKnapSackPodCreate() ((GSetKnapSackPod*)GSetCreate())
 inline GSetKnapSackPod GSetKnapSackPodCreateStatic(void) 
   {GSetKnapSackPod ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetKnapSackPod* GSetKnapSackPodClone(GSetKnapSackPod* that)
-  {return (GSetKnapSackPod*)GSetClone((GSet*)that);}
+inline GSetKnapSackPod* GSetKnapSackPodClone(
+  const GSetKnapSackPod* const that)
+  {return (GSetKnapSackPod*)GSetClone((const GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodGet(
-  GSetKnapSackPod* that, int iElem)
-  {return (KnapSackPod*)_GSetGet((GSet*)that, iElem);}
-inline KnapSackPod* _GSetKnapSackPodGetFirst(GSetKnapSackPod* that)
-  {return (KnapSackPod*)_GSetGetFirst((GSet*)that);}
-inline KnapSackPod* _GSetKnapSackPodGetLast(GSetKnapSackPod* that)
-  {return (KnapSackPod*)_GSetGetLast((GSet*)that);}
-inline KnapSackPod* _GSetKnapSackPodPop(GSetKnapSackPod* that)
-  {return (KnapSackPod*)_GSetPop((GSet*)that);}
-inline KnapSackPod* _GSetKnapSackPodDrop(GSetKnapSackPod* that)
-  {return (KnapSackPod*)_GSetDrop((GSet*)that);}
+  const GSetKnapSackPod* const that, const int iElem)
+  {return (KnapSackPod*)_GSetGet((const GSet* const)that, iElem);}
+inline KnapSackPod* _GSetKnapSackPodGetFirst(
+  const GSetKnapSackPod* const that)
+  {return (KnapSackPod*)_GSetGetFirst((const GSet* const)that);}
+inline KnapSackPod* _GSetKnapSackPodGetLast(
+  const GSetKnapSackPod* const that)
+  {return (KnapSackPod*)_GSetGetLast((const GSet* const)that);}
+inline KnapSackPod* _GSetKnapSackPodPop(GSetKnapSackPod* const that)
+  {return (KnapSackPod*)_GSetPop((GSet* const)that);}
+inline KnapSackPod* _GSetKnapSackPodDrop(GSetKnapSackPod* const that)
+  {return (KnapSackPod*)_GSetDrop((GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodRemove(
-  GSetKnapSackPod* that, int iElem)
-  {return (KnapSackPod*)_GSetRemove((GSet*)that, iElem);}
+  GSetKnapSackPod* that, const int iElem)
+  {return (KnapSackPod*)_GSetRemove((GSet* const)that, iElem);}
 inline KnapSackPod* _GSetKnapSackPodRemoveElem(
-  GSetKnapSackPod* that, GSetElem** elem)
-  {return (KnapSackPod*)_GSetRemoveElem((GSet*)that, elem);}
+  GSetKnapSackPod* const that, GSetElem** elem)
+  {return (KnapSackPod*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef PBPhysParticle
   typedef struct PBPhysParticle PBPhysParticle;
@@ -656,27 +677,29 @@ typedef struct GSetPBPhysParticle {GSet _set;} GSetPBPhysParticle;
 inline GSetPBPhysParticle GSetPBPhysParticleCreateStatic(void) 
   {GSetPBPhysParticle ret = {._set=GSetCreateStatic()}; return ret;}
 inline GSetPBPhysParticle* GSetPBPhysParticleClone(
-  GSetPBPhysParticle* that)
-  {return (GSetPBPhysParticle*)GSetClone((GSet*)that);}
+  const GSetPBPhysParticle* const that)
+  {return (GSetPBPhysParticle*)GSetClone((const GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleGet(
-  GSetPBPhysParticle* that, int iElem)
-  {return (PBPhysParticle*)_GSetGet((GSet*)that, iElem);}
+  const GSetPBPhysParticle* const that, const int iElem)
+  {return (PBPhysParticle*)_GSetGet((const GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleGetFirst(
-  GSetPBPhysParticle* that)
-  {return (PBPhysParticle*)_GSetGetFirst((GSet*)that);}
+  const GSetPBPhysParticle* const that)
+  {return (PBPhysParticle*)_GSetGetFirst((const GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleGetLast(
-  GSetPBPhysParticle* that)
-  {return (PBPhysParticle*)_GSetGetLast((GSet*)that);}
-inline PBPhysParticle* _GSetPBPhysParticlePop(GSetPBPhysParticle* that)
-  {return (PBPhysParticle*)_GSetPop((GSet*)that);}
-inline PBPhysParticle* _GSetPBPhysParticleDrop(GSetPBPhysParticle* that)
-  {return (PBPhysParticle*)_GSetDrop((GSet*)that);}
+  const GSetPBPhysParticle* const that)
+  {return (PBPhysParticle*)_GSetGetLast((const GSet* const)that);}
+inline PBPhysParticle* _GSetPBPhysParticlePop(
+  GSetPBPhysParticle* const that)
+  {return (PBPhysParticle*)_GSetPop((GSet* const)that);}
+inline PBPhysParticle* _GSetPBPhysParticleDrop(
+  GSetPBPhysParticle* const that)
+  {return (PBPhysParticle*)_GSetDrop((GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleRemove(
-  GSetPBPhysParticle* that, int iElem)
-  {return (PBPhysParticle*)_GSetRemove((GSet*)that, iElem);}
+  GSetPBPhysParticle* const that, const int iElem)
+  {return (PBPhysParticle*)_GSetRemove((GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
-  GSetPBPhysParticle* that, GSetElem** elem)
-  {return (PBPhysParticle*)_GSetRemoveElem((GSet*)that, elem);}
+  GSetPBPhysParticle* const that, GSetElem** elem)
+  {return (PBPhysParticle*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef GTree
   typedef struct GTree GTree;
@@ -685,43 +708,44 @@ typedef struct GSetGTree {GSet _set;} GSetGTree;
 #define GSetGTreeCreate() ((GSetGTree*)GSetCreate())
 inline GSetGTree GSetGTreeCreateStatic(void) 
   {GSetGTree ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetGTree* GSetGTreeClone(GSetGTree* that)
-  {return (GSetGTree*)GSetClone((GSet*)that);}
-inline GTree* _GSetGTreeGet(GSetGTree* that, int iElem)
-  {return (GTree*)_GSetGet((GSet*)that, iElem);}
-inline GTree* _GSetGTreeGetFirst(GSetGTree* that)
-  {return (GTree*)_GSetGetFirst((GSet*)that);}
-inline GTree* _GSetGTreeGetLast(GSetGTree* that)
-  {return (GTree*)_GSetGetLast((GSet*)that);}
-inline GTree* _GSetGTreePop(GSetGTree* that)
-  {return (GTree*)_GSetPop((GSet*)that);}
-inline GTree* _GSetGTreeDrop(GSetGTree* that)
-  {return (GTree*)_GSetDrop((GSet*)that);}
-inline GTree* _GSetGTreeRemove(GSetGTree* that, int iElem)
-  {return (GTree*)_GSetRemove((GSet*)that, iElem);}
-inline GTree* _GSetGTreeRemoveElem(GSetGTree* that, GSetElem** elem)
-  {return (GTree*)_GSetRemoveElem((GSet*)that, elem);}
+inline GSetGTree* GSetGTreeClone(const GSetGTree* const that)
+  {return (GSetGTree*)GSetClone((const GSet* const)that);}
+inline GTree* _GSetGTreeGet(const GSetGTree* const that, const int iElem)
+  {return (GTree*)_GSetGet((const GSet* const)that, iElem);}
+inline GTree* _GSetGTreeGetFirst(const GSetGTree* const that)
+  {return (GTree*)_GSetGetFirst((const GSet* const)that);}
+inline GTree* _GSetGTreeGetLast(const GSetGTree* const that)
+  {return (GTree*)_GSetGetLast((const GSet* const)that);}
+inline GTree* _GSetGTreePop(GSetGTree* const that)
+  {return (GTree*)_GSetPop((GSet* const)that);}
+inline GTree* _GSetGTreeDrop(GSetGTree* const that)
+  {return (GTree*)_GSetDrop((GSet* const)that);}
+inline GTree* _GSetGTreeRemove(GSetGTree* const that, const int iElem)
+  {return (GTree*)_GSetRemove((GSet* const)that, iElem);}
+inline GTree* _GSetGTreeRemoveElem(GSetGTree* const that, 
+  GSetElem** elem)
+  {return (GTree*)_GSetRemoveElem((GSet* const)that, elem);}
 
 typedef struct GSetStr {GSet _set;} GSetStr;
 #define GSetStrCreate() ((GSetStr*)GSetCreate())
 inline GSetStr GSetStrCreateStatic(void) 
   {GSetStr ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetStr* GSetStrClone(GSetStr* that)
-  {return (GSetStr*)GSetClone((GSet*)that);}
-inline char* _GSetStrGet(GSetStr* that, int iElem)
-  {return (char*)_GSetGet((GSet*)that, iElem);}
-inline char* _GSetStrGetFirst(GSetStr* that)
-  {return (char*)_GSetGetFirst((GSet*)that);}
-inline char* _GSetStrGetLast(GSetStr* that)
-  {return (char*)_GSetGetLast((GSet*)that);}
-inline char* _GSetStrPop(GSetStr* that)
-  {return (char*)_GSetPop((GSet*)that);}
-inline char* _GSetStrDrop(GSetStr* that)
-  {return (char*)_GSetDrop((GSet*)that);}
-inline char* _GSetStrRemove(GSetStr* that, int iElem)
-  {return (char*)_GSetRemove((GSet*)that, iElem);}
-inline char* _GSetStrRemoveElem(GSetStr* that, GSetElem** elem)
-  {return (char*)_GSetRemoveElem((GSet*)that, elem);}
+inline GSetStr* GSetStrClone(const GSetStr* const that)
+  {return (GSetStr*)GSetClone((const GSet* const)that);}
+inline char* _GSetStrGet(const GSetStr* const that, const int iElem)
+  {return (char*)_GSetGet((const GSet* const)that, iElem);}
+inline char* _GSetStrGetFirst(const GSetStr* const that)
+  {return (char*)_GSetGetFirst((const GSet* const)that);}
+inline char* _GSetStrGetLast(const GSetStr* const that)
+  {return (char*)_GSetGetLast((const GSet* const)that);}
+inline char* _GSetStrPop(GSetStr* const that)
+  {return (char*)_GSetPop((GSet* const)that);}
+inline char* _GSetStrDrop(GSetStr* const that)
+  {return (char*)_GSetDrop((GSet* const)that);}
+inline char* _GSetStrRemove(GSetStr* const that, const int iElem)
+  {return (char*)_GSetRemove((GSet* const)that, iElem);}
+inline char* _GSetStrRemoveElem(GSetStr* const that, GSetElem** elem)
+  {return (char*)_GSetRemoveElem((GSet* const)that, elem);}
 
 #ifndef GTreeStr
   typedef struct GTreeStr GTreeStr;
@@ -730,23 +754,25 @@ typedef struct GSetGTreeStr {GSet _set;} GSetGTreeStr;
 #define GSetGTreeStrCreate() ((GSetGTreeStr*)GSetCreate())
 inline GSetGTreeStr GSetGTreeStrCreateStatic(void) 
   {GSetGTreeStr ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetGTreeStr* GSetGTreeStrClone(GSetGTreeStr* that)
-  {return (GSetGTreeStr*)GSetClone((GSet*)that);}
-inline GTreeStr* _GSetGTreeStrGet(GSetGTreeStr* that, int iElem)
-  {return (GTreeStr*)_GSetGet((GSet*)that, iElem);}
-inline GTreeStr* _GSetGTreeStrGetFirst(GSetGTreeStr* that)
-  {return (GTreeStr*)_GSetGetFirst((GSet*)that);}
-inline GTreeStr* _GSetGTreeStrGetLast(GSetGTreeStr* that)
-  {return (GTreeStr*)_GSetGetLast((GSet*)that);}
-inline GTreeStr* _GSetGTreeStrPop(GSetGTreeStr* that)
-  {return (GTreeStr*)_GSetPop((GSet*)that);}
-inline GTreeStr* _GSetGTreeStrDrop(GSetGTreeStr* that)
-  {return (GTreeStr*)_GSetDrop((GSet*)that);}
-inline GTreeStr* _GSetGTreeStrRemove(GSetGTreeStr* that, int iElem)
-  {return (GTreeStr*)_GSetRemove((GSet*)that, iElem);}
+inline GSetGTreeStr* GSetGTreeStrClone(const GSetGTreeStr* const that)
+  {return (GSetGTreeStr*)GSetClone((const GSet* const)that);}
+inline GTreeStr* _GSetGTreeStrGet(const GSetGTreeStr* const that, 
+  const int iElem)
+  {return (GTreeStr*)_GSetGet((const GSet* const)that, iElem);}
+inline GTreeStr* _GSetGTreeStrGetFirst(const GSetGTreeStr* const that)
+  {return (GTreeStr*)_GSetGetFirst((const GSet* const)that);}
+inline GTreeStr* _GSetGTreeStrGetLast(const GSetGTreeStr* const that)
+  {return (GTreeStr*)_GSetGetLast((const GSet* const)that);}
+inline GTreeStr* _GSetGTreeStrPop(GSetGTreeStr* const that)
+  {return (GTreeStr*)_GSetPop((GSet* const)that);}
+inline GTreeStr* _GSetGTreeStrDrop(GSetGTreeStr* const that)
+  {return (GTreeStr*)_GSetDrop((GSet* const)that);}
+inline GTreeStr* _GSetGTreeStrRemove(GSetGTreeStr* const that, 
+  const int iElem)
+  {return (GTreeStr*)_GSetRemove((GSet* const)that, iElem);}
 inline GTreeStr* _GSetGTreeStrRemoveElem(
-  GSetGTreeStr* that, GSetElem** elem)
-  {return (GTreeStr*)_GSetRemoveElem((GSet*)that, elem);}
+  GSetGTreeStr* const that, GSetElem** elem)
+  {return (GTreeStr*)_GSetRemoveElem((GSet* const)that, elem);}
 
 // ================= Generic functions ==================
 
@@ -1068,7 +1094,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 #define GSetGetIndexFirst(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
     default: _GSetGetIndexFirst), \
+  const GSet*: _Generic(Data, \
+    default: _GSetGetIndexFirst), \
   GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetIndexFirst, \
+    VecFloat2D*: _GSetGetIndexFirst, \
+    VecFloat3D*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetVecFloat*: _Generic(Data, \
     VecFloat*: _GSetGetIndexFirst, \
     VecFloat2D*: _GSetGetIndexFirst, \
     VecFloat3D*: _GSetGetIndexFirst, \
@@ -1079,10 +1112,22 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     VecShort3D*: _GSetGetIndexFirst, \
     VecShort4D*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetIndexFirst, \
+    VecShort2D*: _GSetGetIndexFirst, \
+    VecShort3D*: _GSetGetIndexFirst, \
+    VecShort4D*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
     BCurve*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
@@ -1091,19 +1136,40 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     Pyramidoid*: _GSetGetIndexFirst, \
     Spheroid*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetIndexFirst, \
+    Facoid*: _GSetGetIndexFirst, \
+    Pyramidoid*: _GSetGetIndexFirst, \
+    Spheroid*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTree*: _Generic(Data, \
     GTree*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetStr*: _Generic(Data, \
+    char*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
+    GTreeStr*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTreeStr*: _Generic(Data, \
     GTreeStr*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
@@ -1111,7 +1177,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
     default: _GSetGetIndexLast), \
+  const GSet*: _Generic(Data, \
+    default: _GSetGetIndexLast), \
   GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetIndexLast, \
+    VecFloat2D*: _GSetGetIndexLast, \
+    VecFloat3D*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetVecFloat*: _Generic(Data, \
     VecFloat*: _GSetGetIndexLast, \
     VecFloat2D*: _GSetGetIndexLast, \
     VecFloat3D*: _GSetGetIndexLast, \
@@ -1122,10 +1195,22 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     VecShort3D*: _GSetGetIndexLast, \
     VecShort4D*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
+  const GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetIndexLast, \
+    VecShort2D*: _GSetGetIndexLast, \
+    VecShort3D*: _GSetGetIndexLast, \
+    VecShort4D*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
     BCurve*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
+  const GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
@@ -1134,19 +1219,40 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     Pyramidoid*: _GSetGetIndexLast, \
     Spheroid*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
+  const GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetIndexLast, \
+    Facoid*: _GSetGetIndexLast, \
+    Pyramidoid*: _GSetGetIndexLast, \
+    Spheroid*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
+  const GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTree*: _Generic(Data, \
     GTree*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
+  const GSetStr*: _Generic(Data, \
+    char*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
+    GTreeStr*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTreeStr*: _Generic(Data, \
     GTreeStr*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
@@ -1154,7 +1260,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 #define GSetGetFirstElem(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
     default: _GSetGetFirstElem), \
+  const GSet*: _Generic(Data, \
+    default: _GSetGetFirstElem), \
   GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetFirstElem, \
+    VecFloat2D*: _GSetGetFirstElem, \
+    VecFloat3D*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetVecFloat*: _Generic(Data, \
     VecFloat*: _GSetGetFirstElem, \
     VecFloat2D*: _GSetGetFirstElem, \
     VecFloat3D*: _GSetGetFirstElem, \
@@ -1165,10 +1278,22 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     VecShort3D*: _GSetGetFirstElem, \
     VecShort4D*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetFirstElem, \
+    VecShort2D*: _GSetGetFirstElem, \
+    VecShort3D*: _GSetGetFirstElem, \
+    VecShort4D*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
     BCurve*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
@@ -1177,19 +1302,40 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     Pyramidoid*: _GSetGetFirstElem, \
     Spheroid*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetFirstElem, \
+    Facoid*: _GSetGetFirstElem, \
+    Pyramidoid*: _GSetGetFirstElem, \
+    Spheroid*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTree*: _Generic(Data, \
     GTree*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetStr*: _Generic(Data, \
+    char*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
+    GTreeStr*: _GSetGetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTreeStr*: _Generic(Data, \
     GTreeStr*: _GSetGetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
@@ -1197,7 +1343,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 #define GSetGetLastElem(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
     default: _GSetGetLastElem), \
+  const GSet*: _Generic(Data, \
+    default: _GSetGetLastElem), \
   GSetVecFloat*: _Generic(Data, \
+    VecFloat*: _GSetGetLastElem, \
+    VecFloat2D*: _GSetGetLastElem, \
+    VecFloat3D*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetVecFloat*: _Generic(Data, \
     VecFloat*: _GSetGetLastElem, \
     VecFloat2D*: _GSetGetLastElem, \
     VecFloat3D*: _GSetGetLastElem, \
@@ -1208,10 +1361,22 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     VecShort3D*: _GSetGetLastElem, \
     VecShort4D*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetVecShort*: _Generic(Data, \
+    VecShort*: _GSetGetLastElem, \
+    VecShort2D*: _GSetGetLastElem, \
+    VecShort3D*: _GSetGetLastElem, \
+    VecShort4D*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
     BCurve*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetBCurve*: _Generic(Data, \
+    BCurve*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
+    SCurve*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSCurve*: _Generic(Data, \
     SCurve*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
@@ -1220,35 +1385,67 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     Pyramidoid*: _GSetGetLastElem, \
     Spheroid*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetShapoid*: _Generic(Data, \
+    Shapoid*: _GSetGetLastElem, \
+    Facoid*: _GSetGetLastElem, \
+    Pyramidoid*: _GSetGetLastElem, \
+    Spheroid*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
+    KnapSackPod*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetPBPhysParticle*: _Generic(Data, \
+    PBPhysParticle*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
+    GTree*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTree*: _Generic(Data, \
     GTree*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetStr*: _Generic(Data, \
+    char*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
+    GTreeStr*: _GSetGetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetGTreeStr*: _Generic(Data, \
     GTreeStr*: _GSetGetLastElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
   GSet*: _GSetPrint, \
+  const GSet*: _GSetPrint, \
   GSetVecFloat*: _GSetPrint, \
+  const GSetVecFloat*: _GSetPrint, \
   GSetVecShort*: _GSetPrint, \
+  const GSetVecShort*: _GSetPrint, \
   GSetBCurve*: _GSetPrint, \
+  const GSetBCurve*: _GSetPrint, \
   GSetSCurve*: _GSetPrint, \
+  const GSetSCurve*: _GSetPrint, \
   GSetShapoid*: _GSetPrint, \
+  const GSetShapoid*: _GSetPrint, \
   GSetKnapSackPod*: _GSetPrint, \
+  const GSetKnapSackPod*: _GSetPrint, \
   GSetPBPhysParticle*: _GSetPrint, \
+  const GSetPBPhysParticle*: _GSetPrint, \
   GSetGTree*: _GSetPrint, \
+  const GSetGTree*: _GSetPrint, \
   GSetStr*: _GSetPrint, \
+  const GSetStr*: _GSetPrint, \
   GSetGTreeStr*: _GSetPrint, \
+  const GSetGTreeStr*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -1267,16 +1464,27 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 
 #define GSetNbElem(Set) _Generic(Set, \
   GSet*: _GSetNbElem, \
+  const GSet*: _GSetNbElem, \
   GSetVecFloat*: _GSetNbElem, \
+  const GSetVecFloat*: _GSetNbElem, \
   GSetVecShort*: _GSetNbElem, \
+  const GSetVecShort*: _GSetNbElem, \
   GSetBCurve*: _GSetNbElem, \
+  const GSetBCurve*: _GSetNbElem, \
   GSetSCurve*: _GSetNbElem, \
+  const GSetSCurve*: _GSetNbElem, \
   GSetShapoid*: _GSetNbElem, \
+  const GSetShapoid*: _GSetNbElem, \
   GSetKnapSackPod*: _GSetNbElem, \
+  const GSetKnapSackPod*: _GSetNbElem, \
   GSetPBPhysParticle*: _GSetNbElem, \
+  const GSetPBPhysParticle*: _GSetNbElem, \
   GSetGTree*: _GSetNbElem, \
+  const GSetGTree*: _GSetNbElem, \
   GSetStr*: _GSetNbElem, \
+  const GSetStr*: _GSetNbElem, \
   GSetGTreeStr*: _GSetNbElem, \
+  const GSetGTreeStr*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -1337,58 +1545,102 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 
 #define GSetGet(Set, Pos) _Generic(Set, \
   GSet*: _GSetGet, \
+  const GSet*: _GSetGet, \
   GSetVecFloat*: _GSetVecFloatGet, \
+  const GSetVecFloat*: _GSetVecFloatGet, \
   GSetVecShort*: _GSetVecShortGet, \
+  const GSetVecShort*: _GSetVecShortGet, \
   GSetBCurve*: _GSetBCurveGet, \
+  const GSetBCurve*: _GSetBCurveGet, \
   GSetSCurve*: _GSetSCurveGet, \
+  const GSetSCurve*: _GSetSCurveGet, \
   GSetShapoid*: _GSetShapoidGet, \
+  const GSetShapoid*: _GSetShapoidGet, \
   GSetKnapSackPod*: _GSetKnapSackPodGet, \
+  const GSetKnapSackPod*: _GSetKnapSackPodGet, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
+  const GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
   GSetGTree*: _GSetGTreeGet, \
+  const GSetGTree*: _GSetGTreeGet, \
   GSetStr*: _GSetStrGet, \
+  const GSetStr*: _GSetStrGet, \
   GSetGTreeStr*: _GSetGTreeStrGet, \
+  const GSetGTreeStr*: _GSetGTreeStrGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetFirst(Set) _Generic(Set, \
   GSet*: _GSetGetFirst, \
+  const GSet*: _GSetGetFirst, \
   GSetVecFloat*: _GSetVecFloatGetFirst, \
+  const GSetVecFloat*: _GSetVecFloatGetFirst, \
   GSetVecShort*: _GSetVecShortGetFirst, \
+  const GSetVecShort*: _GSetVecShortGetFirst, \
   GSetBCurve*: _GSetBCurveGetFirst, \
+  const GSetBCurve*: _GSetBCurveGetFirst, \
   GSetSCurve*: _GSetSCurveGetFirst, \
+  const GSetSCurve*: _GSetSCurveGetFirst, \
   GSetShapoid*: _GSetShapoidGetFirst, \
+  const GSetShapoid*: _GSetShapoidGetFirst, \
   GSetKnapSackPod*: _GSetKnapSackPodGetFirst, \
+  const GSetKnapSackPod*: _GSetKnapSackPodGetFirst, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetFirst, \
+  const GSetPBPhysParticle*: _GSetPBPhysParticleGetFirst, \
   GSetGTree*: _GSetGTreeGetFirst, \
+  const GSetGTree*: _GSetGTreeGetFirst, \
   GSetStr*: _GSetStrGetFirst, \
+  const GSetStr*: _GSetStrGetFirst, \
   GSetGTreeStr*: _GSetGTreeStrGetFirst, \
+  const GSetGTreeStr*: _GSetGTreeStrGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetLast(Set) _Generic(Set, \
   GSet*: _GSetGetLast, \
+  const GSet*: _GSetGetLast, \
   GSetVecFloat*: _GSetVecFloatGetLast, \
+  const GSetVecFloat*: _GSetVecFloatGetLast, \
   GSetVecShort*: _GSetVecShortGetLast, \
+  const GSetVecShort*: _GSetVecShortGetLast, \
   GSetBCurve*: _GSetBCurveGetLast, \
+  const GSetBCurve*: _GSetBCurveGetLast, \
   GSetSCurve*: _GSetSCurveGetLast, \
+  const GSetSCurve*: _GSetSCurveGetLast, \
   GSetShapoid*: _GSetShapoidGetLast, \
+  const GSetShapoid*: _GSetShapoidGetLast, \
   GSetKnapSackPod*: _GSetKnapSackPodGetLast, \
+  const GSetKnapSackPod*: _GSetKnapSackPodGetLast, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetLast, \
+  const GSetPBPhysParticle*: _GSetPBPhysParticleGetLast, \
   GSetGTree*: _GSetGTreeGetLast, \
+  const GSetGTree*: _GSetGTreeGetLast, \
   GSetStr*: _GSetStrGetLast, \
+  const GSetStr*: _GSetStrGetLast, \
   GSetGTreeStr*: _GSetGTreeStrGetLast, \
+  const GSetGTreeStr*: _GSetGTreeStrGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetGetElem(Set, Pos) _Generic(Set, \
   GSet*: _GSetGetElem, \
+  const GSet*: _GSetGetElem, \
   GSetVecFloat*: _GSetGetElem, \
+  const GSetVecFloat*: _GSetGetElem, \
   GSetVecShort*: _GSetGetElem, \
+  const GSetVecShort*: _GSetGetElem, \
   GSetBCurve*: _GSetGetElem, \
+  const GSetBCurve*: _GSetGetElem, \
   GSetSCurve*: _GSetGetElem, \
+  const GSetSCurve*: _GSetGetElem, \
   GSetShapoid*: _GSetGetElem, \
+  const GSetShapoid*: _GSetGetElem, \
   GSetKnapSackPod*: _GSetGetElem, \
+  const GSetKnapSackPod*: _GSetGetElem, \
   GSetPBPhysParticle*: _GSetGetElem, \
+  const GSetPBPhysParticle*: _GSetGetElem, \
   GSetGTree*: _GSetGetElem, \
+  const GSetGTree*: _GSetGetElem, \
   GSetStr*: _GSetGetElem, \
+  const GSetStr*: _GSetGetElem, \
   GSetGTreeStr*: _GSetGetElem, \
+  const GSetGTreeStr*: _GSetGetElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1575,99 +1827,175 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 
 #define GSetCount(Set, Data) _Generic(Set, \
   GSet*: _GSetCount, \
+  const GSet*: _GSetCount, \
   GSetVecFloat*: _GSetCount, \
+  const GSetVecFloat*: _GSetCount, \
   GSetVecShort*: _GSetCount, \
+  const GSetVecShort*: _GSetCount, \
   GSetBCurve*: _GSetCount, \
+  const GSetBCurve*: _GSetCount, \
   GSetSCurve*: _GSetCount, \
+  const GSetSCurve*: _GSetCount, \
   GSetShapoid*: _GSetCount, \
+  const GSetShapoid*: _GSetCount, \
   GSetKnapSackPod*: _GSetCount, \
+  const GSetKnapSackPod*: _GSetCount, \
   GSetPBPhysParticle*: _GSetCount, \
+  const GSetPBPhysParticle*: _GSetCount, \
   GSetGTree*: _GSetCount, \
+  const GSetGTree*: _GSetCount, \
   GSetStr*: _GSetCount, \
+  const GSetStr*: _GSetCount, \
   GSetGTreeStr*: _GSetCount, \
+  const GSetGTreeStr*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreate, \
+  const GSet*: _GSetIterForwardCreate, \
   GSetVecFloat*: _GSetIterForwardCreate, \
+  const GSetVecFloat*: _GSetIterForwardCreate, \
   GSetVecShort*: _GSetIterForwardCreate, \
+  const GSetVecShort*: _GSetIterForwardCreate, \
   GSetBCurve*: _GSetIterForwardCreate, \
+  const GSetBCurve*: _GSetIterForwardCreate, \
   GSetSCurve*: _GSetIterForwardCreate, \
+  const GSetSCurve*: _GSetIterForwardCreate, \
   GSetShapoid*: _GSetIterForwardCreate, \
+  const GSetShapoid*: _GSetIterForwardCreate, \
   GSetKnapSackPod*: _GSetIterForwardCreate, \
+  const GSetKnapSackPod*: _GSetIterForwardCreate, \
   GSetPBPhysParticle*: _GSetIterForwardCreate, \
+  const GSetPBPhysParticle*: _GSetIterForwardCreate, \
   GSetGTree*: _GSetIterForwardCreate, \
+  const GSetGTree*: _GSetIterForwardCreate, \
   GSetStr*: _GSetIterForwardCreate, \
+  const GSetStr*: _GSetIterForwardCreate, \
   GSetGTreeStr*: _GSetIterForwardCreate, \
+  const GSetGTreeStr*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterForwardCreateStatic, \
+  const GSet*: _GSetIterForwardCreateStatic, \
   GSetVecFloat*: _GSetIterForwardCreateStatic, \
+  const GSetVecFloat*: _GSetIterForwardCreateStatic, \
   GSetVecShort*: _GSetIterForwardCreateStatic, \
+  const GSetVecShort*: _GSetIterForwardCreateStatic, \
   GSetBCurve*: _GSetIterForwardCreateStatic, \
+  const GSetBCurve*: _GSetIterForwardCreateStatic, \
   GSetSCurve*: _GSetIterForwardCreateStatic, \
+  const GSetSCurve*: _GSetIterForwardCreateStatic, \
   GSetShapoid*: _GSetIterForwardCreateStatic, \
+  const GSetShapoid*: _GSetIterForwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
+  const GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
+  const GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
   GSetGTree*: _GSetIterForwardCreateStatic, \
+  const GSetGTree*: _GSetIterForwardCreateStatic, \
   GSetStr*: _GSetIterForwardCreateStatic, \
+  const GSetStr*: _GSetIterForwardCreateStatic, \
   GSetGTreeStr*: _GSetIterForwardCreateStatic, \
+  const GSetGTreeStr*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreate, \
+  const GSet*: _GSetIterBackwardCreate, \
   GSetVecFloat*: _GSetIterBackwardCreate, \
+  const GSetVecFloat*: _GSetIterBackwardCreate, \
   GSetVecShort*: _GSetIterBackwardCreate, \
+  const GSetVecShort*: _GSetIterBackwardCreate, \
   GSetBCurve*: _GSetIterBackwardCreate, \
+  const GSetBCurve*: _GSetIterBackwardCreate, \
   GSetSCurve*: _GSetIterBackwardCreate, \
+  const GSetSCurve*: _GSetIterBackwardCreate, \
   GSetShapoid*: _GSetIterBackwardCreate, \
+  const GSetShapoid*: _GSetIterBackwardCreate, \
   GSetKnapSackPod*: _GSetIterBackwardCreate, \
+  const GSetKnapSackPod*: _GSetIterBackwardCreate, \
   GSetPBPhysParticle*: _GSetIterBackwardCreate, \
+  const GSetPBPhysParticle*: _GSetIterBackwardCreate, \
   GSetGTree*: _GSetIterBackwardCreate, \
+  const GSetGTree*: _GSetIterBackwardCreate, \
   GSetGTreeStr*: _GSetIterBackwardCreate, \
+  const GSetGTreeStr*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
   GSet*: _GSetIterBackwardCreateStatic, \
+  const GSet*: _GSetIterBackwardCreateStatic, \
   GSetVecFloat*: _GSetIterBackwardCreateStatic, \
+  const GSetVecFloat*: _GSetIterBackwardCreateStatic, \
   GSetVecShort*: _GSetIterBackwardCreateStatic, \
+  const GSetVecShort*: _GSetIterBackwardCreateStatic, \
   GSetBCurve*: _GSetIterBackwardCreateStatic, \
+  const GSetBCurve*: _GSetIterBackwardCreateStatic, \
   GSetSCurve*: _GSetIterBackwardCreateStatic, \
+  const GSetSCurve*: _GSetIterBackwardCreateStatic, \
   GSetShapoid*: _GSetIterBackwardCreateStatic, \
+  const GSetShapoid*: _GSetIterBackwardCreateStatic, \
   GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
+  const GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
+  const GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
   GSetGTree*: _GSetIterBackwardCreateStatic, \
+  const GSetGTree*: _GSetIterBackwardCreateStatic, \
   GSetStr*: _GSetIterBackwardCreateStatic, \
+  const GSetStr*: _GSetIterBackwardCreateStatic, \
   GSetGTreeStr*: _GSetIterBackwardCreateStatic, \
+  const GSetGTreeStr*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
   GSetIterForward*: _Generic(Set, \
     GSet*: GSetIterForwardSetGSet, \
+    const GSet*: GSetIterForwardSetGSet, \
     GSetVecFloat*: GSetIterForwardSetGSet, \
+    const GSetVecFloat*: GSetIterForwardSetGSet, \
     GSetVecShort*: GSetIterForwardSetGSet, \
+    const GSetVecShort*: GSetIterForwardSetGSet, \
     GSetBCurve*: GSetIterForwardSetGSet, \
+    const GSetBCurve*: GSetIterForwardSetGSet, \
     GSetSCurve*: GSetIterForwardSetGSet, \
+    const GSetSCurve*: GSetIterForwardSetGSet, \
     GSetShapoid*: GSetIterForwardSetGSet, \
+    const GSetShapoid*: GSetIterForwardSetGSet, \
     GSetKnapSackPod*: GSetIterForwardSetGSet, \
+    const GSetKnapSackPod*: GSetIterForwardSetGSet, \
     GSetPBPhysParticle*: GSetIterForwardSetGSet, \
+    const GSetPBPhysParticle*: GSetIterForwardSetGSet, \
     GSetGTree*: GSetIterForwardSetGSet, \
+    const GSetGTree*: GSetIterForwardSetGSet, \
     GSetStr*: GSetIterForwardSetGSet, \
+    const GSetStr*: GSetIterForwardSetGSet, \
     GSetGTreeStr*: GSetIterForwardSetGSet, \
+    const GSetGTreeStr*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
+    const GSet*: GSetIterBackwardSetGSet, \
     GSetVecFloat*: GSetIterBackwardSetGSet, \
+    const GSetVecFloat*: GSetIterBackwardSetGSet, \
     GSetVecShort*: GSetIterBackwardSetGSet, \
+    const GSetVecShort*: GSetIterBackwardSetGSet, \
     GSetBCurve*: GSetIterBackwardSetGSet, \
+    const GSetBCurve*: GSetIterBackwardSetGSet, \
     GSetSCurve*: GSetIterBackwardSetGSet, \
+    const GSetSCurve*: GSetIterBackwardSetGSet, \
     GSetShapoid*: GSetIterBackwardSetGSet, \
+    const GSetShapoid*: GSetIterBackwardSetGSet, \
     GSetKnapSackPod*: GSetIterBackwardSetGSet, \
+    const GSetKnapSackPod*: GSetIterBackwardSetGSet, \
     GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
+    const GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
     GSetGTree*: GSetIterBackwardSetGSet, \
+    const GSetGTree*: GSetIterBackwardSetGSet, \
     GSetStr*: GSetIterBackwardSetGSet, \
+    const GSetStr*: GSetIterBackwardSetGSet, \
     GSetGTreeStr*: GSetIterBackwardSetGSet, \
+    const GSetGTreeStr*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
@@ -1703,22 +2031,30 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
 
 #define GSetIterIsFirst(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardIsFirst, \
+  const GSetIterForward*: GSetIterForwardIsFirst, \
   GSetIterBackward*: GSetIterBackwardIsFirst, \
+  const GSetIterBackward*: GSetIterBackwardIsFirst, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterIsLast(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardIsLast, \
+  const GSetIterForward*: GSetIterForwardIsLast, \
   GSetIterBackward*: GSetIterBackwardIsLast, \
+  const GSetIterBackward*: GSetIterBackwardIsLast, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterGet(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGet, \
+  const GSetIterForward*: GSetIterForwardGet, \
   GSetIterBackward*: GSetIterBackwardGet, \
+  const GSetIterBackward*: GSetIterBackwardGet, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterGetElem(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGetElem, \
+  const GSetIterForward*: GSetIterForwardGetElem, \
   GSetIterBackward*: GSetIterBackwardGetElem, \
+  const GSetIterBackward*: GSetIterBackwardGetElem, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterRemoveElem(Iter) _Generic(Iter, \
