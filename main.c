@@ -118,7 +118,7 @@ void UnitTestGSetFlush() {
   printf("UnitTestGSetFlush OK\n");
 }
 
-void printData(void* data, FILE* stream) {
+void printData(const void* const data, FILE* const stream) {
   fprintf(stream, "%d", *(int*)data);
 }
 
@@ -315,12 +315,12 @@ void UnitTestGSetNbElemGet() {
       sprintf(GSetErr->_msg, "GSetGet NOK");
       PBErrCatch(GSetErr);
     }
-  if (*(int*)GSetGetFirst(&set) != 0) {
+  if (*(int*)GSetFirst(&set) != 0) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetGetFirst NOK");
     PBErrCatch(GSetErr);
   }
-  if (*(int*)GSetGetLast(&set) != 4) {
+  if (*(int*)GSetLast(&set) != 4) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetGetLast NOK");
     PBErrCatch(GSetErr);

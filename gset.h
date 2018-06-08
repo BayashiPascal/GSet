@@ -181,14 +181,14 @@ void* _GSetGet(const GSet* const that, const int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetFirst(const GSet* const that);
+void* _GSetFirst(const GSet* const that);
 
 // Function to get the data at last position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGetLast(const GSet* const that);
+void* _GSetLast(const GSet* const that);
 
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
@@ -219,7 +219,7 @@ int _GSetGetIndexLast(const GSet* const that, const void* const data);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetFirstElem(const GSet* const that, 
+GSetElem* _GSetFirstElem(const GSet* const that, 
   const void* const data);
 
 // Function to get the last element of the GSet
@@ -228,7 +228,7 @@ GSetElem* _GSetGetFirstElem(const GSet* const that,
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetLastElem(const GSet* const that, 
+GSetElem* _GSetLastElem(const GSet* const that, 
   const void* const data);
 
 // Function to sort the element of the gset in increasing order of 
@@ -500,9 +500,9 @@ inline VecFloat* _GSetVecFloatGet(const GSetVecFloat* const that,
   const int iElem)
   {return (VecFloat*)_GSetGet((GSet* const)that, iElem);}
 inline VecFloat* _GSetVecFloatGetFirst(const GSetVecFloat* const that)
-  {return (VecFloat*)_GSetGetFirst((const GSet* const)that);}
+  {return (VecFloat*)_GSetFirst((const GSet* const)that);}
 inline VecFloat* _GSetVecFloatGetLast(const GSetVecFloat* const that)
-  {return (VecFloat*)_GSetGetLast((const GSet* const)that);}
+  {return (VecFloat*)_GSetLast((const GSet* const)that);}
 inline VecFloat* _GSetVecFloatPop(GSetVecFloat* const that)
   {return (VecFloat*)_GSetPop((GSet* const)that);}
 inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* const that)
@@ -536,9 +536,9 @@ inline VecShort* _GSetVecShortGet(const GSetVecShort* const that,
   const int iElem)
   {return (VecShort*)_GSetGet((const GSet* const)that, iElem);}
 inline VecShort* _GSetVecShortGetFirst(const GSetVecShort* const that)
-  {return (VecShort*)_GSetGetFirst((const GSet* const)that);}
+  {return (VecShort*)_GSetFirst((const GSet* const)that);}
 inline VecShort* _GSetVecShortGetLast(const GSetVecShort* const that)
-  {return (VecShort*)_GSetGetLast((const GSet* const)that);}
+  {return (VecShort*)_GSetLast((const GSet* const)that);}
 inline VecShort* _GSetVecShortPop(GSetVecShort* const that)
   {return (VecShort*)_GSetPop((GSet* const)that);}
 inline VecShort* _GSetVecShortDrop(GSetVecShort* const that)
@@ -563,9 +563,9 @@ inline BCurve* _GSetBCurveGet(const GSetBCurve* const that,
   const int iElem)
   {return (BCurve*)_GSetGet((const GSet* const)that, iElem);}
 inline BCurve* _GSetBCurveGetFirst(const GSetBCurve* const that)
-  {return (BCurve*)_GSetGetFirst((const GSet* const)that);}
+  {return (BCurve*)_GSetFirst((const GSet* const)that);}
 inline BCurve* _GSetBCurveGetLast(const GSetBCurve* const that)
-  {return (BCurve*)_GSetGetLast((const GSet* const)that);}
+  {return (BCurve*)_GSetLast((const GSet* const)that);}
 inline BCurve* _GSetBCurvePop(GSetBCurve* const that)
   {return (BCurve*)_GSetPop((GSet* const)that);}
 inline BCurve* _GSetBCurveDrop(GSetBCurve* const that)
@@ -589,9 +589,9 @@ inline SCurve* _GSetSCurveGet(const GSetSCurve* const that,
   const int iElem)
   {return (SCurve*)_GSetGet((const GSet* const)that, iElem);}
 inline SCurve* _GSetSCurveGetFirst(const GSetSCurve* const that)
-  {return (SCurve*)_GSetGetFirst((const GSet* const)that);}
+  {return (SCurve*)_GSetFirst((const GSet* const)that);}
 inline SCurve* _GSetSCurveGetLast(const GSetSCurve* const that)
-  {return (SCurve*)_GSetGetLast((const GSet* const)that);}
+  {return (SCurve*)_GSetLast((const GSet* const)that);}
 inline SCurve* _GSetSCurvePop(GSetSCurve* const that)
   {return (SCurve*)_GSetPop((GSet* const)that);}
 inline SCurve* _GSetSCurveDrop(GSetSCurve* const that)
@@ -625,9 +625,9 @@ inline Shapoid* _GSetShapoidGet(const GSetShapoid* const that,
   const int iElem)
   {return (Shapoid*)_GSetGet((const GSet* const)that, iElem);}
 inline Shapoid* _GSetShapoidGetFirst(const GSetShapoid* const that)
-  {return (Shapoid*)_GSetGetFirst((const GSet* const)that);}
+  {return (Shapoid*)_GSetFirst((const GSet* const)that);}
 inline Shapoid* _GSetShapoidGetLast(const GSetShapoid* const that)
-  {return (Shapoid*)_GSetGetLast((const GSet* const)that);}
+  {return (Shapoid*)_GSetLast((const GSet* const)that);}
 inline Shapoid* _GSetShapoidPop(GSetShapoid* const that)
   {return (Shapoid*)_GSetPop((GSet* const)that);}
 inline Shapoid* _GSetShapoidDrop(GSetShapoid* const that)
@@ -654,10 +654,10 @@ inline KnapSackPod* _GSetKnapSackPodGet(
   {return (KnapSackPod*)_GSetGet((const GSet* const)that, iElem);}
 inline KnapSackPod* _GSetKnapSackPodGetFirst(
   const GSetKnapSackPod* const that)
-  {return (KnapSackPod*)_GSetGetFirst((const GSet* const)that);}
+  {return (KnapSackPod*)_GSetFirst((const GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodGetLast(
   const GSetKnapSackPod* const that)
-  {return (KnapSackPod*)_GSetGetLast((const GSet* const)that);}
+  {return (KnapSackPod*)_GSetLast((const GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodPop(GSetKnapSackPod* const that)
   {return (KnapSackPod*)_GSetPop((GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodDrop(GSetKnapSackPod* const that)
@@ -684,10 +684,10 @@ inline PBPhysParticle* _GSetPBPhysParticleGet(
   {return (PBPhysParticle*)_GSetGet((const GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleGetFirst(
   const GSetPBPhysParticle* const that)
-  {return (PBPhysParticle*)_GSetGetFirst((const GSet* const)that);}
+  {return (PBPhysParticle*)_GSetFirst((const GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleGetLast(
   const GSetPBPhysParticle* const that)
-  {return (PBPhysParticle*)_GSetGetLast((const GSet* const)that);}
+  {return (PBPhysParticle*)_GSetLast((const GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticlePop(
   GSetPBPhysParticle* const that)
   {return (PBPhysParticle*)_GSetPop((GSet* const)that);}
@@ -713,9 +713,9 @@ inline GSetGTree* GSetGTreeClone(const GSetGTree* const that)
 inline GTree* _GSetGTreeGet(const GSetGTree* const that, const int iElem)
   {return (GTree*)_GSetGet((const GSet* const)that, iElem);}
 inline GTree* _GSetGTreeGetFirst(const GSetGTree* const that)
-  {return (GTree*)_GSetGetFirst((const GSet* const)that);}
+  {return (GTree*)_GSetFirst((const GSet* const)that);}
 inline GTree* _GSetGTreeGetLast(const GSetGTree* const that)
-  {return (GTree*)_GSetGetLast((const GSet* const)that);}
+  {return (GTree*)_GSetLast((const GSet* const)that);}
 inline GTree* _GSetGTreePop(GSetGTree* const that)
   {return (GTree*)_GSetPop((GSet* const)that);}
 inline GTree* _GSetGTreeDrop(GSetGTree* const that)
@@ -735,9 +735,9 @@ inline GSetStr* GSetStrClone(const GSetStr* const that)
 inline char* _GSetStrGet(const GSetStr* const that, const int iElem)
   {return (char*)_GSetGet((const GSet* const)that, iElem);}
 inline char* _GSetStrGetFirst(const GSetStr* const that)
-  {return (char*)_GSetGetFirst((const GSet* const)that);}
+  {return (char*)_GSetFirst((const GSet* const)that);}
 inline char* _GSetStrGetLast(const GSetStr* const that)
-  {return (char*)_GSetGetLast((const GSet* const)that);}
+  {return (char*)_GSetLast((const GSet* const)that);}
 inline char* _GSetStrPop(GSetStr* const that)
   {return (char*)_GSetPop((GSet* const)that);}
 inline char* _GSetStrDrop(GSetStr* const that)
@@ -760,9 +760,9 @@ inline GTreeStr* _GSetGTreeStrGet(const GSetGTreeStr* const that,
   const int iElem)
   {return (GTreeStr*)_GSetGet((const GSet* const)that, iElem);}
 inline GTreeStr* _GSetGTreeStrGetFirst(const GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetGetFirst((const GSet* const)that);}
+  {return (GTreeStr*)_GSetFirst((const GSet* const)that);}
 inline GTreeStr* _GSetGTreeStrGetLast(const GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetGetLast((const GSet* const)that);}
+  {return (GTreeStr*)_GSetLast((const GSet* const)that);}
 inline GTreeStr* _GSetGTreeStrPop(GSetGTreeStr* const that)
   {return (GTreeStr*)_GSetPop((GSet* const)that);}
 inline GTreeStr* _GSetGTreeStrDrop(GSetGTreeStr* const that)
@@ -1257,169 +1257,169 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
-#define GSetGetFirstElem(Set, Data) _Generic(Set, \
+#define GSetFirstElem(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
-    default: _GSetGetFirstElem), \
+    default: _GSetFirstElem), \
   const GSet*: _Generic(Data, \
-    default: _GSetGetFirstElem), \
+    default: _GSetFirstElem), \
   GSetVecFloat*: _Generic(Data, \
-    VecFloat*: _GSetGetFirstElem, \
-    VecFloat2D*: _GSetGetFirstElem, \
-    VecFloat3D*: _GSetGetFirstElem, \
+    VecFloat*: _GSetFirstElem, \
+    VecFloat2D*: _GSetFirstElem, \
+    VecFloat3D*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetVecFloat*: _Generic(Data, \
-    VecFloat*: _GSetGetFirstElem, \
-    VecFloat2D*: _GSetGetFirstElem, \
-    VecFloat3D*: _GSetGetFirstElem, \
+    VecFloat*: _GSetFirstElem, \
+    VecFloat2D*: _GSetFirstElem, \
+    VecFloat3D*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetVecShort*: _Generic(Data, \
-    VecShort*: _GSetGetFirstElem, \
-    VecShort2D*: _GSetGetFirstElem, \
-    VecShort3D*: _GSetGetFirstElem, \
-    VecShort4D*: _GSetGetFirstElem, \
+    VecShort*: _GSetFirstElem, \
+    VecShort2D*: _GSetFirstElem, \
+    VecShort3D*: _GSetFirstElem, \
+    VecShort4D*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetVecShort*: _Generic(Data, \
-    VecShort*: _GSetGetFirstElem, \
-    VecShort2D*: _GSetGetFirstElem, \
-    VecShort3D*: _GSetGetFirstElem, \
-    VecShort4D*: _GSetGetFirstElem, \
+    VecShort*: _GSetFirstElem, \
+    VecShort2D*: _GSetFirstElem, \
+    VecShort3D*: _GSetFirstElem, \
+    VecShort4D*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
-    BCurve*: _GSetGetFirstElem, \
+    BCurve*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetBCurve*: _Generic(Data, \
-    BCurve*: _GSetGetFirstElem, \
+    BCurve*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
-    SCurve*: _GSetGetFirstElem, \
+    SCurve*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetSCurve*: _Generic(Data, \
-    SCurve*: _GSetGetFirstElem, \
+    SCurve*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
-    Shapoid*: _GSetGetFirstElem, \
-    Facoid*: _GSetGetFirstElem, \
-    Pyramidoid*: _GSetGetFirstElem, \
-    Spheroid*: _GSetGetFirstElem, \
+    Shapoid*: _GSetFirstElem, \
+    Facoid*: _GSetFirstElem, \
+    Pyramidoid*: _GSetFirstElem, \
+    Spheroid*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetShapoid*: _Generic(Data, \
-    Shapoid*: _GSetGetFirstElem, \
-    Facoid*: _GSetGetFirstElem, \
-    Pyramidoid*: _GSetGetFirstElem, \
-    Spheroid*: _GSetGetFirstElem, \
+    Shapoid*: _GSetFirstElem, \
+    Facoid*: _GSetFirstElem, \
+    Pyramidoid*: _GSetFirstElem, \
+    Spheroid*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
-    KnapSackPod*: _GSetGetFirstElem, \
+    KnapSackPod*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetKnapSackPod*: _Generic(Data, \
-    KnapSackPod*: _GSetGetFirstElem, \
+    KnapSackPod*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
-    PBPhysParticle*: _GSetGetFirstElem, \
+    PBPhysParticle*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetPBPhysParticle*: _Generic(Data, \
-    PBPhysParticle*: _GSetGetFirstElem, \
+    PBPhysParticle*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetFirstElem, \
+    GTree*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetFirstElem, \
+    GTree*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
-    char*: _GSetGetFirstElem, \
+    char*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetStr*: _Generic(Data, \
-    char*: _GSetGetFirstElem, \
+    char*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetFirstElem, \
+    GTreeStr*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetFirstElem, \
+    GTreeStr*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
-#define GSetGetLastElem(Set, Data) _Generic(Set, \
+#define GSetLastElem(Set, Data) _Generic(Set, \
   GSet*: _Generic(Data, \
-    default: _GSetGetLastElem), \
+    default: _GSetLastElem), \
   const GSet*: _Generic(Data, \
-    default: _GSetGetLastElem), \
+    default: _GSetLastElem), \
   GSetVecFloat*: _Generic(Data, \
-    VecFloat*: _GSetGetLastElem, \
-    VecFloat2D*: _GSetGetLastElem, \
-    VecFloat3D*: _GSetGetLastElem, \
+    VecFloat*: _GSetLastElem, \
+    VecFloat2D*: _GSetLastElem, \
+    VecFloat3D*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetVecFloat*: _Generic(Data, \
-    VecFloat*: _GSetGetLastElem, \
-    VecFloat2D*: _GSetGetLastElem, \
-    VecFloat3D*: _GSetGetLastElem, \
+    VecFloat*: _GSetLastElem, \
+    VecFloat2D*: _GSetLastElem, \
+    VecFloat3D*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetVecShort*: _Generic(Data, \
-    VecShort*: _GSetGetLastElem, \
-    VecShort2D*: _GSetGetLastElem, \
-    VecShort3D*: _GSetGetLastElem, \
-    VecShort4D*: _GSetGetLastElem, \
+    VecShort*: _GSetLastElem, \
+    VecShort2D*: _GSetLastElem, \
+    VecShort3D*: _GSetLastElem, \
+    VecShort4D*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetVecShort*: _Generic(Data, \
-    VecShort*: _GSetGetLastElem, \
-    VecShort2D*: _GSetGetLastElem, \
-    VecShort3D*: _GSetGetLastElem, \
-    VecShort4D*: _GSetGetLastElem, \
+    VecShort*: _GSetLastElem, \
+    VecShort2D*: _GSetLastElem, \
+    VecShort3D*: _GSetLastElem, \
+    VecShort4D*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetBCurve*: _Generic(Data, \
-    BCurve*: _GSetGetLastElem, \
+    BCurve*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetBCurve*: _Generic(Data, \
-    BCurve*: _GSetGetLastElem, \
+    BCurve*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetSCurve*: _Generic(Data, \
-    SCurve*: _GSetGetLastElem, \
+    SCurve*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetSCurve*: _Generic(Data, \
-    SCurve*: _GSetGetLastElem, \
+    SCurve*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetShapoid*: _Generic(Data, \
-    Shapoid*: _GSetGetLastElem, \
-    Facoid*: _GSetGetLastElem, \
-    Pyramidoid*: _GSetGetLastElem, \
-    Spheroid*: _GSetGetLastElem, \
+    Shapoid*: _GSetLastElem, \
+    Facoid*: _GSetLastElem, \
+    Pyramidoid*: _GSetLastElem, \
+    Spheroid*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetShapoid*: _Generic(Data, \
-    Shapoid*: _GSetGetLastElem, \
-    Facoid*: _GSetGetLastElem, \
-    Pyramidoid*: _GSetGetLastElem, \
-    Spheroid*: _GSetGetLastElem, \
+    Shapoid*: _GSetLastElem, \
+    Facoid*: _GSetLastElem, \
+    Pyramidoid*: _GSetLastElem, \
+    Spheroid*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
-    KnapSackPod*: _GSetGetLastElem, \
+    KnapSackPod*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetKnapSackPod*: _Generic(Data, \
-    KnapSackPod*: _GSetGetLastElem, \
+    KnapSackPod*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
-    PBPhysParticle*: _GSetGetLastElem, \
+    PBPhysParticle*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetPBPhysParticle*: _Generic(Data, \
-    PBPhysParticle*: _GSetGetLastElem, \
+    PBPhysParticle*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetLastElem, \
+    GTree*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetLastElem, \
+    GTree*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
-    char*: _GSetGetLastElem, \
+    char*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetStr*: _Generic(Data, \
-    char*: _GSetGetLastElem, \
+    char*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetLastElem, \
+    GTreeStr*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetLastElem, \
+    GTreeStr*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1568,9 +1568,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetGTreeStr*: _GSetGTreeStrGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
-#define GSetGetFirst(Set) _Generic(Set, \
-  GSet*: _GSetGetFirst, \
-  const GSet*: _GSetGetFirst, \
+#define GSetFirst(Set) _Generic(Set, \
+  GSet*: _GSetFirst, \
+  const GSet*: _GSetFirst, \
   GSetVecFloat*: _GSetVecFloatGetFirst, \
   const GSetVecFloat*: _GSetVecFloatGetFirst, \
   GSetVecShort*: _GSetVecShortGetFirst, \
@@ -1593,9 +1593,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetGTreeStr*: _GSetGTreeStrGetFirst, \
   default: PBErrInvalidPolymorphism)(Set)
 
-#define GSetGetLast(Set) _Generic(Set, \
-  GSet*: _GSetGetLast, \
-  const GSet*: _GSetGetLast, \
+#define GSetLast(Set) _Generic(Set, \
+  GSet*: _GSetLast, \
+  const GSet*: _GSetLast, \
   GSetVecFloat*: _GSetVecFloatGetLast, \
   const GSetVecFloat*: _GSetVecFloatGetLast, \
   GSetVecShort*: _GSetVecShortGetLast, \
