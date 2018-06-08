@@ -195,7 +195,7 @@ void* _GSetLast(const GSet* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetElem(const GSet* const that, const int iElem);
+GSetElem* _GSetElement(const GSet* const that, const int iElem);
 
 // Function to get the index of the first element of the GSet
 // which point to 'data'
@@ -1618,29 +1618,29 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetGTreeStr*: _GSetGTreeStrGetLast, \
   default: PBErrInvalidPolymorphism)(Set)
 
-#define GSetGetElem(Set, Pos) _Generic(Set, \
-  GSet*: _GSetGetElem, \
-  const GSet*: _GSetGetElem, \
-  GSetVecFloat*: _GSetGetElem, \
-  const GSetVecFloat*: _GSetGetElem, \
-  GSetVecShort*: _GSetGetElem, \
-  const GSetVecShort*: _GSetGetElem, \
-  GSetBCurve*: _GSetGetElem, \
-  const GSetBCurve*: _GSetGetElem, \
-  GSetSCurve*: _GSetGetElem, \
-  const GSetSCurve*: _GSetGetElem, \
-  GSetShapoid*: _GSetGetElem, \
-  const GSetShapoid*: _GSetGetElem, \
-  GSetKnapSackPod*: _GSetGetElem, \
-  const GSetKnapSackPod*: _GSetGetElem, \
-  GSetPBPhysParticle*: _GSetGetElem, \
-  const GSetPBPhysParticle*: _GSetGetElem, \
-  GSetGTree*: _GSetGetElem, \
-  const GSetGTree*: _GSetGetElem, \
-  GSetStr*: _GSetGetElem, \
-  const GSetStr*: _GSetGetElem, \
-  GSetGTreeStr*: _GSetGetElem, \
-  const GSetGTreeStr*: _GSetGetElem, \
+#define GSetElement(Set, Pos) _Generic(Set, \
+  GSet*: _GSetElement, \
+  const GSet*: _GSetElement, \
+  GSetVecFloat*: _GSetElement, \
+  const GSetVecFloat*: _GSetElement, \
+  GSetVecShort*: _GSetElement, \
+  const GSetVecShort*: _GSetElement, \
+  GSetBCurve*: _GSetElement, \
+  const GSetBCurve*: _GSetElement, \
+  GSetSCurve*: _GSetElement, \
+  const GSetSCurve*: _GSetElement, \
+  GSetShapoid*: _GSetElement, \
+  const GSetShapoid*: _GSetElement, \
+  GSetKnapSackPod*: _GSetElement, \
+  const GSetKnapSackPod*: _GSetElement, \
+  GSetPBPhysParticle*: _GSetElement, \
+  const GSetPBPhysParticle*: _GSetElement, \
+  GSetGTree*: _GSetElement, \
+  const GSetGTree*: _GSetElement, \
+  GSetStr*: _GSetElement, \
+  const GSetStr*: _GSetElement, \
+  GSetGTreeStr*: _GSetElement, \
+  const GSetGTreeStr*: _GSetElement, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \

@@ -342,7 +342,7 @@ void* _GSetGet(const GSet* const that, const int iElem) {
   // Set a pointer for the return value
   void* ret = NULL;
   // Get the iElem-th element
-  GSetElem* e = GSetGetElem(that, iElem);
+  GSetElem* e = GSetElement(that, iElem);
   // Get the data of the element
   ret = e->_data;
   // Return the data
@@ -392,7 +392,7 @@ void* _GSetLast(const GSet* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetGetElem(const GSet* const that, const int iElem) {
+GSetElem* _GSetElement(const GSet* const that, const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -664,8 +664,8 @@ void _GSetSwitch(GSet* const that, const int iElem, const int jElem) {
   }
 #endif
   // Get the two elements
-  GSetElem* iPtr = GSetGetElem(that, iElem);
-  GSetElem* jPtr = GSetGetElem(that, jElem);
+  GSetElem* iPtr = GSetElement(that, iElem);
+  GSetElem* jPtr = GSetElement(that, jElem);
   // Switch the elements
   float v = iPtr->_sortVal;
   iPtr->_sortVal = jPtr->_sortVal;

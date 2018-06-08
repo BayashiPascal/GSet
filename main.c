@@ -362,7 +362,7 @@ void UnitTestGSetSort() {
     for (int i = 10; i--;) {
       int j = (int)floor(rnd() * 5);
       GSetPush(&set, a + j);
-      GSetElemSetSortVal(GSetGetElem(&set, 0), a[j]);
+      GSetElemSetSortVal(GSetElement(&set, 0), a[j]);
     }
     GSetSort(&set);
     GSetIterReset(&iter);
@@ -389,7 +389,7 @@ void UnitTestGSetSplitMerge() {
     GSetPush(&set, a + i);
   for (int i = 5; i--;)
     GSetAppend(&set, a + i);
-  GSet* split = GSetSplit(&set, GSetGetElem(&set, 5));
+  GSet* split = GSetSplit(&set, GSetElement(&set, 5));
   if (split->_nbElem != 5 || set._nbElem != 5) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetSplit NOK");
