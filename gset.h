@@ -907,6 +907,7 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetKnapSackPod*: _Generic(Data, \
     KnapSackPod*: _GSetPush, \
+    const KnapSackPod*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetPush, \
