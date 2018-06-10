@@ -213,11 +213,11 @@ void _GSetRemoveFirst(GSet* const that, const void* const data) {
   }
 #endif
   // Get the first element pointing to 'data'
-  GSetElem* elem = GSetFirstElem(that, data);
+  GSetElem* elem = (GSetElem*)GSetFirstElem(that, data);
   // If we could find an element
   if (elem != NULL)
     // Remove this element
-    while (GSetRemoveElem(that, &elem) && false);
+    GSetRemoveElem(that, &elem);
 }
 
 // Function to remove the last element of the GSet pointing to 'data'
@@ -234,11 +234,11 @@ void _GSetRemoveLast(GSet* const that, const void* const data) {
   }
 #endif
   // Get the last element pointing to 'data'
-  GSetElem* elem = GSetLastElem(that, data);
+  GSetElem* elem = (GSetElem*)GSetLastElem(that, data);
   // If we could find an element
   if (elem != NULL)
     // Remove this element
-    while (GSetRemoveElem(that, &elem) && false);
+    GSetRemoveElem(that, &elem);
 }
 
 // Function to remove the element at the 'iElem'-th position of the GSet
@@ -320,6 +320,22 @@ void _GSetRemoveAll(GSet* const that, const void* const data) {
   }
 }
 
+// Function to get the data at the GSetElem
+#if BUILDMODE != 0
+inline
+#endif 
+void* GSetElemData(const GSetElem* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Return the data
+  return that->_data;
+}
+
 // Function to get the data at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
@@ -339,14 +355,8 @@ void* _GSetGet(const GSet* const that, const int iElem) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Set a pointer for the return value
-  void* ret = NULL;
-  // Get the iElem-th element
-  GSetElem* e = GSetElement(that, iElem);
-  // Get the data of the element
-  ret = e->_data;
-  // Return the data
-  return ret;
+  // Return the data of the iElem-th element
+  return GSetElemData(GSetElement(that, iElem));
 }
 
 // Function to get the data at first position of the GSet
@@ -354,7 +364,7 @@ void* _GSetGet(const GSet* const that, const int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetFirst(const GSet* const that) {
+void* _GSetHead(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -362,10 +372,8 @@ void* _GSetFirst(const GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Set a pointer for the return value
-  void* ret = that->_head->_data;
-  // Return the data
-  return ret;
+  // Return the data of the first element
+  return GSetElemData(that->_head);
 }
 
 // Function to get the data at last position of the GSet
@@ -373,7 +381,7 @@ void* _GSetFirst(const GSet* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetLast(const GSet* const that) {
+void* _GSetTail(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -381,10 +389,8 @@ void* _GSetLast(const GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Set a pointer for the return value
-  void* ret = that->_tail->_data;
-  // Return the data
-  return ret;
+  // Return the data of the last element
+  return GSetElemData(that->_tail);
 }
 
 // Function to get the element at the 'iElem'-th position of the GSet
@@ -481,7 +487,7 @@ int _GSetGetIndexLast(const GSet* const that, const void* const data) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetFirstElem(const GSet* const that, 
+const GSetElem* _GSetFirstElem(const GSet* const that, 
   const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
@@ -506,7 +512,7 @@ GSetElem* _GSetFirstElem(const GSet* const that,
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetLastElem(const GSet* const that, 
+const GSetElem* _GSetLastElem(const GSet* const that, 
   const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {

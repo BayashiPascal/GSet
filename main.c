@@ -315,12 +315,12 @@ void UnitTestGSetNbElemGet() {
       sprintf(GSetErr->_msg, "GSetGet NOK");
       PBErrCatch(GSetErr);
     }
-  if (*(int*)GSetFirst(&set) != 0) {
+  if (*(int*)GSetHead(&set) != 0) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetGetFirst NOK");
     PBErrCatch(GSetErr);
   }
-  if (*(int*)GSetLast(&set) != 4) {
+  if (*(int*)GSetTail(&set) != 4) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetGetLast NOK");
     PBErrCatch(GSetErr);

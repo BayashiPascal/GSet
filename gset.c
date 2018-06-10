@@ -334,7 +334,7 @@ void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
   // there is nothing to do
   if (iElem == pos)
     return;
-  // Get a pointer to the mmoved element
+  // Get a pointer to the moved element
   GSetElem* elem = GSetElement(that, iElem);
   //Declare two variables to memorize the sort value and data
   // of the moved element
