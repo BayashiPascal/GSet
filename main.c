@@ -8,9 +8,77 @@
 #include <math.h>
 #include "pberr.h"
 #include "gset.h"
+#include "pbmath.h"
 
 #define RANDOMSEED 0
 #define rnd() (float)(rand())/(float)(RAND_MAX)
+
+void UnitTestGSetElemGetSet() {
+  GSetElem elem;
+  GSetElem elemNext;
+  GSetElem elemPrev;
+  float val = 1.0;
+  char data = ' ';
+  elem._next = &elemNext;
+  elem._prev = &elemPrev;
+  elem._sortVal = val;
+  elem._data = &data;
+  if (GSetElemNext(&elem) != &elemNext) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemNext failed");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetElemPrev(&elem) != &elemPrev) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemPrev failed");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetElemData(&elem) != &data) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemData failed");
+    PBErrCatch(GSetErr);
+  }
+  if (!ISEQUALF(GSetElemGetSortVal(&elem), val)) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemGetSortVal failed");
+    PBErrCatch(GSetErr);
+  }
+  float valb = 2.0;
+  char datab = ' ';
+  GSetElem elemNextb;
+  GSetElem elemPrevb;
+  GSetElemSetData(&elem, &datab);
+  GSetElemSetSortVal(&elem, valb);
+  GSetElemSetNext(&elem, &elemNextb);
+  GSetElemSetPrev(&elem, &elemPrevb);
+  if (GSetElemData(&elem) != &datab) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemSetData failed");
+    PBErrCatch(GSetErr);
+  }
+  if (!ISEQUALF(GSetElemGetSortVal(&elem), valb)) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemSetSortVal failed");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetElemNext(&elem) != &elemNextb) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemSetNext failed");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetElemPrev(&elem) != &elemPrevb) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetElemSetPrev failed");
+    PBErrCatch(GSetErr);
+  }
+  
+  printf("UnitTestGSetElemGetSet OK\n");
+}
+
+void UnitTestGSetElem() {
+  UnitTestGSetElemGetSet();
+  printf("UnitTestGSetElem OK\n");
+}
 
 void UnitTestGSetCreateFree() {
   GSet* set = GSetCreate();
@@ -362,7 +430,7 @@ void UnitTestGSetSort() {
     for (int i = 10; i--;) {
       int j = (int)floor(rnd() * 5);
       GSetPush(&set, a + j);
-      GSetElemSetSortVal(GSetElement(&set, 0), a[j]);
+      GSetElemSetSortVal((GSetElem*)GSetHeadElem(&set), a[j]);
     }
     GSetSort(&set);
     GSetIterReset(&iter);
@@ -389,7 +457,7 @@ void UnitTestGSetSplitMerge() {
     GSetPush(&set, a + i);
   for (int i = 5; i--;)
     GSetAppend(&set, a + i);
-  GSet* split = GSetSplit(&set, GSetElement(&set, 5));
+  GSet* split = GSetSplit(&set, (GSetElem*)GSetElement(&set, 5));
   if (split->_nbElem != 5 || set._nbElem != 5) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
     sprintf(GSetErr->_msg, "GSetSplit NOK");
@@ -714,7 +782,7 @@ void UnitTestGSetIteratorForwardIsFirstIsLast() {
   printf("UnitTestGSetIteratorForwardIsFirstIsLast OK\n");
 }
 
-void UnitTestGSetIteratorForwardSetGSet() {
+void UnitTestGSetIteratorForwardSet() {
   int a[3] = {1, 2, 3};
   GSet set = GSetCreateStatic();
   for (int i = 3; i--;)
@@ -727,12 +795,19 @@ void UnitTestGSetIteratorForwardSetGSet() {
   GSetIterSetGSet(&iter, &setb);
   if (iter._set != &setb || iter._curElem != setb._head) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, "UnitTestGSetIteratorForwardSetGSet NOK");
+    sprintf(GSetErr->_msg, "GSetIterSetGSet NOK");
+    PBErrCatch(GSetErr);
+  }
+  char c = ' ';
+  GSetIterSetData(&iter, &c);
+  if (GSetIterGet(&iter) != &c) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetIterSetData NOK");
     PBErrCatch(GSetErr);
   }
   GSetFlush(&set);
   GSetFlush(&setb);
-  printf("UnitTestGSetIteratorForwardSetGSet OK\n");
+  printf("UnitTestGSetIteratorForwardSet OK\n");
 }
 
 void UnitTestGSetIteratorForwardRemoveElem() {
@@ -778,7 +853,7 @@ void UnitTestGSetIteratorForward() {
   UnitTestGSetIteratorForwardStepGetGetElem();
   UnitTestGSetIteratorForwardApply();
   UnitTestGSetIteratorForwardIsFirstIsLast();
-  UnitTestGSetIteratorForwardSetGSet();
+  UnitTestGSetIteratorForwardSet();
   UnitTestGSetIteratorForwardRemoveElem();
   printf("UnitTestGSetIteratorForward OK\n");
 }
@@ -924,7 +999,7 @@ void UnitTestGSetIteratorBackwardIsFirstIsLast() {
   printf("UnitTestGSetIteratorBackwardIsFirstIsLast OK\n");
 }
 
-void UnitTestGSetIteratorBackwardSetGSet() {
+void UnitTestGSetIteratorBackwardSet() {
   int a[3] = {1, 2, 3};
   GSet set = GSetCreateStatic();
   for (int i = 3; i--;)
@@ -937,12 +1012,19 @@ void UnitTestGSetIteratorBackwardSetGSet() {
   GSetIterSetGSet(&iter, &setb);
   if (iter._set != &setb || iter._curElem != setb._tail) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, "UnitTestGSetIteratorBackwardSetGSet NOK");
+    sprintf(GSetErr->_msg, "GSetIterSetGSet NOK");
+    PBErrCatch(GSetErr);
+  }
+  char c = ' ';
+  GSetIterSetData(&iter, &c);
+  if (GSetIterGet(&iter) != &c) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetIterSetData NOK");
     PBErrCatch(GSetErr);
   }
   GSetFlush(&set);
   GSetFlush(&setb);
-  printf("UnitTestGSetIteratorBackwardSetGSet OK\n");
+  printf("UnitTestGSetIteratorBackwardSet OK\n");
 }
 
 void UnitTestGSetIteratorBackwardRemoveElem() {
@@ -988,11 +1070,12 @@ void UnitTestGSetIteratorBackward() {
   UnitTestGSetIteratorBackwardStepGetGetElem();
   UnitTestGSetIteratorBackwardApply();
   UnitTestGSetIteratorBackwardIsFirstIsLast();
-  UnitTestGSetIteratorBackwardSetGSet();
+  UnitTestGSetIteratorBackwardSet();
   printf("UnitTestGSetIteratorBackward OK\n");
 }
 
 void UnitTestAll() {
+  UnitTestGSetElem();
   UnitTestGSet();
   UnitTestGSetIteratorForward();
   UnitTestGSetIteratorBackward();

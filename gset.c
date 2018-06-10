@@ -34,15 +34,16 @@ GSet* GSetClone(const GSet* const that) {
   // Create the clone
   GSet* c = GSetCreate();
   // Set a pointer to the head of the set
-  GSetElem* ptr = that->_head;
+  GSetElem* ptr = (GSetElem*)GSetHeadElem(that);
   // While the pointer is not at the end of the set
   while (ptr != NULL) {
     // Append the data of the current pointer to the clone
-    GSetAppend(c, ptr->_data);
+    GSetAppend(c, GSetElemData(ptr));
     // Copy the sort value
-    c->_tail->_sortVal = ptr->_sortVal;
+    GSetElemSetSortVal((GSetElem*)GSetTailElem(c), 
+      GSetElemGetSortVal(ptr));
     // Move the pointer to the next element
-    ptr = ptr->_next;
+    ptr = (GSetElem*)GSetElemNext(ptr);
   }
   // Return the clone
   return c;
@@ -85,21 +86,21 @@ void _GSetPrint(GSet* const that, FILE* const stream,
   }
 #endif
   // Set a pointer to the head element
-  GSetElem* p = that->_head;
+  GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // While the pointer hasn't reach the end
   while (p != NULL) {
     // If there is a print function for the data
     if (printData != NULL) {
       // Use the argument function to print the data of the 
       // current element
-      (*printData)(p->_data, stream);
+      (*printData)(GSetElemData(p), stream);
     // Else, there is no print function for the data
     } else {
       // Print the pointer value instead
-      fprintf(stream, "%p", p->_data);
+      fprintf(stream, "%p", GSetElemData(p));
     }
     // Move to the next element
-    p = p->_next;
+    p = (GSetElem*)GSetElemNext(p);
     // If there is a next element
     if (p != NULL)
       // Print the separator
@@ -123,42 +124,42 @@ void _GSetAddSort(GSet* const that, void* const data,
   // Allocate memory for the new element
   GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
   // Memorize the pointer toward data
-  e->_data = data;
+  GSetElemSetData(e, data);
   // Memorize the sorting value
-  e->_sortVal = v;
+  GSetElemSetSortVal(e, v);
   // If the GSet is empty
   if (that->_nbElem == 0) {
     // Add the element at the head of the GSet
     that->_head = e;
     that->_tail = e;
-    e->_next = NULL;
-    e->_prev = NULL;
+    GSetElemSetNext(e, NULL);
+    GSetElemSetPrev(e, NULL);
   } else {
     // Set a pointer to the head of the GSet
-    GSetElem* p = that->_head;
+    GSetElem* p = (GSetElem*)GSetHeadElem(that);
     // While the pointed element has a lower value than the 
     // new element, move the pointer to the next element
-    while (p != NULL && p->_sortVal <= v) 
-      p = p->_next;
+    while (p != NULL && GSetElemGetSortVal(p) <= v) 
+      p = (GSetElem*)GSetElemNext(p);
     // Set the next element of the new element to the current element
-    e->_next = p;
+    GSetElemSetNext(e, p);
     // If the current element is not null
     if (p != NULL) {
       // Insert the new element inside the list of elements before p
-      e->_prev = p->_prev;
-      if (p->_prev != NULL) 
-        p->_prev->_next = e;
+      GSetElemSetPrev(e, (GSetElem*)GSetElemPrev(p));
+      if (GSetElemPrev(p) != NULL) 
+        GSetElemSetNext((GSetElem*)GSetElemPrev(p), e);
       else
         that->_head = e;
-      p->_prev = e;
+      GSetElemSetPrev(p, e);
     // Else, if the current element is null
     } else {
       // Insert the new element at the tail of the GSet
-      e->_prev = that->_tail;
-      if (that->_tail != NULL) 
-        that->_tail->_next = e;
+      GSetElemSetPrev(e, (GSetElem*)GSetTailElem(that));
+      if (GSetTailElem(that) != NULL) 
+        GSetElemSetNext((GSetElem*)GSetTailElem(that), e);
       that->_tail = e;
-      if (that->_head == NULL) 
+      if (GSetHeadElem(that) == NULL) 
         that->_head = e;
     }
   }
@@ -205,18 +206,19 @@ void _GSetInsert(GSet* const that, void* const data,
       // Allocate memory for the new element
       GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
       // Memorize the pointer toward data
-      e->_data = data;
+      GSetElemSetData(e, data);
       // By default set the sorting value to 0.0
-      e->_sortVal = 0.0;
+      GSetElemSetSortVal(e, 0.0);
       // Set a pointer toward the head of the GSet
-      GSetElem* p = that->_head;
+      GSetElem* p = (GSetElem*)GSetHeadElem(that);
       // Move the pointer to the iElem-th element
-      for (int i = iElem; i > 0 && p != NULL; --i, p = p->_next);
+      for (int i = iElem; i > 0 && p != NULL; 
+        --i, p = (GSetElem*)GSetElemNext(p));
       // Insert the element before the pointer
-      e->_next = p;
-      e->_prev = p->_prev;
-      p->_prev = e;
-      e->_prev->_next = e;
+      GSetElemSetNext(e, p);
+      GSetElemSetPrev(e, (GSetElem*)GSetElemPrev(p));
+      GSetElemSetPrev(p, e);
+      GSetElemSetNext((GSetElem*)GSetElemPrev(e), e);
       // Increment the number of elements
       ++(that->_nbElem);
     }
@@ -265,16 +267,16 @@ GSet* GSetSortRec(GSet** s) {
     res = GSetCreate();
     // Declare a variable to memorize the pivot, which is equal
     // to the sort value of the first element of the set
-    float pivot = (*s)->_head->_sortVal;
+    float pivot = GSetElemGetSortVal(GSetHeadElem(*s));
     // Pop the pivot and put it in the result
     void* data = GSetPop(*s);
     GSetAppend(res, data);
-    res->_head->_sortVal = pivot;
+    GSetElemSetSortVal((GSetElem*)GSetHeadElem(res), pivot);
     // Pop all the elements one by one from the set
     while ((*s)->_nbElem != 0) {
       // Declare a variable to memorize the sort value of the head
       // element
-      float val = (*s)->_head->_sortVal;
+      float val = GSetElemGetSortVal((GSetElem*)GSetHeadElem(*s));
       // Pop the head element
       data = GSetPop(*s);
       // If the poped element has a sort value lower than the pivot
@@ -282,14 +284,14 @@ GSet* GSetSortRec(GSet** s) {
         // Insert it in the lower set
         GSetAppend(lower, data);
         // Copy the sort value
-        lower->_tail->_sortVal = val;
+        GSetElemSetSortVal((GSetElem*)GSetTailElem(lower), val);
       // Else, the poped element has a sort value greater than or 
       // equal to the pivot
       } else {
         // Insert it in the greater set
         GSetAppend(greater, data);
         // Copy the sort value
-        greater->_tail->_sortVal = val;
+        GSetElemSetSortVal((GSetElem*)GSetTailElem(greater), val);
       }
     }
     // At the end of the loop the original set is empty and we 
@@ -335,19 +337,19 @@ void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
   if (iElem == pos)
     return;
   // Get a pointer to the moved element
-  GSetElem* elem = GSetElement(that, iElem);
+  GSetElem* elem = (GSetElem*)GSetElement(that, iElem);
   //Declare two variables to memorize the sort value and data
   // of the moved element
-  float sortVal = elem->_sortVal;
-  void* data = elem->_data;
+  float sortVal = GSetElemGetSortVal(elem);
+  void* data = GSetElemData(elem);
   // Remove the moved element
   GSetRemove(that, iElem);
   // Insert  new element
   GSetInsert(that, data, pos);
   // Get a pointer to the newly inserted element
-  elem = GSetElement(that, pos);
+  elem = (GSetElem*)GSetElement(that, pos);
   // Correct the sorted value with the original value
-  elem->_sortVal = sortVal;
+  GSetElemSetSortVal(elem, sortVal);
 }
 
 // Return the number of (GSetElem._data=='data') in the GSet 'that'
@@ -391,7 +393,7 @@ GSetIterForward* _GSetIterForwardCreate(GSet* const set) {
     PBErrMalloc(GSetErr, sizeof(GSetIterForward));
   // Set properties
   ret->_set = set;
-  ret->_curElem = set->_head;
+  ret->_curElem = (GSetElem*)GSetHeadElem(set);
   // Return the new iterator
   return ret;
 }

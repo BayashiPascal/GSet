@@ -46,16 +46,16 @@ void _GSetPush(GSet* const that, void* const data) {
   // Allocate memory for the new element
   GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
   // Memorize the pointer toward data
-  e->_data = data;
+  GSetElemSetData(e, data);
   // By default set the sorting value to 0.0
-  e->_sortVal = 0.0;
+  GSetElemSetSortVal(e, 0.0);
   // Add the element at the head of the GSet 
-  e->_prev = NULL;
-  if (that->_head != NULL) 
-    that->_head->_prev = e;
-  e->_next = that->_head;
+  GSetElemSetPrev(e, NULL);
+  if (GSetHeadElem(that) != NULL) 
+    GSetElemSetPrev((GSetElem*)GSetHeadElem(that), e);
+  GSetElemSetNext(e, (GSetElem*)GSetHeadElem(that));
   that->_head = e;
-  if (that->_tail == NULL) 
+  if (GSetTailElem(that) == NULL) 
     that->_tail = e;
   // Increment the number of elements in the GSet
   ++(that->_nbElem);
@@ -76,14 +76,14 @@ void _GSetAppend(GSet* const that, void* const data) {
 #endif
   GSetElem* e = PBErrMalloc(GSetErr, sizeof(GSetElem));
   if (e != NULL) {
-    e->_data = data;
-    e->_sortVal = 0.0;
-    e->_prev = that->_tail;
-    e->_next = NULL;
-    if (that->_tail != NULL) 
-      that->_tail->_next = e;
+    GSetElemSetData(e, data);
+    GSetElemSetSortVal(e, 0.0);
+    GSetElemSetPrev(e, (GSetElem*)GSetTailElem(that));
+    GSetElemSetNext(e, NULL);
+    if (GSetTailElem(that) != NULL) 
+      GSetElemSetNext((GSetElem*)GSetTailElem(that), e);
     that->_tail = e;
-    if (that->_head == NULL) 
+    if (GSetHeadElem(that) == NULL) 
       that->_head = e;
     ++(that->_nbElem);
   }
@@ -104,15 +104,15 @@ void* _GSetPop(GSet* const that) {
   }
 #endif
   void* ret = NULL;
-  GSetElem* p = that->_head;
+  GSetElem* p = (GSetElem*)GSetHeadElem(that);
   if (p != NULL) {
-    ret = p->_data;
-    that->_head = p->_next;
-    if (p->_next != NULL) 
-      p->_next->_prev = NULL;
-    p->_next = NULL;
-    p->_data = NULL;
-    if (that->_tail == p) 
+    ret = GSetElemData(p);
+    that->_head = (GSetElem*)GSetElemNext(p);
+    if (GSetElemNext(p) != NULL) 
+      GSetElemSetPrev((GSetElem*)GSetElemNext(p), NULL);
+    GSetElemSetNext(p, NULL);
+    GSetElemSetData(p, NULL);
+    if (GSetTailElem(that) == p) 
       that->_tail = NULL;
     free(p);
     --(that->_nbElem);
@@ -135,15 +135,15 @@ void* _GSetDrop(GSet* const that) {
   }
 #endif
   void* ret = NULL;
-  GSetElem* p = that->_tail;
+  GSetElem* p = (GSetElem*)GSetTailElem(that);
   if (p != NULL) {
-    ret = p->_data;
-    that->_tail = p->_prev;
-    if (p->_prev != NULL) 
-      p->_prev->_next = NULL;
-    p->_prev = NULL;
-    p->_data = NULL;
-    if (that->_head == p) 
+    ret = GSetElemData(p);
+    that->_tail = (GSetElem*)GSetElemPrev(p);
+    if (GSetElemPrev(p) != NULL) 
+      GSetElemSetNext((GSetElem*)GSetElemPrev(p), NULL);
+    GSetElemSetPrev(p, NULL);
+    GSetElemSetData(p, NULL);
+    if (GSetHeadElem(that) == p) 
       that->_head = NULL;
     free(p);
     --(that->_nbElem);
@@ -178,19 +178,21 @@ void* _GSetRemoveElem(GSet* const that, GSetElem** elem) {
   // Variable to memorize the return value
   void* ret = NULL;
   // Memorize the data at iElem-th position
-  ret = (*elem)->_data;
+  ret = GSetElemData(*elem);
   // Remove the element
-  if ((*elem)->_next != NULL) 
-    (*elem)->_next->_prev = (*elem)->_prev;
-  if ((*elem)->_prev != NULL) 
-    (*elem)->_prev->_next = (*elem)->_next;
-  if (that->_head == (*elem)) 
-    that->_head = (*elem)->_next;
+  if (GSetElemNext(*elem) != NULL) 
+    GSetElemSetPrev((GSetElem*)GSetElemNext(*elem), 
+      (GSetElem*)GSetElemPrev(*elem));
+  if (GSetElemPrev(*elem) != NULL) 
+    GSetElemSetNext((GSetElem*)GSetElemPrev(*elem), 
+      (GSetElem*)GSetElemNext(*elem));
+  if (GSetHeadElem(that) == *elem) 
+    that->_head = (GSetElem*)GSetElemNext(*elem);
   if (that->_tail == (*elem)) 
-    that->_tail = (*elem)->_prev;
-  (*elem)->_next = NULL;
-  (*elem)->_prev = NULL;
-  (*elem)->_data = NULL;
+    that->_tail = (GSetElem*)GSetElemPrev(*elem);
+  GSetElemSetNext(*elem, NULL);
+  GSetElemSetPrev(*elem, NULL);
+  GSetElemSetData(*elem, NULL);
   free((*elem));
   *elem = NULL;
   // Decrement the number of elements
@@ -263,23 +265,26 @@ void* _GSetRemove(GSet* const that, const int iElem) {
   // Variable to memorize the return value
   void* ret = NULL;
   // Set a pointer to the head of the Gset
-  GSetElem* p = that->_head;
+  GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // Move the pointer to the iElem-th element
-  for (int i = iElem; i > 0 && p != NULL; --i, p = p->_next);
+  for (int i = iElem; i > 0 && p != NULL; 
+    --i, p = (GSetElem*)GSetElemNext(p));
   // Memorize the data at iElem-th position
-  ret = p->_data;
+  ret = GSetElemData(p);
   // Remove the element
-  if (p->_next != NULL) 
-    p->_next->_prev = p->_prev;
-  if (p->_prev != NULL) 
-    p->_prev->_next = p->_next;
-  if (that->_head == p) 
-    that->_head = p->_next;
+  if (GSetElemNext(p) != NULL) 
+    GSetElemSetPrev((GSetElem*)GSetElemNext(p), 
+      (GSetElem*)GSetElemPrev(p));
+  if (GSetElemPrev(p) != NULL) 
+    GSetElemSetNext((GSetElem*)GSetElemPrev(p), 
+      (GSetElem*)GSetElemNext(p));
+  if (GSetHeadElem(that) == p) 
+    that->_head = (GSetElem*)GSetElemNext(p);
   if (that->_tail == p) 
-    that->_tail = p->_prev;
-  p->_next = NULL;
-  p->_prev = NULL;
-  p->_data = NULL;
+    that->_tail = (GSetElem*)GSetElemPrev(p);
+  GSetElemSetNext(p, NULL);
+  GSetElemSetPrev(p, NULL);
+  GSetElemSetData(p, NULL);
   free(p);
   // Decrement the number of elements
   --(that->_nbElem);
@@ -301,13 +306,13 @@ void _GSetRemoveAll(GSet* const that, const void* const data) {
   }
 #endif
   // Set a pointer toward the tail of the GSet
-  GSetElem* p = that->_tail;
+  GSetElem* p = (GSetElem*)GSetTailElem(that);
   // Loop on elements until we reached the head of the list
   while (p != NULL) {
     // If the element points toward data
-    if (p->_data == data) {
+    if (GSetElemData(p) == data) {
       // Memorize the previous element before deleting
-      GSetElem* prev = p->_prev;
+      GSetElem* prev = (GSetElem*)GSetElemPrev(p);
       // Remove the element
       GSetRemoveElem(that, &p);
       // Continue with previous element
@@ -315,7 +320,7 @@ void _GSetRemoveAll(GSet* const that, const void* const data) {
     // Else, the element doesn't point toward data
     } else {
       // Continue with previous element
-      p = p->_prev;
+      p = (GSetElem*)GSetElemPrev(p);
     }
   }
 }
@@ -373,7 +378,7 @@ void* _GSetHead(const GSet* const that) {
   }
 #endif
   // Return the data of the first element
-  return GSetElemData(that->_head);
+  return GSetElemData(GSetHeadElem(that));
 }
 
 // Function to get the data at last position of the GSet
@@ -390,7 +395,41 @@ void* _GSetTail(const GSet* const that) {
   }
 #endif
   // Return the data of the last element
-  return GSetElemData(that->_tail);
+  return GSetElemData(GSetTailElem(that));
+}
+
+// Function to get the GSetElem at first position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetHeadElem(const GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Return the first element
+  return that->_head;
+}
+
+// Function to get the GSetElem at last position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetTailElem(const GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Return the last element
+  return that->_tail;
 }
 
 // Function to get the element at the 'iElem'-th position of the GSet
@@ -398,7 +437,7 @@ void* _GSetTail(const GSet* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetElement(const GSet* const that, const int iElem) {
+const GSetElem* _GSetElement(const GSet* const that, const int iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -415,9 +454,10 @@ GSetElem* _GSetElement(const GSet* const that, const int iElem) {
   // Set a pointer for the return value
   GSetElem* ret = NULL;
   // Set the pointer to the head of the GSet
-  ret = that->_head;
+  ret = (GSetElem*)GSetHeadElem(that);
   // Move to the next element iElem times
-  for (int i = iElem; i > 0 && ret != NULL; --i, ret = ret->_next);
+  for (int i = iElem; i > 0 && ret != NULL; 
+    --i, ret = (GSetElem*)GSetElemNext(ret));
   // Return the element
   return ret;
 }
@@ -437,14 +477,14 @@ int _GSetGetIndexFirst(const GSet* const that, const void* const data) {
   }
 #endif
   // Set a pointer toward the head of the GSet
-  GSetElem* p = that->_head;
+  GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // Set a variable to memorize index
   int index = 0;
   // Loop on elements until we have found the 
   // requested data or reached the end of the list
-  while (p != NULL && p->_data != data) {
+  while (p != NULL && GSetElemData(p) != data) {
     ++index;
-    p = p->_next;
+    p = (GSetElem*)GSetElemNext(p);
   }
   // If the pointer is null it means the data wasn't in the GSet
   if (p == NULL)
@@ -468,14 +508,14 @@ int _GSetGetIndexLast(const GSet* const that, const void* const data) {
   }
 #endif
   // Set a pointer toward the tail of the GSet
-  GSetElem* p = that->_tail;
+  GSetElem* p = (GSetElem*)GSetTailElem(that);
   // Set a variable to memorize index
   int index = that->_nbElem - 1;
   // Loop on elements until we have found the 
   // requested data or reached the head of the list
-  while (p != NULL && p->_data != data) {
+  while (p != NULL && GSetElemData(p) != data) {
     --index;
-    p = p->_prev;
+    p = (GSetElem*)GSetElemPrev(p);
   }
   // Return the index
   return index;
@@ -497,11 +537,11 @@ const GSetElem* _GSetFirstElem(const GSet* const that,
   }
 #endif
   // Set a pointer toward the head of the GSet
-  GSetElem* p = that->_head;
+  GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // Loop on elements until we have found the 
   // requested data or reached the end of the list
-  while (p != NULL && p->_data != data)
-    p = p->_next;
+  while (p != NULL && GSetElemData(p) != data)
+    p = (GSetElem*)GSetElemNext(p);
   // Return the pointer
   return p;
 }
@@ -522,11 +562,11 @@ const GSetElem* _GSetLastElem(const GSet* const that,
   }
 #endif
   // Set a pointer toward the head of the GSet
-  GSetElem* p = that->_tail;
+  GSetElem* p = (GSetElem*)GSetTailElem(that);
   // Loop on elements until we have found the 
   // requested data or reached the end of the list
-  while (p != NULL && p->_data != data)
-    p = p->_prev;
+  while (p != NULL && GSetElemData(p) != data)
+    p = (GSetElem*)GSetElemPrev(p);
   // Return the pointer
   return p;
 }
@@ -563,11 +603,13 @@ void _GSetMerge(GSet* const that, GSet* const set) {
     // Else, if 'that' is not empty
     } else {
       // Add 'set' to the tail of 'that'
-      that->_tail->_next = set->_head;
+      GSetElemSetNext((GSetElem*)GSetTailElem(that), 
+        (GSetElem*)GSetHeadElem(set));
       // Add 'that' to the head of 'set'
-      set->_head->_prev = that->_tail;
+      GSetElemSetPrev((GSetElem*)GSetHeadElem(set), 
+        (GSetElem*)GSetTailElem(that));
       // Update the tail of 'that'
-      that->_tail = set->_tail;
+      that->_tail = (GSetElem*)GSetTailElem(set);
       // Update the number of element of 'that'
       that->_nbElem += set->_nbElem;
       // Empty 'set'
@@ -604,15 +646,15 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
   // Declare a variable to count element before e in that
   int nb = 0;
   // If e is not the head of that 
-  if (that->_head != e) {
+  if (GSetHeadElem(that) != e) {
     GSetElem* ptr = e;
     // While there is an element before e
     do {
       // Increment the number of element
       ++nb;
       // Move to the previous element
-      ptr = ptr->_prev;
-    } while (ptr != NULL && ptr != that->_head);
+      ptr = (GSetElem*)GSetElemPrev(ptr);
+    } while (ptr != NULL && ptr != GSetHeadElem(that));
     // If we have reached an element without previous element, this
     // element is not the head of that, meaning e is not in the set 
     if (ptr == NULL)
@@ -624,11 +666,11 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
   // Set the head of res
   res->_head = e;
   // Set the tail of res
-  res->_tail = that->_tail;
+  res->_tail = (GSetElem*)GSetTailElem(that);
   // Set the number of element of res
   res->_nbElem = that->_nbElem - nb;
   // Set the tail of s
-  that->_tail = e->_prev;
+  that->_tail = (GSetElem*)GSetElemPrev(e);
   // Set the number of element of that
   that->_nbElem = nb;
   // If that is empty
@@ -638,9 +680,9 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
   // Else, that is not empty
   else
     // Disconnect the tail of that
-    that->_tail->_next = NULL;
+    GSetElemSetNext((GSetElem*)GSetTailElem(that), NULL);
   // Disconnect the head of res
-  res->_head->_prev = NULL;
+  GSetElemSetPrev((GSetElem*)GSetHeadElem(res), NULL);
   // Return the result
   return res;
 }
@@ -670,15 +712,15 @@ void _GSetSwitch(GSet* const that, const int iElem, const int jElem) {
   }
 #endif
   // Get the two elements
-  GSetElem* iPtr = GSetElement(that, iElem);
-  GSetElem* jPtr = GSetElement(that, jElem);
+  GSetElem* iPtr = (GSetElem*)GSetElement(that, iElem);
+  GSetElem* jPtr = (GSetElem*)GSetElement(that, jElem);
   // Switch the elements
-  float v = iPtr->_sortVal;
-  iPtr->_sortVal = jPtr->_sortVal;
-  jPtr->_sortVal = v;
-  void* dat = iPtr->_data;
-  iPtr->_data = jPtr->_data;
-  jPtr->_data = dat;
+  float v = GSetElemGetSortVal(iPtr);
+  GSetElemSetSortVal(iPtr, GSetElemGetSortVal(jPtr));
+  GSetElemSetSortVal(jPtr, v);
+  void* dat = GSetElemData(iPtr);
+  GSetElemSetData(iPtr, GSetElemData(jPtr));
+  GSetElemSetData(jPtr, dat);
 }
 
 // Set the sort value of the GSetElem 'that' to 'v'
@@ -694,6 +736,53 @@ void GSetElemSetSortVal(GSetElem* const that, const float v) {
   }
 #endif
   that->_sortVal = v;
+}
+
+// Set the data of the GSetElem 'that' to 'd'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetData(GSetElem* const that, void* const d) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  that->_data = d;
+}
+
+// Set the previous element of the GSetElem 'that' to 'e'
+// Do not set the link back in 'e'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetPrev(GSetElem* const that, GSetElem* const e) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  that->_prev = e;
+}
+
+// Set the next element of the GSetElem 'that' to 'e'
+// Do not set the link back in 'e'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetNext(GSetElem* const that, GSetElem* const e) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  that->_next = e;
 }
 
 // Create a new GSetIterForward for the GSet 'set'
@@ -748,7 +837,7 @@ void GSetIterForwardReset(GSetIterForward* const that) {
   }
 #endif
   // Reset
-  that->_curElem = that->_set->_head;
+  that->_curElem = (GSetElem*)GSetHeadElem(that->_set);
 }
 
 // Reset the GSetIterBackward to its starting position
@@ -765,7 +854,7 @@ void GSetIterBackwardReset(GSetIterBackward* const that) {
   }
 #endif
   // Reset
-  that->_curElem = that->_set->_tail;
+  that->_curElem = (GSetElem*)GSetTailElem(that->_set);
 }
 
 // Step the GSetIterForward
@@ -783,8 +872,8 @@ bool GSetIterForwardStep(GSetIterForward* const that) {
   }
 #endif
   // Step
-  if (that->_curElem != NULL && that->_curElem->_next != NULL)
-    that->_curElem = that->_curElem->_next;
+  if (that->_curElem != NULL && GSetElemNext(that->_curElem) != NULL)
+    that->_curElem = (GSetElem*)GSetElemNext(that->_curElem);
   else
     return false;
   return true;
@@ -805,8 +894,8 @@ bool GSetIterBackwardStep(GSetIterBackward* const that) {
   }
 #endif
   // Step
-  if (that->_curElem != NULL && that->_curElem->_prev != NULL)
-    that->_curElem = that->_curElem->_prev;
+  if (that->_curElem != NULL && GSetElemPrev(that->_curElem) != NULL)
+    that->_curElem = (GSetElem*)GSetElemPrev(that->_curElem);
   else
     return false;
   return true;
@@ -827,8 +916,8 @@ bool GSetIterForwardStepBack(GSetIterForward* const that) {
   }
 #endif
   // Step back
-  if (that->_curElem != NULL && that->_curElem->_prev != NULL)
-    that->_curElem = that->_curElem->_prev;
+  if (that->_curElem != NULL && GSetElemPrev(that->_curElem) != NULL)
+    that->_curElem = (GSetElem*)GSetElemPrev(that->_curElem);
   else
     return false;
   return true;
@@ -849,8 +938,8 @@ bool GSetIterBackwardStepBack(GSetIterBackward* const that) {
   }
 #endif
   // Step back
-  if (that->_curElem != NULL && that->_curElem->_next != NULL)
-    that->_curElem = that->_curElem->_next;
+  if (that->_curElem != NULL && GSetElemNext(that->_curElem) != NULL)
+    that->_curElem = (GSetElem*)GSetElemNext(that->_curElem);
   else
     return false;
   return true;
@@ -886,7 +975,7 @@ void GSetIterForwardApply(GSetIterForward* const that,
     // Loop on element
     do {
       // Apply the user function
-      fun(that->_curElem->_data, param);
+      fun(GSetElemData(that->_curElem), param);
     } while (GSetIterStep(that));
 }
 
@@ -920,7 +1009,7 @@ void GSetIterBackwardApply(GSetIterBackward* const that,
     // Loop on element
     do {
       // Apply the user function
-      fun(that->_curElem->_data, param);
+      fun(GSetElemData(that->_curElem), param);
     } while (GSetIterStep(that) == true);
 }
 
@@ -938,7 +1027,7 @@ bool GSetIterForwardIsFirst(const GSetIterForward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == that->_set->_head)
+  if (that->_curElem == GSetHeadElem(that->_set))
     return true;
   else
     return false;
@@ -958,7 +1047,7 @@ bool GSetIterBackwardIsFirst(const GSetIterBackward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == that->_set->_tail)
+  if (that->_curElem == GSetTailElem(that->_set))
     return true;
   else
     return false;
@@ -978,7 +1067,7 @@ bool GSetIterForwardIsLast(const GSetIterForward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == that->_set->_tail)
+  if (that->_curElem == GSetTailElem(that->_set))
     return true;
   else
     return false;
@@ -998,7 +1087,7 @@ bool GSetIterBackwardIsLast(const GSetIterBackward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == that->_set->_head)
+  if (that->_curElem == GSetHeadElem(that->_set))
     return true;
   else
     return false;
@@ -1063,14 +1152,9 @@ void* GSetIterForwardGet(const GSetIterForward* const that) {
     sprintf(GSetErr->_msg, "'that' is null");
     PBErrCatch(GSetErr);
   }
-  if (that->_curElem == NULL) {
-    GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'that->_curElem' is null");
-    PBErrCatch(GSetErr);
-  }
 #endif
   // Return the data
-  return that->_curElem->_data;
+  return GSetElemData(that->_curElem);
 }
 
 // Return the data currently pointed to by the iterator
@@ -1084,21 +1168,17 @@ void* GSetIterBackwardGet(const GSetIterBackward* const that) {
     sprintf(GSetErr->_msg, "'that' is null");
     PBErrCatch(GSetErr);
   }
-  if (that->_curElem == NULL) {
-    GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'that->_curElem' is null");
-    PBErrCatch(GSetErr);
-  }
 #endif
   // Return the data
-  return that->_curElem->_data;
+  return GSetElemData(that->_curElem);
 }
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterForwardGetElem(const GSetIterForward* const that) {
+const GSetElem* GSetIterForwardGetElem(
+  const GSetIterForward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1114,7 +1194,8 @@ GSetElem* GSetIterForwardGetElem(const GSetIterForward* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterBackwardGetElem(const GSetIterBackward* const that) {
+const GSetElem* GSetIterBackwardGetElem(
+  const GSetIterBackward* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -1159,7 +1240,7 @@ bool GSetIterForwardRemoveElem(GSetIterForward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  GSetElem *next = that->_curElem->_next;
+  GSetElem *next = (GSetElem*)GSetElemNext(that->_curElem);
   GSetRemoveElem(that->_set, &(that->_curElem));
   that->_curElem = next;
   if (next != NULL)
@@ -1185,7 +1266,7 @@ bool GSetIterBackwardRemoveElem(GSetIterBackward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  GSetElem *prev = that->_curElem->_prev;
+  GSetElem *prev = (GSetElem*)GSetElemPrev(that->_curElem);
   GSetRemoveElem(that->_set, &(that->_curElem));
   that->_curElem = prev;
   if (prev != NULL)
@@ -1252,9 +1333,119 @@ void _GSetAppendSortedSet(GSet* const that, const GSet* const set) {
     // Loop on element to append
     do {
       // Get the element to append
-      GSetElem* elem = GSetIterGetElem(&iter);
+      GSetElem* elem = (GSetElem*)GSetIterGetElem(&iter);
       // Append the data of the element according to the sorting value
-      GSetAddSort(that, elem->_data, elem->_sortVal);
+      GSetAddSort(that, GSetElemData(elem), GSetElemGetSortVal(elem));
     } while (GSetIterStep(&iter));
   }
 }
+
+// Return the sort value of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetElemGetSortVal(const GSetElem* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  return that->_sortVal;
+}
+
+// Return the next element of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* GSetElemNext(const GSetElem* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  return that->_next;
+}
+
+// Return the previous element of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* GSetElemPrev(const GSetElem* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  return that->_prev;
+}
+
+// Set the data of the element currently pointed to by the iterator
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetIterForwardSetData(const GSetIterForward* const that, 
+  void* data) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  GSetElemSetData((GSetElem*)GSetIterGetElem(that), data);
+}
+
+// Set the data of the element currently pointed to by the iterator
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetIterBackwardSetData(const GSetIterBackward* const that,
+  void* data) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  GSetElemSetData((GSetElem*)GSetIterGetElem(that), data);
+}
+
+// Return the sort value of the element currently pointed to by the 
+// iterator
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetIterForwardGetSortVal(const GSetIterForward* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  return GSetElemGetSortVal(GSetIterGetElem(that));
+}
+
+// Return the sort value of the element currently pointed to by the 
+// iterator
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetIterBackwardGetSortVal(const GSetIterBackward* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  return GSetElemGetSortVal(GSetIterGetElem(that));
+}
+

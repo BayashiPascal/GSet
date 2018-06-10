@@ -196,12 +196,26 @@ inline
 #endif 
 void* _GSetTail(const GSet* const that);
 
+// Function to get the GSetElem at first position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetHeadElem(const GSet* const that);
+
+// Function to get the GSetElem at last position of the GSet
+// without removing it
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetTailElem(const GSet* const that);
+
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* _GSetElement(const GSet* const that, const int iElem);
+const GSetElem* _GSetElement(const GSet* const that, const int iElem);
 
 // Function to get the index of the first element of the GSet
 // which point to 'data'
@@ -289,6 +303,26 @@ int _GSetCount(const GSet* const that, const void* const data);
 inline
 #endif 
 void GSetElemSetSortVal(GSetElem* const that, const float v);
+
+// Set the data of the GSetElem 'that' to 'd'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetData(GSetElem* const that, void* const d);
+
+// Set the previous element of the GSetElem 'that' to 'e'
+// Do not set the link back in 'e'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetPrev(GSetElem* const that, GSetElem* const e);
+
+// Set the next element of the GSetElem 'that' to 'e'
+// Do not set the link back in 'e'
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetElemSetNext(GSetElem* const that, GSetElem* const e);
 
 // Move the 'iElem'-th element to the 'pos' index in the GSet
 void _GSetMoveElem(GSet* const that, const int iElem, const int pos);
@@ -455,13 +489,43 @@ void* GSetIterBackwardGet(const GSetIterBackward* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterForwardGetElem(const GSetIterForward* const that);
+const GSetElem* GSetIterForwardGetElem(
+  const GSetIterForward* const that);
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
 inline
 #endif 
-GSetElem* GSetIterBackwardGetElem(const GSetIterBackward* const that);
+const GSetElem* GSetIterBackwardGetElem(
+  const GSetIterBackward* const that);
+
+// Return the sort value of the element currently pointed to by the 
+// iterator
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetIterForwardGetSortVal(const GSetIterForward* const that);
+
+// Return the sort value of the element currently pointed to by the 
+// iterator
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetIterBackwardGetSortVal(const GSetIterBackward* const that);
+
+// Set the data of the element currently pointed to by the iterator
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetIterForwardSetData(const GSetIterForward* const that, 
+  void* data);
+
+// Set the data of the element currently pointed to by the iterator
+#if BUILDMODE != 0
+inline
+#endif 
+void GSetIterBackwardSetData(const GSetIterBackward* const that,
+  void* data);
 
 // Remove the element currently pointed to by the iterator
 // The iterator is moved forward to the next element
@@ -484,6 +548,25 @@ bool GSetIterForwardRemoveElem(GSetIterForward* const that);
 inline
 #endif 
 bool GSetIterBackwardRemoveElem(GSetIterBackward* const that);
+
+// Return the sort value of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+float GSetElemGetSortVal(const GSetElem* const that);
+
+// Return the next element of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* GSetElemNext(const GSetElem* const that);
+
+// Return the previous element of GSetElem 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* GSetElemPrev(const GSetElem* const that);
+
 
 // ================= Typed GSet ==================
 
@@ -1624,6 +1707,56 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetGTreeStr*: _GSetGTreeStrGetTail, \
   default: PBErrInvalidPolymorphism)(Set)
 
+#define GSetHeadElem(Set) _Generic(Set, \
+  GSet*: _GSetHeadElem, \
+  const GSet*: _GSetHeadElem, \
+  GSetVecFloat*: _GSetHeadElem, \
+  const GSetVecFloat*: _GSetHeadElem, \
+  GSetVecShort*: _GSetHeadElem, \
+  const GSetVecShort*: _GSetHeadElem, \
+  GSetBCurve*: _GSetHeadElem, \
+  const GSetBCurve*: _GSetHeadElem, \
+  GSetSCurve*: _GSetHeadElem, \
+  const GSetSCurve*: _GSetHeadElem, \
+  GSetShapoid*: _GSetHeadElem, \
+  const GSetShapoid*: _GSetHeadElem, \
+  GSetKnapSackPod*: _GSetHeadElem, \
+  const GSetKnapSackPod*: _GSetHeadElem, \
+  GSetPBPhysParticle*: _GSetHeadElem, \
+  const GSetPBPhysParticle*: _GSetHeadElem, \
+  GSetGTree*: _GSetHeadElem, \
+  const GSetGTree*: _GSetHeadElem, \
+  GSetStr*: _GSetHeadElem, \
+  const GSetStr*: _GSetHeadElem, \
+  GSetGTreeStr*: _GSetHeadElem, \
+  const GSetGTreeStr*: _GSetHeadElem, \
+  default: PBErrInvalidPolymorphism)((const GSet*)Set)
+
+#define GSetTailElem(Set) _Generic(Set, \
+  GSet*: _GSetTailElem, \
+  const GSet*: _GSetTailElem, \
+  GSetVecFloat*: _GSetTailElem, \
+  const GSetVecFloat*: _GSetTailElem, \
+  GSetVecShort*: _GSetTailElem, \
+  const GSetVecShort*: _GSetTailElem, \
+  GSetBCurve*: _GSetTailElem, \
+  const GSetBCurve*: _GSetTailElem, \
+  GSetSCurve*: _GSetTailElem, \
+  const GSetSCurve*: _GSetTailElem, \
+  GSetShapoid*: _GSetTailElem, \
+  const GSetShapoid*: _GSetTailElem, \
+  GSetKnapSackPod*: _GSetTailElem, \
+  const GSetKnapSackPod*: _GSetTailElem, \
+  GSetPBPhysParticle*: _GSetTailElem, \
+  const GSetPBPhysParticle*: _GSetTailElem, \
+  GSetGTree*: _GSetTailElem, \
+  const GSetGTree*: _GSetTailElem, \
+  GSetStr*: _GSetTailElem, \
+  const GSetStr*: _GSetTailElem, \
+  GSetGTreeStr*: _GSetTailElem, \
+  const GSetGTreeStr*: _GSetTailElem, \
+  default: PBErrInvalidPolymorphism)((const GSet*)Set)
+
 #define GSetElement(Set, Pos) _Generic(Set, \
   GSet*: _GSetElement, \
   const GSet*: _GSetElement, \
@@ -2056,11 +2189,25 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetIterBackward*: GSetIterBackwardGet, \
   default: PBErrInvalidPolymorphism)(Iter)
 
+#define GSetIterSetData(Iter, Data) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardSetData, \
+  const GSetIterForward*: GSetIterForwardSetData, \
+  GSetIterBackward*: GSetIterBackwardSetData, \
+  const GSetIterBackward*: GSetIterBackwardSetData, \
+  default: PBErrInvalidPolymorphism)(Iter, Data)
+
 #define GSetIterGetElem(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardGetElem, \
   const GSetIterForward*: GSetIterForwardGetElem, \
   GSetIterBackward*: GSetIterBackwardGetElem, \
   const GSetIterBackward*: GSetIterBackwardGetElem, \
+  default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterGetSortVal(Iter) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardGetSortVal, \
+  const GSetIterForward*: GSetIterForwardGetSortVal, \
+  GSetIterBackward*: GSetIterBackwardGetSortVal, \
+  const GSetIterBackward*: GSetIterBackwardGetSortVal, \
   default: PBErrInvalidPolymorphism)(Iter)
 
 #define GSetIterRemoveElem(Iter) _Generic(Iter, \
