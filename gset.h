@@ -790,30 +790,30 @@ inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle* const that, GSetElem** elem)
   {return (PBPhysParticle*)_GSetRemoveElem((GSet* const)that, elem);}
 
-#ifndef GTree
-  typedef struct GTree GTree;
+#ifndef GenTree
+  typedef struct GenTree GenTree;
 #endif
-typedef struct GSetGTree {GSet _set;} GSetGTree;
-#define GSetGTreeCreate() ((GSetGTree*)GSetCreate())
-inline GSetGTree GSetGTreeCreateStatic(void) 
-  {GSetGTree ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetGTree* GSetGTreeClone(const GSetGTree* const that)
-  {return (GSetGTree*)GSetClone((const GSet* const)that);}
-inline GTree* _GSetGTreeGet(const GSetGTree* const that, const int iElem)
-  {return (GTree*)_GSetGet((const GSet* const)that, iElem);}
-inline GTree* _GSetGTreeGetHead(const GSetGTree* const that)
-  {return (GTree*)_GSetHead((const GSet* const)that);}
-inline GTree* _GSetGTreeGetTail(const GSetGTree* const that)
-  {return (GTree*)_GSetTail((const GSet* const)that);}
-inline GTree* _GSetGTreePop(GSetGTree* const that)
-  {return (GTree*)_GSetPop((GSet* const)that);}
-inline GTree* _GSetGTreeDrop(GSetGTree* const that)
-  {return (GTree*)_GSetDrop((GSet* const)that);}
-inline GTree* _GSetGTreeRemove(GSetGTree* const that, const int iElem)
-  {return (GTree*)_GSetRemove((GSet* const)that, iElem);}
-inline GTree* _GSetGTreeRemoveElem(GSetGTree* const that, 
+typedef struct GSetGenTree {GSet _set;} GSetGenTree;
+#define GSetGenTreeCreate() ((GSetGenTree*)GSetCreate())
+inline GSetGenTree GSetGenTreeCreateStatic(void) 
+  {GSetGenTree ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetGenTree* GSetGenTreeClone(const GSetGenTree* const that)
+  {return (GSetGenTree*)GSetClone((const GSet* const)that);}
+inline GenTree* _GSetGenTreeGet(const GSetGenTree* const that, const int iElem)
+  {return (GenTree*)_GSetGet((const GSet* const)that, iElem);}
+inline GenTree* _GSetGenTreeGetHead(const GSetGenTree* const that)
+  {return (GenTree*)_GSetHead((const GSet* const)that);}
+inline GenTree* _GSetGenTreeGetTail(const GSetGenTree* const that)
+  {return (GenTree*)_GSetTail((const GSet* const)that);}
+inline GenTree* _GSetGenTreePop(GSetGenTree* const that)
+  {return (GenTree*)_GSetPop((GSet* const)that);}
+inline GenTree* _GSetGenTreeDrop(GSetGenTree* const that)
+  {return (GenTree*)_GSetDrop((GSet* const)that);}
+inline GenTree* _GSetGenTreeRemove(GSetGenTree* const that, const int iElem)
+  {return (GenTree*)_GSetRemove((GSet* const)that, iElem);}
+inline GenTree* _GSetGenTreeRemoveElem(GSetGenTree* const that, 
   GSetElem** elem)
-  {return (GTree*)_GSetRemoveElem((GSet* const)that, elem);}
+  {return (GenTree*)_GSetRemoveElem((GSet* const)that, elem);}
 
 typedef struct GSetStr {GSet _set;} GSetStr;
 #define GSetStrCreate() ((GSetStr*)GSetCreate())
@@ -836,32 +836,32 @@ inline char* _GSetStrRemove(GSetStr* const that, const int iElem)
 inline char* _GSetStrRemoveElem(GSetStr* const that, GSetElem** elem)
   {return (char*)_GSetRemoveElem((GSet* const)that, elem);}
 
-#ifndef GTreeStr
-  typedef struct GTreeStr GTreeStr;
+#ifndef GenTreeStr
+  typedef struct GenTreeStr GenTreeStr;
 #endif
-typedef struct GSetGTreeStr {GSet _set;} GSetGTreeStr;
-#define GSetGTreeStrCreate() ((GSetGTreeStr*)GSetCreate())
-inline GSetGTreeStr GSetGTreeStrCreateStatic(void) 
-  {GSetGTreeStr ret = {._set=GSetCreateStatic()}; return ret;}
-inline GSetGTreeStr* GSetGTreeStrClone(const GSetGTreeStr* const that)
-  {return (GSetGTreeStr*)GSetClone((const GSet* const)that);}
-inline GTreeStr* _GSetGTreeStrGet(const GSetGTreeStr* const that, 
+typedef struct GSetGenTreeStr {GSet _set;} GSetGenTreeStr;
+#define GSetGenTreeStrCreate() ((GSetGenTreeStr*)GSetCreate())
+inline GSetGenTreeStr GSetGenTreeStrCreateStatic(void) 
+  {GSetGenTreeStr ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetGenTreeStr* GSetGenTreeStrClone(const GSetGenTreeStr* const that)
+  {return (GSetGenTreeStr*)GSetClone((const GSet* const)that);}
+inline GenTreeStr* _GSetGenTreeStrGet(const GSetGenTreeStr* const that, 
   const int iElem)
-  {return (GTreeStr*)_GSetGet((const GSet* const)that, iElem);}
-inline GTreeStr* _GSetGTreeStrGetHead(const GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetHead((const GSet* const)that);}
-inline GTreeStr* _GSetGTreeStrGetTail(const GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetTail((const GSet* const)that);}
-inline GTreeStr* _GSetGTreeStrPop(GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetPop((GSet* const)that);}
-inline GTreeStr* _GSetGTreeStrDrop(GSetGTreeStr* const that)
-  {return (GTreeStr*)_GSetDrop((GSet* const)that);}
-inline GTreeStr* _GSetGTreeStrRemove(GSetGTreeStr* const that, 
+  {return (GenTreeStr*)_GSetGet((const GSet* const)that, iElem);}
+inline GenTreeStr* _GSetGenTreeStrGetHead(const GSetGenTreeStr* const that)
+  {return (GenTreeStr*)_GSetHead((const GSet* const)that);}
+inline GenTreeStr* _GSetGenTreeStrGetTail(const GSetGenTreeStr* const that)
+  {return (GenTreeStr*)_GSetTail((const GSet* const)that);}
+inline GenTreeStr* _GSetGenTreeStrPop(GSetGenTreeStr* const that)
+  {return (GenTreeStr*)_GSetPop((GSet* const)that);}
+inline GenTreeStr* _GSetGenTreeStrDrop(GSetGenTreeStr* const that)
+  {return (GenTreeStr*)_GSetDrop((GSet* const)that);}
+inline GenTreeStr* _GSetGenTreeStrRemove(GSetGenTreeStr* const that, 
   const int iElem)
-  {return (GTreeStr*)_GSetRemove((GSet* const)that, iElem);}
-inline GTreeStr* _GSetGTreeStrRemoveElem(
-  GSetGTreeStr* const that, GSetElem** elem)
-  {return (GTreeStr*)_GSetRemoveElem((GSet* const)that, elem);}
+  {return (GenTreeStr*)_GSetRemove((GSet* const)that, iElem);}
+inline GenTreeStr* _GSetGenTreeStrRemoveElem(
+  GSetGenTreeStr* const that, GSetElem** elem)
+  {return (GenTreeStr*)_GSetRemoveElem((GSet* const)that, elem);}
 
 // ================= Generic functions ==================
 
@@ -874,9 +874,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid**: _GSetFree, \
   GSetKnapSackPod**: _GSetFree, \
   GSetPBPhysParticle**: _GSetFree, \
-  GSetGTree**: _GSetFree, \
+  GSetGenTree**: _GSetFree, \
   GSetStr**: _GSetFree, \
-  GSetGTreeStr**: _GSetFree, \
+  GSetGenTreeStr**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -912,14 +912,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetPush, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetPush, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -955,14 +955,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetAddSort, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetAddSort, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
@@ -998,14 +998,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetInsert, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetInsert, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
@@ -1041,14 +1041,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetAppend, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetAppend, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1084,14 +1084,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetRemoveFirst, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetRemoveFirst, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1127,14 +1127,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetRemoveLast, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetRemoveLast, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1170,14 +1170,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetRemoveAll, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetRemoveAll, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1244,11 +1244,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetIndexFirst, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetIndexFirst, \
+  const GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexFirst, \
@@ -1256,11 +1256,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetIndexFirst, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetIndexFirst, \
+  const GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1327,11 +1327,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetIndexLast, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetGetIndexLast, \
+  const GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexLast, \
@@ -1339,11 +1339,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetStr*: _Generic(Data, \
     char*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetIndexLast, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetGetIndexLast, \
+  const GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1410,11 +1410,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetFirstElem, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetFirstElem, \
+  const GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetFirstElem, \
@@ -1422,11 +1422,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetStr*: _Generic(Data, \
     char*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetFirstElem, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetFirstElem, \
+  const GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1493,11 +1493,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetPBPhysParticle*: _Generic(Data, \
     PBPhysParticle*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(Data, \
-    GTree*: _GSetLastElem, \
+  GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTree*: _Generic(Data, \
-    GTree*: _GSetLastElem, \
+  const GSetGenTree*: _Generic(Data, \
+    GenTree*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(Data, \
     char*: _GSetLastElem, \
@@ -1505,11 +1505,11 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetStr*: _Generic(Data, \
     char*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetLastElem, \
+  GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
-  const GSetGTreeStr*: _Generic(Data, \
-    GTreeStr*: _GSetLastElem, \
+  const GSetGenTreeStr*: _Generic(Data, \
+    GenTreeStr*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1530,12 +1530,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetPrint, \
   GSetPBPhysParticle*: _GSetPrint, \
   const GSetPBPhysParticle*: _GSetPrint, \
-  GSetGTree*: _GSetPrint, \
-  const GSetGTree*: _GSetPrint, \
+  GSetGenTree*: _GSetPrint, \
+  const GSetGenTree*: _GSetPrint, \
   GSetStr*: _GSetPrint, \
   const GSetStr*: _GSetPrint, \
-  GSetGTreeStr*: _GSetPrint, \
-  const GSetGTreeStr*: _GSetPrint, \
+  GSetGenTreeStr*: _GSetPrint, \
+  const GSetGenTreeStr*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -1547,9 +1547,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetFlush, \
   GSetKnapSackPod*: _GSetFlush, \
   GSetPBPhysParticle*: _GSetFlush, \
-  GSetGTree*: _GSetFlush, \
+  GSetGenTree*: _GSetFlush, \
   GSetStr*: _GSetFlush, \
-  GSetGTreeStr*: _GSetFlush, \
+  GSetGenTreeStr*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -1569,12 +1569,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetNbElem, \
   GSetPBPhysParticle*: _GSetNbElem, \
   const GSetPBPhysParticle*: _GSetNbElem, \
-  GSetGTree*: _GSetNbElem, \
-  const GSetGTree*: _GSetNbElem, \
+  GSetGenTree*: _GSetNbElem, \
+  const GSetGenTree*: _GSetNbElem, \
   GSetStr*: _GSetNbElem, \
   const GSetStr*: _GSetNbElem, \
-  GSetGTreeStr*: _GSetNbElem, \
-  const GSetGTreeStr*: _GSetNbElem, \
+  GSetGenTreeStr*: _GSetNbElem, \
+  const GSetGenTreeStr*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -1586,9 +1586,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetShapoidPop, \
   GSetKnapSackPod*: _GSetKnapSackPodPop, \
   GSetPBPhysParticle*: _GSetPBPhysParticlePop, \
-  GSetGTree*: _GSetGTreePop, \
+  GSetGenTree*: _GSetGenTreePop, \
   GSetStr*: _GSetStrPop, \
-  GSetGTreeStr*: _GSetGTreeStrPop, \
+  GSetGenTreeStr*: _GSetGenTreeStrPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1600,9 +1600,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetShapoidDrop, \
   GSetKnapSackPod*: _GSetKnapSackPodDrop, \
   GSetPBPhysParticle*: _GSetPBPhysParticleDrop, \
-  GSetGTree*: _GSetGTreeDrop, \
+  GSetGenTree*: _GSetGenTreeDrop, \
   GSetStr*: _GSetStrDrop, \
-  GSetGTreeStr*: _GSetGTreeStrDrop, \
+  GSetGenTreeStr*: _GSetGenTreeStrDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1614,9 +1614,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetShapoidRemove, \
   GSetKnapSackPod*: _GSetKnapSackPodRemove, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemove, \
-  GSetGTree*: _GSetGTreeRemove, \
+  GSetGenTree*: _GSetGenTreeRemove, \
   GSetStr*: _GSetStrRemove, \
-  GSetGTreeStr*: _GSetGTreeStrRemove, \
+  GSetGenTreeStr*: _GSetGenTreeStrRemove, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1628,9 +1628,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetShapoidRemoveElem, \
   GSetKnapSackPod*: _GSetKnapSackPodRemoveElem, \
   GSetPBPhysParticle*: _GSetPBPhysParticleRemoveElem, \
-  GSetGTree*: _GSetGTreeRemoveElem, \
+  GSetGenTree*: _GSetGenTreeRemoveElem, \
   GSetStr*: _GSetStrRemoveElem, \
-  GSetGTreeStr*: _GSetGTreeStrRemoveElem, \
+  GSetGenTreeStr*: _GSetGenTreeStrRemoveElem, \
   default: PBErrInvalidPolymorphism)(Set, Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -1650,12 +1650,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetKnapSackPodGet, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
   const GSetPBPhysParticle*: _GSetPBPhysParticleGet, \
-  GSetGTree*: _GSetGTreeGet, \
-  const GSetGTree*: _GSetGTreeGet, \
+  GSetGenTree*: _GSetGenTreeGet, \
+  const GSetGenTree*: _GSetGenTreeGet, \
   GSetStr*: _GSetStrGet, \
   const GSetStr*: _GSetStrGet, \
-  GSetGTreeStr*: _GSetGTreeStrGet, \
-  const GSetGTreeStr*: _GSetGTreeStrGet, \
+  GSetGenTreeStr*: _GSetGenTreeStrGet, \
+  const GSetGenTreeStr*: _GSetGenTreeStrGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetHead(Set) _Generic(Set, \
@@ -1675,12 +1675,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetKnapSackPodGetHead, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetHead, \
   const GSetPBPhysParticle*: _GSetPBPhysParticleGetHead, \
-  GSetGTree*: _GSetGTreeGetHead, \
-  const GSetGTree*: _GSetGTreeGetHead, \
+  GSetGenTree*: _GSetGenTreeGetHead, \
+  const GSetGenTree*: _GSetGenTreeGetHead, \
   GSetStr*: _GSetStrGetHead, \
   const GSetStr*: _GSetStrGetHead, \
-  GSetGTreeStr*: _GSetGTreeStrGetHead, \
-  const GSetGTreeStr*: _GSetGTreeStrGetHead, \
+  GSetGenTreeStr*: _GSetGenTreeStrGetHead, \
+  const GSetGenTreeStr*: _GSetGenTreeStrGetHead, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetTail(Set) _Generic(Set, \
@@ -1700,12 +1700,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetKnapSackPodGetTail, \
   GSetPBPhysParticle*: _GSetPBPhysParticleGetTail, \
   const GSetPBPhysParticle*: _GSetPBPhysParticleGetTail, \
-  GSetGTree*: _GSetGTreeGetTail, \
-  const GSetGTree*: _GSetGTreeGetTail, \
+  GSetGenTree*: _GSetGenTreeGetTail, \
+  const GSetGenTree*: _GSetGenTreeGetTail, \
   GSetStr*: _GSetStrGetTail, \
   const GSetStr*: _GSetStrGetTail, \
-  GSetGTreeStr*: _GSetGTreeStrGetTail, \
-  const GSetGTreeStr*: _GSetGTreeStrGetTail, \
+  GSetGenTreeStr*: _GSetGenTreeStrGetTail, \
+  const GSetGenTreeStr*: _GSetGenTreeStrGetTail, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetHeadElem(Set) _Generic(Set, \
@@ -1725,12 +1725,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetHeadElem, \
   GSetPBPhysParticle*: _GSetHeadElem, \
   const GSetPBPhysParticle*: _GSetHeadElem, \
-  GSetGTree*: _GSetHeadElem, \
-  const GSetGTree*: _GSetHeadElem, \
+  GSetGenTree*: _GSetHeadElem, \
+  const GSetGenTree*: _GSetHeadElem, \
   GSetStr*: _GSetHeadElem, \
   const GSetStr*: _GSetHeadElem, \
-  GSetGTreeStr*: _GSetHeadElem, \
-  const GSetGTreeStr*: _GSetHeadElem, \
+  GSetGenTreeStr*: _GSetHeadElem, \
+  const GSetGenTreeStr*: _GSetHeadElem, \
   default: PBErrInvalidPolymorphism)((const GSet*)Set)
 
 #define GSetTailElem(Set) _Generic(Set, \
@@ -1750,12 +1750,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetTailElem, \
   GSetPBPhysParticle*: _GSetTailElem, \
   const GSetPBPhysParticle*: _GSetTailElem, \
-  GSetGTree*: _GSetTailElem, \
-  const GSetGTree*: _GSetTailElem, \
+  GSetGenTree*: _GSetTailElem, \
+  const GSetGenTree*: _GSetTailElem, \
   GSetStr*: _GSetTailElem, \
   const GSetStr*: _GSetTailElem, \
-  GSetGTreeStr*: _GSetTailElem, \
-  const GSetGTreeStr*: _GSetTailElem, \
+  GSetGenTreeStr*: _GSetTailElem, \
+  const GSetGenTreeStr*: _GSetTailElem, \
   default: PBErrInvalidPolymorphism)((const GSet*)Set)
 
 #define GSetElement(Set, Pos) _Generic(Set, \
@@ -1775,12 +1775,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetElement, \
   GSetPBPhysParticle*: _GSetElement, \
   const GSetPBPhysParticle*: _GSetElement, \
-  GSetGTree*: _GSetElement, \
-  const GSetGTree*: _GSetElement, \
+  GSetGenTree*: _GSetElement, \
+  const GSetGenTree*: _GSetElement, \
   GSetStr*: _GSetElement, \
   const GSetStr*: _GSetElement, \
-  GSetGTreeStr*: _GSetElement, \
-  const GSetGTreeStr*: _GSetElement, \
+  GSetGenTreeStr*: _GSetElement, \
+  const GSetGenTreeStr*: _GSetElement, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1792,9 +1792,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetSort, \
   GSetKnapSackPod*: _GSetSort, \
   GSetPBPhysParticle*: _GSetSort, \
-  GSetGTree*: _GSetSort, \
+  GSetGenTree*: _GSetSort, \
   GSetStr*: _GSetSort, \
-  GSetGTreeStr*: _GSetSort, \
+  GSetGenTreeStr*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -1827,14 +1827,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(MergedSet, \
     GSetPBPhysParticle*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(MergedSet, \
-    GSetGTree*: _GSetMerge, \
+  GSetGenTree*: _Generic(MergedSet, \
+    GSetGenTree*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(MergedSet, \
     GSetStr*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(MergedSet, \
-    GSetGTreeStr*: _GSetMerge, \
+  GSetGenTreeStr*: _Generic(MergedSet, \
+    GSetGenTreeStr*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
@@ -1848,9 +1848,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetSplit, \
   GSetKnapSackPod*: _GSetSplit, \
   GSetPBPhysParticle*: _GSetSplit, \
-  GSetGTree*: _GSetSplit, \
+  GSetGenTree*: _GSetSplit, \
   GSetStr*: _GSetSplit, \
-  GSetGTreeStr*: _GSetSplit, \
+  GSetGenTreeStr*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -1883,14 +1883,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(AppendSet, \
     GSetPBPhysParticle*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(AppendSet, \
-    GSetGTree*: _GSetAppendSet, \
+  GSetGenTree*: _Generic(AppendSet, \
+    GSetGenTree*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(AppendSet, \
     GSetStr*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(AppendSet, \
-    GSetGTreeStr*: _GSetAppendSet, \
+  GSetGenTreeStr*: _Generic(AppendSet, \
+    GSetGenTreeStr*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -1925,14 +1925,14 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetPBPhysParticle*: _Generic(AppendSet, \
     GSetPBPhysParticle*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTree*: _Generic(AppendSet, \
-    GSetGTree*: _GSetAppendSortedSet, \
+  GSetGenTree*: _Generic(AppendSet, \
+    GSetGenTree*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   GSetStr*: _Generic(AppendSet, \
     GSetStr*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
-  GSetGTreeStr*: _Generic(AppendSet, \
-    GSetGTreeStr*: _GSetAppendSortedSet, \
+  GSetGenTreeStr*: _Generic(AppendSet, \
+    GSetGenTreeStr*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -1946,9 +1946,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetSwitch, \
   GSetKnapSackPod*: _GSetSwitch, \
   GSetPBPhysParticle*: _GSetSwitch, \
-  GSetGTree*: _GSetSwitch, \
+  GSetGenTree*: _GSetSwitch, \
   GSetStr*: _GSetSwitch, \
-  GSetGTreeStr*: _GSetSwitch, \
+  GSetGenTreeStr*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -1960,9 +1960,9 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   GSetShapoid*: _GSetMoveElem, \
   GSetKnapSackPod*: _GSetMoveElem, \
   GSetPBPhysParticle*: _GSetMoveElem, \
-  GSetGTree*: _GSetMoveElem, \
+  GSetGenTree*: _GSetMoveElem, \
   GSetStr*: _GSetMoveElem, \
-  GSetGTreeStr*: _GSetMoveElem, \
+  GSetGenTreeStr*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetCount(Set, Data) _Generic(Set, \
@@ -1982,12 +1982,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetCount, \
   GSetPBPhysParticle*: _GSetCount, \
   const GSetPBPhysParticle*: _GSetCount, \
-  GSetGTree*: _GSetCount, \
-  const GSetGTree*: _GSetCount, \
+  GSetGenTree*: _GSetCount, \
+  const GSetGenTree*: _GSetCount, \
   GSetStr*: _GSetCount, \
   const GSetStr*: _GSetCount, \
-  GSetGTreeStr*: _GSetCount, \
-  const GSetGTreeStr*: _GSetCount, \
+  GSetGenTreeStr*: _GSetCount, \
+  const GSetGenTreeStr*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetIterForwardCreate(Set) _Generic(Set, \
@@ -2007,12 +2007,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetIterForwardCreate, \
   GSetPBPhysParticle*: _GSetIterForwardCreate, \
   const GSetPBPhysParticle*: _GSetIterForwardCreate, \
-  GSetGTree*: _GSetIterForwardCreate, \
-  const GSetGTree*: _GSetIterForwardCreate, \
+  GSetGenTree*: _GSetIterForwardCreate, \
+  const GSetGenTree*: _GSetIterForwardCreate, \
   GSetStr*: _GSetIterForwardCreate, \
   const GSetStr*: _GSetIterForwardCreate, \
-  GSetGTreeStr*: _GSetIterForwardCreate, \
-  const GSetGTreeStr*: _GSetIterForwardCreate, \
+  GSetGenTreeStr*: _GSetIterForwardCreate, \
+  const GSetGenTreeStr*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -2032,12 +2032,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetIterForwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
   const GSetPBPhysParticle*: _GSetIterForwardCreateStatic, \
-  GSetGTree*: _GSetIterForwardCreateStatic, \
-  const GSetGTree*: _GSetIterForwardCreateStatic, \
+  GSetGenTree*: _GSetIterForwardCreateStatic, \
+  const GSetGenTree*: _GSetIterForwardCreateStatic, \
   GSetStr*: _GSetIterForwardCreateStatic, \
   const GSetStr*: _GSetIterForwardCreateStatic, \
-  GSetGTreeStr*: _GSetIterForwardCreateStatic, \
-  const GSetGTreeStr*: _GSetIterForwardCreateStatic, \
+  GSetGenTreeStr*: _GSetIterForwardCreateStatic, \
+  const GSetGenTreeStr*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -2057,10 +2057,10 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetIterBackwardCreate, \
   GSetPBPhysParticle*: _GSetIterBackwardCreate, \
   const GSetPBPhysParticle*: _GSetIterBackwardCreate, \
-  GSetGTree*: _GSetIterBackwardCreate, \
-  const GSetGTree*: _GSetIterBackwardCreate, \
-  GSetGTreeStr*: _GSetIterBackwardCreate, \
-  const GSetGTreeStr*: _GSetIterBackwardCreate, \
+  GSetGenTree*: _GSetIterBackwardCreate, \
+  const GSetGenTree*: _GSetIterBackwardCreate, \
+  GSetGenTreeStr*: _GSetIterBackwardCreate, \
+  const GSetGenTreeStr*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -2080,12 +2080,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
   const GSetKnapSackPod*: _GSetIterBackwardCreateStatic, \
   GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
   const GSetPBPhysParticle*: _GSetIterBackwardCreateStatic, \
-  GSetGTree*: _GSetIterBackwardCreateStatic, \
-  const GSetGTree*: _GSetIterBackwardCreateStatic, \
+  GSetGenTree*: _GSetIterBackwardCreateStatic, \
+  const GSetGenTree*: _GSetIterBackwardCreateStatic, \
   GSetStr*: _GSetIterBackwardCreateStatic, \
   const GSetStr*: _GSetIterBackwardCreateStatic, \
-  GSetGTreeStr*: _GSetIterBackwardCreateStatic, \
-  const GSetGTreeStr*: _GSetIterBackwardCreateStatic, \
+  GSetGenTreeStr*: _GSetIterBackwardCreateStatic, \
+  const GSetGenTreeStr*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
@@ -2106,12 +2106,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     const GSetKnapSackPod*: GSetIterForwardSetGSet, \
     GSetPBPhysParticle*: GSetIterForwardSetGSet, \
     const GSetPBPhysParticle*: GSetIterForwardSetGSet, \
-    GSetGTree*: GSetIterForwardSetGSet, \
-    const GSetGTree*: GSetIterForwardSetGSet, \
+    GSetGenTree*: GSetIterForwardSetGSet, \
+    const GSetGenTree*: GSetIterForwardSetGSet, \
     GSetStr*: GSetIterForwardSetGSet, \
     const GSetStr*: GSetIterForwardSetGSet, \
-    GSetGTreeStr*: GSetIterForwardSetGSet, \
-    const GSetGTreeStr*: GSetIterForwardSetGSet, \
+    GSetGenTreeStr*: GSetIterForwardSetGSet, \
+    const GSetGenTreeStr*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
@@ -2130,12 +2130,12 @@ inline GTreeStr* _GSetGTreeStrRemoveElem(
     const GSetKnapSackPod*: GSetIterBackwardSetGSet, \
     GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
     const GSetPBPhysParticle*: GSetIterBackwardSetGSet, \
-    GSetGTree*: GSetIterBackwardSetGSet, \
-    const GSetGTree*: GSetIterBackwardSetGSet, \
+    GSetGenTree*: GSetIterBackwardSetGSet, \
+    const GSetGenTree*: GSetIterBackwardSetGSet, \
     GSetStr*: GSetIterBackwardSetGSet, \
     const GSetStr*: GSetIterBackwardSetGSet, \
-    GSetGTreeStr*: GSetIterBackwardSetGSet, \
-    const GSetGTreeStr*: GSetIterBackwardSetGSet, \
+    GSetGenTreeStr*: GSetIterBackwardSetGSet, \
+    const GSetGenTreeStr*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 
