@@ -89,7 +89,7 @@ void UnitTestGSetCreateFree() {
   }
   if (set->_nbElem != 0) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, "_nbElem is invalid (%d==0)", set->_nbElem);
+    sprintf(GSetErr->_msg, "_nbElem is invalid (%ld==0)", set->_nbElem);
     PBErrCatch(GSetErr);
   }
   if (set->_head != NULL) {
@@ -119,7 +119,7 @@ void UnitTestGSetCreateFree() {
   GSet setstatic = GSetCreateStatic();
   if (setstatic._nbElem != 0) {
     GSetErr->_type = PBErrTypeUnitTestFailed;
-    sprintf(GSetErr->_msg, "_nbElem is invalid (%d==0)", 
+    sprintf(GSetErr->_msg, "_nbElem is invalid (%ld==0)", 
       setstatic._nbElem);
     PBErrCatch(GSetErr);
   }

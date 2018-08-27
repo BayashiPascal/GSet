@@ -32,7 +32,7 @@ typedef struct GSet {
   // Pointer toward the last element of the GSet
   GSetElem* _tail;
   // Number of element in the GSet
-  int _nbElem;
+  long _nbElem;
 } GSet;
 
 // Structures of the GSet iterators
@@ -79,7 +79,7 @@ void _GSetFlush(GSet* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetNbElem(const GSet* const that);
+long _GSetNbElem(const GSet* const that);
 
 // Function to print a GSet
 // Use the function 'printData' to print the data pointed to by 
@@ -108,7 +108,7 @@ void _GSetAddSort(GSet* const that, void* const data,
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
 void _GSetInsert(GSet* const that, void* const data, 
-  const int iElem);
+  const long iElem);
 
 // Function to insert an element pointing toward 'data' at the 
 // tail of the GSet
@@ -138,7 +138,7 @@ void* _GSetDrop(GSet* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemove(GSet* const that, const int iElem);
+void* _GSetRemove(GSet* const that, const long iElem);
 
 // Function to remove the element 'elem' of the GSet
 // Return the data pointed to by the removed element
@@ -180,7 +180,7 @@ void* GSetElemData(const GSetElem* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGet(const GSet* const that, const int iElem);
+void* _GSetGet(const GSet* const that, const long iElem);
 
 // Function to get the data at first position of the GSet
 // without removing it
@@ -215,7 +215,7 @@ const GSetElem* _GSetTailElem(const GSet* const that);
 #if BUILDMODE != 0
 inline
 #endif 
-const GSetElem* _GSetElement(const GSet* const that, const int iElem);
+const GSetElem* _GSetElement(const GSet* const that, const long iElem);
 
 // Function to get the index of the first element of the GSet
 // which point to 'data'
@@ -223,7 +223,7 @@ const GSetElem* _GSetElement(const GSet* const that, const int iElem);
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexFirst(const GSet* const that, const void* const data);
+long _GSetGetIndexFirst(const GSet* const that, const void* const data);
 
 // Function to get the index of the last element of the GSet
 // which point to 'data'
@@ -231,7 +231,7 @@ int _GSetGetIndexFirst(const GSet* const that, const void* const data);
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexLast(const GSet* const that, const void* const data);
+long _GSetGetIndexLast(const GSet* const that, const void* const data);
 
 // Function to get the first element of the GSet
 // which point to 'data'
@@ -293,10 +293,10 @@ void _GSetAppendSortedSet(GSet* const that, const GSet* const set);
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetSwitch(GSet* const that, const int iElem, const int jElem);
+void _GSetSwitch(GSet* const that, const long iElem, const long jElem);
 
 // Return the number of (GSetElem._data=='data') in the GSet 'that'
-int _GSetCount(const GSet* const that, const void* const data);
+long _GSetCount(const GSet* const that, const void* const data);
 
 // Set the sort value of the GSetElem 'that' to 'v'
 #if BUILDMODE != 0
@@ -325,7 +325,7 @@ inline
 void GSetElemSetNext(GSetElem* const that, GSetElem* const e);
 
 // Move the 'iElem'-th element to the 'pos' index in the GSet
-void _GSetMoveElem(GSet* const that, const int iElem, const int pos);
+void _GSetMoveElem(GSet* const that, const long iElem, const long pos);
 
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
@@ -586,7 +586,7 @@ inline GSetVecFloat GSetVecFloatCreateStatic(void)
 inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* const that)
   {return (GSetVecFloat*)GSetClone((GSet* const)that);}
 inline VecFloat* _GSetVecFloatGet(const GSetVecFloat* const that, 
-  const int iElem)
+  const long iElem)
   {return (VecFloat*)_GSetGet((GSet* const)that, iElem);}
 inline VecFloat* _GSetVecFloatGetHead(const GSetVecFloat* const that)
   {return (VecFloat*)_GSetHead((const GSet* const)that);}
@@ -597,7 +597,7 @@ inline VecFloat* _GSetVecFloatPop(GSetVecFloat* const that)
 inline VecFloat* _GSetVecFloatDrop(GSetVecFloat* const that)
   {return (VecFloat*)_GSetDrop((GSet* const)that);}
 inline VecFloat* _GSetVecFloatRemove(GSetVecFloat* const that, 
-  const int iElem)
+  const long iElem)
   {return (VecFloat*)_GSetRemove((GSet* const)that, iElem);}
 inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* const that, 
   GSetElem** elem)
@@ -622,7 +622,7 @@ inline GSetVecShort GSetVecShortCreateStatic(void)
 inline GSetVecShort* GSetVecShortClone(const GSetVecShort* const that)
   {return (GSetVecShort*)GSetClone((const GSet* const)that);}
 inline VecShort* _GSetVecShortGet(const GSetVecShort* const that, 
-  const int iElem)
+  const long iElem)
   {return (VecShort*)_GSetGet((const GSet* const)that, iElem);}
 inline VecShort* _GSetVecShortGetHead(const GSetVecShort* const that)
   {return (VecShort*)_GSetHead((const GSet* const)that);}
@@ -633,7 +633,7 @@ inline VecShort* _GSetVecShortPop(GSetVecShort* const that)
 inline VecShort* _GSetVecShortDrop(GSetVecShort* const that)
   {return (VecShort*)_GSetDrop((GSet* const)that);}
 inline VecShort* _GSetVecShortRemove(GSetVecShort* const that, 
-  const int iElem)
+  const long iElem)
   {return (VecShort*)_GSetRemove((GSet* const)that, iElem);}
 inline VecShort* _GSetVecShortRemoveElem(GSetVecShort* const that, 
   GSetElem** elem)
@@ -649,7 +649,7 @@ inline GSetBCurve GSetBCurveCreateStatic(void)
 inline GSetBCurve* GSetBCurveClone(const GSetBCurve* const that)
   {return (GSetBCurve*)GSetClone((const GSet* const)that);}
 inline BCurve* _GSetBCurveGet(const GSetBCurve* const that, 
-  const int iElem)
+  const long iElem)
   {return (BCurve*)_GSetGet((const GSet* const)that, iElem);}
 inline BCurve* _GSetBCurveGetHead(const GSetBCurve* const that)
   {return (BCurve*)_GSetHead((const GSet* const)that);}
@@ -659,7 +659,7 @@ inline BCurve* _GSetBCurvePop(GSetBCurve* const that)
   {return (BCurve*)_GSetPop((GSet* const)that);}
 inline BCurve* _GSetBCurveDrop(GSetBCurve* const that)
   {return (BCurve*)_GSetDrop((GSet* const)that);}
-inline BCurve* _GSetBCurveRemove(GSetBCurve* const that, const int iElem)
+inline BCurve* _GSetBCurveRemove(GSetBCurve* const that, const long iElem)
   {return (BCurve*)_GSetRemove((GSet* const)that, iElem);}
 inline BCurve* _GSetBCurveRemoveElem(GSetBCurve* const that, 
   GSetElem** elem)
@@ -675,7 +675,7 @@ inline GSetSCurve GSetSCurveCreateStatic(void)
 inline GSetSCurve* GSetSCurveClone(const GSetSCurve* const that)
   {return (GSetSCurve*)GSetClone((const GSet* const)that);}
 inline SCurve* _GSetSCurveGet(const GSetSCurve* const that, 
-  const int iElem)
+  const long iElem)
   {return (SCurve*)_GSetGet((const GSet* const)that, iElem);}
 inline SCurve* _GSetSCurveGetHead(const GSetSCurve* const that)
   {return (SCurve*)_GSetHead((const GSet* const)that);}
@@ -686,7 +686,7 @@ inline SCurve* _GSetSCurvePop(GSetSCurve* const that)
 inline SCurve* _GSetSCurveDrop(GSetSCurve* const that)
   {return (SCurve*)_GSetDrop((GSet* const)that);}
 inline SCurve* _GSetSCurveRemove(GSetSCurve* const that, 
-  const int iElem)
+  const long iElem)
   {return (SCurve*)_GSetRemove((GSet* const)that, iElem);}
 inline SCurve* _GSetSCurveRemoveElem(GSetSCurve* const that, 
   GSetElem** elem)
@@ -711,7 +711,7 @@ inline GSetShapoid GSetShapoidCreateStatic(void)
 inline GSetShapoid* GSetShapoidClone(const GSetShapoid* const that)
   {return (GSetShapoid*)GSetClone((const GSet* const)that);}
 inline Shapoid* _GSetShapoidGet(const GSetShapoid* const that, 
-  const int iElem)
+  const long iElem)
   {return (Shapoid*)_GSetGet((const GSet* const)that, iElem);}
 inline Shapoid* _GSetShapoidGetHead(const GSetShapoid* const that)
   {return (Shapoid*)_GSetHead((const GSet* const)that);}
@@ -722,7 +722,7 @@ inline Shapoid* _GSetShapoidPop(GSetShapoid* const that)
 inline Shapoid* _GSetShapoidDrop(GSetShapoid* const that)
   {return (Shapoid*)_GSetDrop((GSet* const)that);}
 inline Shapoid* _GSetShapoidRemove(GSetShapoid* const that, 
-  const int iElem)
+  const long iElem)
   {return (Shapoid*)_GSetRemove((GSet* const)that, iElem);}
 inline Shapoid* _GSetShapoidRemoveElem(GSetShapoid* const that, 
   GSetElem** elem)
@@ -739,7 +739,7 @@ inline GSetKnapSackPod* GSetKnapSackPodClone(
   const GSetKnapSackPod* const that)
   {return (GSetKnapSackPod*)GSetClone((const GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodGet(
-  const GSetKnapSackPod* const that, const int iElem)
+  const GSetKnapSackPod* const that, const long iElem)
   {return (KnapSackPod*)_GSetGet((const GSet* const)that, iElem);}
 inline KnapSackPod* _GSetKnapSackPodGetHead(
   const GSetKnapSackPod* const that)
@@ -752,7 +752,7 @@ inline KnapSackPod* _GSetKnapSackPodPop(GSetKnapSackPod* const that)
 inline KnapSackPod* _GSetKnapSackPodDrop(GSetKnapSackPod* const that)
   {return (KnapSackPod*)_GSetDrop((GSet* const)that);}
 inline KnapSackPod* _GSetKnapSackPodRemove(
-  GSetKnapSackPod* that, const int iElem)
+  GSetKnapSackPod* that, const long iElem)
   {return (KnapSackPod*)_GSetRemove((GSet* const)that, iElem);}
 inline KnapSackPod* _GSetKnapSackPodRemoveElem(
   GSetKnapSackPod* const that, GSetElem** elem)
@@ -769,7 +769,7 @@ inline GSetPBPhysParticle* GSetPBPhysParticleClone(
   const GSetPBPhysParticle* const that)
   {return (GSetPBPhysParticle*)GSetClone((const GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleGet(
-  const GSetPBPhysParticle* const that, const int iElem)
+  const GSetPBPhysParticle* const that, const long iElem)
   {return (PBPhysParticle*)_GSetGet((const GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleGetHead(
   const GSetPBPhysParticle* const that)
@@ -784,7 +784,7 @@ inline PBPhysParticle* _GSetPBPhysParticleDrop(
   GSetPBPhysParticle* const that)
   {return (PBPhysParticle*)_GSetDrop((GSet* const)that);}
 inline PBPhysParticle* _GSetPBPhysParticleRemove(
-  GSetPBPhysParticle* const that, const int iElem)
+  GSetPBPhysParticle* const that, const long iElem)
   {return (PBPhysParticle*)_GSetRemove((GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleRemoveElem(
   GSetPBPhysParticle* const that, GSetElem** elem)
@@ -799,7 +799,7 @@ inline GSetGenTree GSetGenTreeCreateStatic(void)
   {GSetGenTree ret = {._set=GSetCreateStatic()}; return ret;}
 inline GSetGenTree* GSetGenTreeClone(const GSetGenTree* const that)
   {return (GSetGenTree*)GSetClone((const GSet* const)that);}
-inline GenTree* _GSetGenTreeGet(const GSetGenTree* const that, const int iElem)
+inline GenTree* _GSetGenTreeGet(const GSetGenTree* const that, const long iElem)
   {return (GenTree*)_GSetGet((const GSet* const)that, iElem);}
 inline GenTree* _GSetGenTreeGetHead(const GSetGenTree* const that)
   {return (GenTree*)_GSetHead((const GSet* const)that);}
@@ -809,7 +809,7 @@ inline GenTree* _GSetGenTreePop(GSetGenTree* const that)
   {return (GenTree*)_GSetPop((GSet* const)that);}
 inline GenTree* _GSetGenTreeDrop(GSetGenTree* const that)
   {return (GenTree*)_GSetDrop((GSet* const)that);}
-inline GenTree* _GSetGenTreeRemove(GSetGenTree* const that, const int iElem)
+inline GenTree* _GSetGenTreeRemove(GSetGenTree* const that, const long iElem)
   {return (GenTree*)_GSetRemove((GSet* const)that, iElem);}
 inline GenTree* _GSetGenTreeRemoveElem(GSetGenTree* const that, 
   GSetElem** elem)
@@ -821,7 +821,7 @@ inline GSetStr GSetStrCreateStatic(void)
   {GSetStr ret = {._set=GSetCreateStatic()}; return ret;}
 inline GSetStr* GSetStrClone(const GSetStr* const that)
   {return (GSetStr*)GSetClone((const GSet* const)that);}
-inline char* _GSetStrGet(const GSetStr* const that, const int iElem)
+inline char* _GSetStrGet(const GSetStr* const that, const long iElem)
   {return (char*)_GSetGet((const GSet* const)that, iElem);}
 inline char* _GSetStrGetHead(const GSetStr* const that)
   {return (char*)_GSetHead((const GSet* const)that);}
@@ -831,7 +831,7 @@ inline char* _GSetStrPop(GSetStr* const that)
   {return (char*)_GSetPop((GSet* const)that);}
 inline char* _GSetStrDrop(GSetStr* const that)
   {return (char*)_GSetDrop((GSet* const)that);}
-inline char* _GSetStrRemove(GSetStr* const that, const int iElem)
+inline char* _GSetStrRemove(GSetStr* const that, const long iElem)
   {return (char*)_GSetRemove((GSet* const)that, iElem);}
 inline char* _GSetStrRemoveElem(GSetStr* const that, GSetElem** elem)
   {return (char*)_GSetRemoveElem((GSet* const)that, elem);}
@@ -846,7 +846,7 @@ inline GSetGenTreeStr GSetGenTreeStrCreateStatic(void)
 inline GSetGenTreeStr* GSetGenTreeStrClone(const GSetGenTreeStr* const that)
   {return (GSetGenTreeStr*)GSetClone((const GSet* const)that);}
 inline GenTreeStr* _GSetGenTreeStrGet(const GSetGenTreeStr* const that, 
-  const int iElem)
+  const long iElem)
   {return (GenTreeStr*)_GSetGet((const GSet* const)that, iElem);}
 inline GenTreeStr* _GSetGenTreeStrGetHead(const GSetGenTreeStr* const that)
   {return (GenTreeStr*)_GSetHead((const GSet* const)that);}
@@ -857,7 +857,7 @@ inline GenTreeStr* _GSetGenTreeStrPop(GSetGenTreeStr* const that)
 inline GenTreeStr* _GSetGenTreeStrDrop(GSetGenTreeStr* const that)
   {return (GenTreeStr*)_GSetDrop((GSet* const)that);}
 inline GenTreeStr* _GSetGenTreeStrRemove(GSetGenTreeStr* const that, 
-  const int iElem)
+  const long iElem)
   {return (GenTreeStr*)_GSetRemove((GSet* const)that, iElem);}
 inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr* const that, GSetElem** elem)

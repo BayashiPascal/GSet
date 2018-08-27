@@ -248,7 +248,7 @@ void _GSetRemoveLast(GSet* const that, const void* const data) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetRemove(GSet* const that, const int iElem) {
+void* _GSetRemove(GSet* const that, const long iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -257,7 +257,7 @@ void* _GSetRemove(GSet* const that, const int iElem) {
   }
   if (iElem < 0 || iElem >= that->_nbElem) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%d<%d)", 
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
       iElem, that->_nbElem);
     PBErrCatch(GSetErr);
   }
@@ -267,7 +267,7 @@ void* _GSetRemove(GSet* const that, const int iElem) {
   // Set a pointer to the head of the Gset
   GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // Move the pointer to the iElem-th element
-  for (int i = iElem; i > 0 && p != NULL; 
+  for (long i = iElem; i > 0 && p != NULL; 
     --i, p = (GSetElem*)GSetElemNext(p));
   // Memorize the data at iElem-th position
   ret = GSetElemData(p);
@@ -346,7 +346,7 @@ void* GSetElemData(const GSetElem* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-void* _GSetGet(const GSet* const that, const int iElem) {
+void* _GSetGet(const GSet* const that, const long iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -355,7 +355,7 @@ void* _GSetGet(const GSet* const that, const int iElem) {
   }
   if (iElem < 0 || iElem >= that->_nbElem) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%d<%d)", 
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
       iElem, that->_nbElem);
     PBErrCatch(GSetErr);
   }
@@ -437,7 +437,7 @@ const GSetElem* _GSetTailElem(const GSet* const that) {
 #if BUILDMODE != 0
 inline
 #endif 
-const GSetElem* _GSetElement(const GSet* const that, const int iElem) {
+const GSetElem* _GSetElement(const GSet* const that, const long iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -446,7 +446,7 @@ const GSetElem* _GSetElement(const GSet* const that, const int iElem) {
   }
   if (iElem < 0 || iElem >= that->_nbElem) {
     GSetErr->_type = PBErrTypeInvalidArg;
-    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%d<%d)", 
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
       iElem, that->_nbElem);
     PBErrCatch(GSetErr);
   }
@@ -456,7 +456,7 @@ const GSetElem* _GSetElement(const GSet* const that, const int iElem) {
   // Set the pointer to the head of the GSet
   ret = (GSetElem*)GSetHeadElem(that);
   // Move to the next element iElem times
-  for (int i = iElem; i > 0 && ret != NULL; 
+  for (long i = iElem; i > 0 && ret != NULL; 
     --i, ret = (GSetElem*)GSetElemNext(ret));
   // Return the element
   return ret;
@@ -468,7 +468,7 @@ const GSetElem* _GSetElement(const GSet* const that, const int iElem) {
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexFirst(const GSet* const that, const void* const data) {
+long _GSetGetIndexFirst(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -479,7 +479,7 @@ int _GSetGetIndexFirst(const GSet* const that, const void* const data) {
   // Set a pointer toward the head of the GSet
   GSetElem* p = (GSetElem*)GSetHeadElem(that);
   // Set a variable to memorize index
-  int index = 0;
+  long index = 0;
   // Loop on elements until we have found the 
   // requested data or reached the end of the list
   while (p != NULL && GSetElemData(p) != data) {
@@ -499,7 +499,7 @@ int _GSetGetIndexFirst(const GSet* const that, const void* const data) {
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetGetIndexLast(const GSet* const that, const void* const data) {
+long _GSetGetIndexLast(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -510,7 +510,7 @@ int _GSetGetIndexLast(const GSet* const that, const void* const data) {
   // Set a pointer toward the tail of the GSet
   GSetElem* p = (GSetElem*)GSetTailElem(that);
   // Set a variable to memorize index
-  int index = that->_nbElem - 1;
+  long index = that->_nbElem - 1;
   // Loop on elements until we have found the 
   // requested data or reached the head of the list
   while (p != NULL && GSetElemData(p) != data) {
@@ -644,7 +644,7 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
 #endif
   // Check that e is an element of that
   // Declare a variable to count element before e in that
-  int nb = 0;
+  long nb = 0;
   // If e is not the head of that 
   if (GSetHeadElem(that) != e) {
     GSetElem* ptr = e;
@@ -691,7 +691,7 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
 #if BUILDMODE != 0
 inline
 #endif 
-void _GSetSwitch(GSet* const that, const int iElem, const int jElem) {
+void _GSetSwitch(GSet* const that, const long iElem, const long jElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -700,13 +700,13 @@ void _GSetSwitch(GSet* const that, const int iElem, const int jElem) {
   }
   if (iElem < 0 || iElem >= that->_nbElem) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%d<%d)", 
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
       iElem, that->_nbElem);
     PBErrCatch(GSetErr);
   }
   if (jElem < 0 || jElem >= that->_nbElem) {
     GSetErr->_type = PBErrTypeNullPointer;
-    sprintf(GSetErr->_msg, "'jElem' is invalid (0<=%d<%d)", 
+    sprintf(GSetErr->_msg, "'jElem' is invalid (0<=%ld<%ld)", 
       jElem, that->_nbElem);
     PBErrCatch(GSetErr);
   }
@@ -1211,7 +1211,7 @@ const GSetElem* GSetIterBackwardGetElem(
 #if BUILDMODE != 0
 inline
 #endif 
-int _GSetNbElem(const GSet* const that) {
+long _GSetNbElem(const GSet* const that) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;

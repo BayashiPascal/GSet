@@ -174,7 +174,7 @@ void _GSetAddSort(GSet* const that, void* const data,
 // If the data is inserted inside the set, the current elements from
 // the iElem-th elem are pushed 
 void _GSetInsert(GSet* const that, void* const data, 
-  const int iElem) {
+  const long iElem) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -183,7 +183,7 @@ void _GSetInsert(GSet* const that, void* const data,
   }
   if (iElem < 0) {
     GSetErr->_type = PBErrTypeInvalidArg;
-    sprintf(GSetErr->_msg, "'iElem' is invalid (%d>=0)", iElem);
+    sprintf(GSetErr->_msg, "'iElem' is invalid (%ld>=0)", iElem);
     PBErrCatch(GSetErr);
   }
 #endif
@@ -212,7 +212,7 @@ void _GSetInsert(GSet* const that, void* const data,
       // Set a pointer toward the head of the GSet
       GSetElem* p = (GSetElem*)GSetHeadElem(that);
       // Move the pointer to the iElem-th element
-      for (int i = iElem; i > 0 && p != NULL; 
+      for (long i = iElem; i > 0 && p != NULL; 
         --i, p = (GSetElem*)GSetElemNext(p));
       // Insert the element before the pointer
       GSetElemSetNext(e, p);
@@ -312,7 +312,7 @@ GSet* GSetSortRec(GSet** s) {
 }
 
 // Move the 'iElem'-th element to the 'pos' index in the GSet
-void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
+void _GSetMoveElem(GSet* const that, const long iElem, const long pos) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GenBrushErr->_type = PBErrTypeNullPointer;
@@ -321,13 +321,13 @@ void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
   }
   if (iElem < 0 || iElem >= GSetNbElem(that)) {
     GenBrushErr->_type = PBErrTypeInvalidArg;
-    sprintf(GenBrushErr->_msg, "'iElem' is invalid (0<=%d<%d)",
+    sprintf(GenBrushErr->_msg, "'iElem' is invalid (0<=%ld<%ld)",
       iElem, GSetNbElem(that));
     PBErrCatch(GenBrushErr);
   }
   if (pos < 0 || pos >= GSetNbElem(that)) {
     GenBrushErr->_type = PBErrTypeInvalidArg;
-    sprintf(GenBrushErr->_msg, "'pos' is invalid (0<=%d<%d)",
+    sprintf(GenBrushErr->_msg, "'pos' is invalid (0<=%ld<%ld)",
       pos, GSetNbElem(that));
     PBErrCatch(GenBrushErr);
   }
@@ -353,7 +353,7 @@ void _GSetMoveElem(GSet* const that, const int iElem, const int pos) {
 }
 
 // Return the number of (GSetElem._data=='data') in the GSet 'that'
-int _GSetCount(const GSet* const that, const void* const data) {
+long _GSetCount(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
   if (that == NULL) {
     GSetErr->_type = PBErrTypeNullPointer;
@@ -362,7 +362,7 @@ int _GSetCount(const GSet* const that, const void* const data) {
   }
 #endif
   // Declare a variable to memorize the result
-  int nb = 0;
+  long nb = 0;
   // If the set is not empty
   if (GSetNbElem(that) > 0) {
     // Loop on the set's elements
