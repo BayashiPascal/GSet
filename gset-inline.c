@@ -596,10 +596,6 @@ void _GSetMerge(GSet* const that, GSet* const set) {
     if (that->_nbElem == 0) {
       // Copy 'set' into 'that'
       memcpy(that, set, sizeof(GSet));
-      // Empty 'set'
-      set->_head = NULL;
-      set->_tail = NULL;
-      set->_nbElem = 0;
     // Else, if 'that' is not empty
     } else {
       // Add 'set' to the tail of 'that'
@@ -612,11 +608,11 @@ void _GSetMerge(GSet* const that, GSet* const set) {
       that->_tail = (GSetElem*)GSetTailElem(set);
       // Update the number of element of 'that'
       that->_nbElem += set->_nbElem;
-      // Empty 'set'
-      set->_head = NULL;
-      set->_tail = NULL;
-      set->_nbElem = 0;
     }
+    // Empty 'set'
+    set->_head = NULL;
+    set->_tail = NULL;
+    set->_nbElem = 0;
   }
 }
 
