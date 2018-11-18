@@ -6,6 +6,8 @@
 #include "gset-inline.c"
 #endif
 
+#define rnd() (float)(rand())/(float)(RAND_MAX)
+
 // ================ Functions implementation ==================
 
 // Function to create a new GSet,
@@ -474,5 +476,29 @@ GSetIterBackward* GSetIterBackwardClone(
   ret->_curElem = that->_curElem;
   // return the clone
   return ret;
+}
+
+// Shuffle the GSet 'that'
+// The random generator must have been initialized before calling 
+// this function
+// This function modifies the _sortVal of each elements in 'that'
+void GSetShuffle(GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Create a temporary set
+  GSet shuffled = GSetCreateStatic();
+  // Append all the elements of the initial set, sorted with a random
+  // value
+  while (GSetNbElem(that) > 0) {
+    void* data = GSetPop(that);
+    GSetAddSort(&shuffled, data, rnd());
+  }
+  // put back the shuffled set into the original set
+  GSetMerge(that, &shuffled);
 }
 

@@ -617,6 +617,25 @@ void UnitTestGSetCount() {
   printf("UnitTestGSetMergeSet OK\n");
 }
 
+void UnitTestGSetShuffle() {
+  srandom(1);
+  int a[5] = {1, 2, 3, 4, 5};
+  GSet set = GSetCreateStatic();
+  for (int i = 5; i--;)
+    GSetPush(&set, a + i);
+  GSetShuffle(&set);
+  int b[5] = {2, 3, 4, 1, 5};
+  for (int i = 0; i < 5; ++i) {
+    int* j = GSetPop(&set);
+    if (*j != b[i]) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetSuffle NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  printf("UnitTestGSetShuffle OK\n");
+}
+
 void UnitTestGSet() {
   UnitTestGSetCreateFree();
   UnitTestGSetClone();
@@ -633,6 +652,7 @@ void UnitTestGSet() {
   UnitTestGSetMoveElem();
   UnitTestGSetMergeSet();
   UnitTestGSetCount();
+  UnitTestGSetShuffle();
   printf("UnitTestGSet OK\n");
 }
 

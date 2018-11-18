@@ -1,3 +1,5 @@
+UnitTestGSetElemGetSet OK
+UnitTestGSetElem OK
 UnitTestGSetCreateFree OK
 UnitTestGSetClone OK
 UnitTestGSetFlush OK
@@ -34,6 +36,7 @@ UnitTestGSetSwitch OK
 UnitTestGSetMoveElem OK
 UnitTestGSetMergeSet OK
 UnitTestGSetMergeSet OK
+UnitTestGSetShuffle OK
 UnitTestGSet OK
 UnitTestGSetIteratorForwardCreateFree OK
 UnitTestGSetIteratorForwardClone OK
@@ -41,7 +44,7 @@ UnitTestGSetIteratorForwardReset OK
 UnitTestGSetIteratorForwardStepGetGetElem OK
 UnitTestGSetIteratorForwardApply OK
 UnitTestGSetIteratorForwardIsFirstIsLast OK
-UnitTestGSetIteratorForwardSetGSet OK
+UnitTestGSetIteratorForwardSet OK
 UnitTestGSetIteratorForwardRemoveElem OK
 UnitTestGSetIteratorForward OK
 UnitTestGSetIteratorBackwardCreateFree OK
@@ -50,6 +53,6 @@ UnitTestGSetIteratorBackwardReset OK
 UnitTestGSetIteratorBackwardStepGetGetElem OK
 UnitTestGSetIteratorBackwardApply OK
 UnitTestGSetIteratorBackwardIsFirstIsLast OK
-UnitTestGSetIteratorBackwardSetGSet OK
+UnitTestGSetIteratorBackwardSet OK
 UnitTestGSetIteratorBackward OK
 UnitTestAll OK

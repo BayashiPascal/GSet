@@ -567,6 +567,11 @@ inline
 #endif 
 const GSetElem* GSetElemPrev(const GSetElem* const that);
 
+// Shuffle the GSet 'that'
+// The random generator must have been initialized before calling 
+// this function
+// This function modifies the _sortVal of each elements in 'that'
+void GSetShuffle(GSet* const that);
 
 // ================= Typed GSet ==================
 
