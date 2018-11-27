@@ -1023,10 +1023,7 @@ bool GSetIterForwardIsFirst(const GSetIterForward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == GSetHeadElem(that->_set))
-    return true;
-  else
-    return false;
+  return (that->_curElem == GSetHeadElem(that->_set));
 }
 
 // Return true if the iterator is at the start of the elements (from
@@ -1043,10 +1040,7 @@ bool GSetIterBackwardIsFirst(const GSetIterBackward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == GSetTailElem(that->_set))
-    return true;
-  else
-    return false;
+  return (that->_curElem == GSetTailElem(that->_set));
 }
 
 // Return true if the iterator is at the end of the elements (from
@@ -1063,10 +1057,7 @@ bool GSetIterForwardIsLast(const GSetIterForward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == GSetTailElem(that->_set))
-    return true;
-  else
-    return false;
+  return (that->_curElem == GSetTailElem(that->_set));
 }
 
 // Return true if the iterator is at the end of the elements (from
@@ -1083,10 +1074,7 @@ bool GSetIterBackwardIsLast(const GSetIterBackward* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  if (that->_curElem == GSetHeadElem(that->_set))
-    return true;
-  else
-    return false;
+  return (that->_curElem == GSetHeadElem(that->_set));
 }
 
 // Change the attached set of the iterator, and reset it
