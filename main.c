@@ -751,7 +751,7 @@ void UnitTestGSetIteratorForwardStepGetGetElem() {
 }
 
 void FunInc(void* data, void* param) {
-  while (param != param);
+  (void)param;
   ++(*(int*)data);
 }
 
