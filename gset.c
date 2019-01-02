@@ -502,3 +502,48 @@ void GSetShuffle(GSet* const that) {
   GSetMerge(that, &shuffled);
 }
 
+// Return a set of two vectors containing the bounds of the vectors in 
+// the GSet 'that'
+// The set must have at least one element
+// The returned set is ordered as follow: (boundMin, boundMax)
+GSetVecFloat _GSetVecFloatGetBounds(const GSetVecFloat* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (GSetNbElem(that) < 1) {
+    GSetErr->_type = PBErrTypeInvalidArg;
+    sprintf(GSetErr->_msg, "'that' is empty");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Create the set containing the bounds
+  GSetVecFloat bounds = GSetVecFloatCreateStatic();
+  // Create the two bounds vector, initialised with the first vector of 
+  // the set
+  VecFloat* boundMin = _VecFloatClone(GSetGet(that, 0));
+  VecFloat* boundMax = _VecFloatClone(GSetGet(that, 0));
+  GSetAppend(&bounds, boundMin);
+  GSetAppend(&bounds, boundMax);
+  // Get the dimension of the vectors, supposes they are all with same 
+  // dimension
+  long dim = _VecFloatGetDim(boundMin);
+  // Loop on the vectors of the set, expect the first one
+  GSetIterForward iter = GSetIterForwardCreateStatic(that);
+  while (GSetIterStep(&iter)) {
+    VecFloat* v = GSetIterGet(&iter);
+    // Loop on dimension
+    for (int iDim = dim; dim--;) {
+      // Update bounds
+      if (_VecFloatGet(boundMin, iDim) > _VecFloatGet(v, iDim))
+        _VecFloatSet(boundMin, iDim, _VecFloatGet(v, iDim));
+      if (_VecFloatGet(boundMax, iDim) < _VecFloatGet(v, iDim))
+        _VecFloatSet(boundMax, iDim, _VecFloatGet(v, iDim));
+    }
+  }
+  // Return the set containing the bounds
+  return bounds;
+}
+
