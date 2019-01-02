@@ -535,7 +535,7 @@ GSetVecFloat _GSetVecFloatGetBounds(const GSetVecFloat* const that) {
   while (GSetIterStep(&iter)) {
     VecFloat* v = GSetIterGet(&iter);
     // Loop on dimension
-    for (int iDim = dim; dim--;) {
+    for (int iDim = dim; iDim--;) {
       // Update bounds
       if (_VecFloatGet(boundMin, iDim) > _VecFloatGet(v, iDim))
         _VecFloatSet(boundMin, iDim, _VecFloatGet(v, iDim));
