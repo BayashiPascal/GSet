@@ -584,21 +584,6 @@ void GSetShuffle(GSet* const that);
 #ifndef VecFloat3D
   typedef struct VecFloat3D VecFloat3D;
 #endif
-#ifndef _VecFloatClone
-VecFloat* _VecFloatClone(const VecFloat* const that);
-#if BUILDMODE != 0 
-inline 
-#endif 
-float _VecFloatGet(const VecFloat* const that, const long i);
-#if BUILDMODE != 0 
-inline 
-#endif 
-void _VecFloatSet(VecFloat* const that, const long i, const float v);
-#if BUILDMODE != 0 
-inline 
-#endif 
-long _VecFloatGetDim(const VecFloat* const that);
-#endif
 typedef struct GSetVecFloat {GSet _set;} GSetVecFloat;
 #define GSetVecFloatCreate() ((GSetVecFloat*)GSetCreate())
 inline GSetVecFloat GSetVecFloatCreateStatic(void) 
@@ -622,11 +607,6 @@ inline VecFloat* _GSetVecFloatRemove(GSetVecFloat* const that,
 inline VecFloat* _GSetVecFloatRemoveElem(GSetVecFloat* const that, 
   GSetElem** elem)
   {return (VecFloat*)_GSetRemoveElem((GSet* const)that, elem);}
-// Return a set of two vectors containing the bounds of the vectors in 
-// the GSet 'that'
-// The set must have at least one element
-// The returned set is ordered as follow: (boundMin, boundMax)
-GSetVecFloat _GSetVecFloatGetBounds(const GSetVecFloat* const that);
 
 #ifndef VecShort
   typedef struct VecShort VecShort;
