@@ -490,7 +490,20 @@ void GSetShuffle(GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Create a temporary set
+  // If the set is empty there is nothong to do
+  if (GSetNbElem(that) == 0)
+    return;
+  // Create an iterator on the set
+  GSetIterForward iter = GSetIterForwardCreateStatic(that);
+  // Loop on the set
+  do {
+    // Set a random value to the element
+    GSetElemSetSortVal((GSetElem*)GSetIterGetElem(&iter), rnd());
+  } while (GSetIterStep(&iter));
+  // Sort the set
+  GSetSort(that);
+  
+/*  // Create a temporary set
   GSet shuffled = GSetCreateStatic();
   // Append all the elements of the initial set, sorted with a random
   // value
@@ -499,6 +512,6 @@ void GSetShuffle(GSet* const that) {
     GSetAddSort(&shuffled, data, rnd());
   }
   // put back the shuffled set into the original set
-  GSetMerge(that, &shuffled);
+  GSetMerge(that, &shuffled);*/
 }
 

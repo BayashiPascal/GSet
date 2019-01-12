@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  4 JAN 2019 00:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  12 JAN 2019 22:27
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -537,9 +537,9 @@ File: ../gset.c  (verbatim)
 File: ../gset-inline.c  (verbatim)
  [46] [47]
 [48] [49] [50] [51] [52] [53] [54] [55] [56] [57] [58] [59] [60] [61] [62]
-[63] [64] [65] [66] [67] [68]
+[63] [64] [65] [66] [67] [68] [69]
 File: ../Makefile  (verbatim)
- [69]
+
 Overfull \hbox (787.2669pt too wide) in paragraph at lines 45--45
 []\OT1/cmtt/m/n/8 if [ ! -d ../PBMake ]; then wget https://github.com/BayashiPa
 scal/PBMake/archive/master.zip; unzip master.zip; rm -f master.zip; sed -i '' '
@@ -568,7 +568,7 @@ File: ../unitTestRef.txt  (verbatim)
 Here is how much of TeX's memory you used:
  13272 strings out of 494314
  255179 string characters out of 6163111
- 292771 words of memory out of 5000000
+ 292773 words of memory out of 5000000
  16363 multiletter control sequences out of 15000+600000
  12740 words of font info for 50 fonts, out of 8000000 for 9000
  372 hyphenation exceptions out of 8191
@@ -580,7 +580,7 @@ m/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 
 pdfTeX warning: pdflatex: no GlyphToUnicode entry has been inserted yet!
-Output written on doc.pdf (89 pages, 171525 bytes).
+Output written on doc.pdf (89 pages, 172070 bytes).
 PDF statistics:
  311 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
