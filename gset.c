@@ -281,14 +281,20 @@ GSet* GSetSortRec(GSet** s) {
       float val = GSetElemGetSortVal((GSetElem*)GSetHeadElem(*s));
       // Pop the head element
       data = GSetPop(*s);
+      // If the poped element has a sort value equal to the pivot
+      if (fabs(val - pivot) < GSET_EPSILON) {
+        // Insert it in the result set
+        GSetAppend(res, data);
+        // Copy the sort value
+        GSetElemSetSortVal((GSetElem*)GSetTailElem(res), val);
       // If the poped element has a sort value lower than the pivot
-      if (val < pivot) {
+      } else if (val < pivot) {
         // Insert it in the lower set
         GSetAppend(lower, data);
         // Copy the sort value
         GSetElemSetSortVal((GSetElem*)GSetTailElem(lower), val);
-      // Else, the poped element has a sort value greater than or 
-      // equal to the pivot
+      // Else, the poped element has a sort value greater than  
+      // the pivot
       } else {
         // Insert it in the greater set
         GSetAppend(greater, data);

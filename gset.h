@@ -7,7 +7,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 #include "pberr.h"
+
+// ================= Define ==================
+
+// Precision used when sorting a GSet
+#define GSET_EPSILON 0.00001
 
 // ================= Data structures ===================
 
