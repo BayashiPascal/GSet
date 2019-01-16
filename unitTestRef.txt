@@ -31,9 +31,9 @@ UnitTestGSetInsertRemove OK
 UnitTestGSetNbElemGet OK
 UnitTestGSetGetIndex OK
 UnitTestGSetSort OK
-Min/Avg/Max time to sort 1000000 elements: 2774.3/3040.9/3293.2ms
+Min/Avg/Max time to sort 1000000 elements: 1286.7/1731.8/1951.1ms
 For comparison, using qsort on an array of 1000000 floats:
-  Min/Avg/Max time : 212.5/215.5/500.8ms
+  Min/Avg/Max time : 208.2/211.3/501.5ms
 UnitTestGSetSortBig OK
 UnitTestGSetSplitMerge OK
 UnitTestGSetSwitch OK

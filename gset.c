@@ -267,6 +267,12 @@ GSet* GSetSortRec(GSet** s) {
     GSet* lower = GSetCreate();
     GSet* greater = GSetCreate();
     res = GSetCreate();
+    
+    // --------------------------
+    // Selecting the pivot as the middle element seemed to me better
+    // but test with UnitTestGSetSortBig proved me wrong: 1492/2060/2554
+    // --------------------------
+    
     // Declare a variable to memorize the pivot, which is equal
     // to the sort value of the first element of the set
     float pivot = GSetElemGetSortVal(GSetHeadElem(*s));
@@ -289,6 +295,16 @@ GSet* GSetSortRec(GSet** s) {
         GSetElemSetSortVal((GSetElem*)GSetTailElem(res), val);
       // If the poped element has a sort value lower than the pivot
       } else if (val < pivot) {
+
+        // --------------------------
+        // The following seemed to me a good idea but test with 
+        // UnitTestGSetSortBig proved me wrong: 1496/2054/2626
+        // Insert at the beginning if the sort value is lower or equal
+        // than the sort value of the head of the lower set, or if it's 
+        // empty
+        // Else, insert at the end of the lower set
+        // --------------------------
+
         // Insert it in the lower set
         GSetAppend(lower, data);
         // Copy the sort value
@@ -296,6 +312,16 @@ GSet* GSetSortRec(GSet** s) {
       // Else, the poped element has a sort value greater than  
       // the pivot
       } else {
+
+        // --------------------------
+        // The following seemed to me a good idea but test with 
+        // UnitTestGSetSortBig proved me wrong: 1496/2054/2626
+        // Insert at the beginning if the sort value is lower or equal
+        // than the sort value of the head of the greater set, or if it's 
+        // empty
+        // Else, insert at the end of the greater set
+        // --------------------------
+
         // Insert it in the greater set
         GSetAppend(greater, data);
         // Copy the sort value
