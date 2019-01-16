@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  15 JAN 2019 22:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  16 JAN 2019 11:11
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -562,9 +562,9 @@ Overfull \hbox (188.0083pt too wide) in paragraph at lines 45--45
 
 File: ../main.c  (verbatim)
 [70] [71] [72] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84]
-[85] [86] [87]
+[85] [86] [87] [88]
 File: ../unitTestRef.txt  (verbatim)
- [88]) [89] (./doc.aux) ) 
+ [89]) [90] (./doc.aux) ) 
 Here is how much of TeX's memory you used:
  13272 strings out of 494314
  255179 string characters out of 6163111
@@ -580,9 +580,9 @@ m/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 
 pdfTeX warning: pdflatex: no GlyphToUnicode entry has been inserted yet!
-Output written on doc.pdf (89 pages, 172244 bytes).
+Output written on doc.pdf (90 pages, 174358 bytes).
 PDF statistics:
- 311 PDF objects out of 1000 (max. 8388607)
+ 314 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

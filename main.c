@@ -450,6 +450,69 @@ void UnitTestGSetSort() {
   printf("UnitTestGSetSort OK\n");
 }
 
+int compare_floats(const void* a, const void* b)
+{
+  float arg1 = *(const float*)a;
+  float arg2 = *(const float*)b;
+  return (arg1 > arg2) - (arg1 < arg2);
+}
+
+void UnitTestGSetSortBig() {
+  srandom(RANDOMSEED);
+  int nbTest = 100;
+  float sumTime = 0.0;
+  float minTime = 100000.0;
+  float maxTime = 0.0;
+  #define sizeSet 1000000l
+  for (int iTest = 0; iTest < nbTest; ++iTest) {
+    GSet set = GSetCreateStatic();
+    for (long i = 0; i < sizeSet; ++i) {
+      GSetPush(&set, NULL);
+      GSetElemSetSortVal((GSetElem*)GSetHeadElem(&set), 
+        rnd() * 100000.0);
+    }
+    clock_t clockBefore = clock();
+    GSetSort(&set);
+    clock_t clockAfter = clock();
+    float delayMs = ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    if (minTime > delayMs)
+      minTime = delayMs;
+    if (maxTime < delayMs)
+      maxTime = delayMs;
+    sumTime += delayMs;
+    GSetFlush(&set);
+  }
+  printf("Min/Avg/Max time to sort %li elements: %.1f/%.1f/%.1fms\n", 
+    sizeSet, minTime, sumTime / (float)nbTest, maxTime);
+
+  float floats[sizeSet];
+  sumTime = 0.0;
+  minTime = 100000.0;
+  maxTime = 0.0;
+  for (int iTest = 0; iTest < nbTest; ++iTest) {
+    for (long i = 0; i < sizeSet; ++i) {
+      floats[i] = rnd() * 100000.0;
+    }
+    clock_t clockBefore = clock();
+    qsort(floats, sizeSet, sizeof(int), compare_floats);
+    clock_t clockAfter = clock();
+    float delayMs = ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    if (minTime > delayMs)
+      minTime = delayMs;
+    if (maxTime < delayMs)
+      maxTime = delayMs;
+    sumTime += delayMs;
+  }
+  printf("For comparison, using qsort on an array of %li floats:\n",
+    sizeSet);
+  printf("  Min/Avg/Max time : %.1f/%.1f/%.1fms\n", 
+    minTime, sumTime / (float)nbTest, maxTime);
+
+  printf("UnitTestGSetSortBig OK\n");
+}
+
 void UnitTestGSetSplitMerge() {
   int a[5] = {0, 1, 2, 3, 4};
   GSet set = GSetCreateStatic();
@@ -647,6 +710,7 @@ void UnitTestGSet() {
   UnitTestGSetNbElemGet();
   UnitTestGSetGetIndex();
   UnitTestGSetSort();
+  UnitTestGSetSortBig();
   UnitTestGSetSplitMerge();
   UnitTestGSetSwitch();
   UnitTestGSetMoveElem();
