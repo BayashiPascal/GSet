@@ -3,5 +3,5 @@
 \contentsline {subsection}{\numberline {2.1}gset.c}{38}
 \contentsline {subsection}{\numberline {2.2}gset-inline.c}{47}
 \contentsline {section}{\numberline {3}Makefile}{70}
-\contentsline {section}{\numberline {4}Unit tests}{70}
-\contentsline {section}{\numberline {5}Unit tests output}{89}
+\contentsline {section}{\numberline {4}Unit tests}{71}
+\contentsline {section}{\numberline {5}Unit tests output}{90}
