@@ -523,6 +523,22 @@ void GSetShuffle(GSet* const that) {
   }
 #endif
   // If the set is empty there is nothong to do
+  if (GSetNbElem(that) <= 1500)
+    GSetShuffleB(that);
+  else 
+    GSetShuffleA(that);
+}
+
+void GSetShuffleA(GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Set the sort value randomly then sort the GSet
+  // If the set is empty there is nothong to do
   if (GSetNbElem(that) == 0)
     return;
   // Create an iterator on the set
@@ -534,8 +550,18 @@ void GSetShuffle(GSet* const that) {
   } while (GSetIterStep(&iter));
   // Sort the set
   GSetSort(that);
-  
-/*  // Create a temporary set
+}
+
+void GSetShuffleB(GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // AddSort each element with a random value in a new GSet 
+  // Create a temporary set
   GSet shuffled = GSetCreateStatic();
   // Append all the elements of the initial set, sorted with a random
   // value
@@ -544,6 +570,21 @@ void GSetShuffle(GSet* const that) {
     GSetAddSort(&shuffled, data, rnd());
   }
   // put back the shuffled set into the original set
-  GSetMerge(that, &shuffled);*/
+  GSetMerge(that, &shuffled);
+}
+
+void GSetShuffleC(GSet* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Fischer-Yates algorithm
+  for (long i = GSetNbElem(that); i--;) {
+     long j = (long)round(rnd() * (float)i);
+     GSetSwitch(that, i, j);
+  }
 }
 

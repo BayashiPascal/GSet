@@ -1158,11 +1158,71 @@ void UnitTestGSetIteratorBackward() {
   printf("UnitTestGSetIteratorBackward OK\n");
 }
 
+void UnitTestSpeedShuffle() {
+  GSet set = GSetCreateStatic();
+  long setSizeMin = 100;
+  long setSizeMax = 10000;
+  printf("Start speed test for shuffling algorithms\n\n");
+  for (long setSize = setSizeMin; setSize <= setSizeMax; setSize *= 2) {
+    for (long i = setSize; i--;)
+      GSetPush(&set, i);
+    clock_t clockBefore = clock();
+    for (int run = 40; run--;)
+      GSetShuffle(&set);
+    clock_t clockAfter = clock();
+    float delayMs = 0.025 * ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    printf("Delay to shuffle %ld elements with GSetShuffle: %fms\n", 
+      setSize, delayMs);
+    clockBefore = clock();
+    for (int run = 40; run--;)
+      GSetShuffleA(&set);
+    clockAfter = clock();
+    float delayMsA = 0.025 * ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    printf("Delay to shuffle %ld elements with GSetShuffleA: %fms\n", 
+      setSize, delayMsA);
+    clockBefore = clock();
+    for (int run = 40; run--;)
+      GSetShuffleB(&set);
+    clockAfter = clock();
+    float delayMsB = 0.025 * ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    printf("Delay to shuffle %ld elements with GSetShuffleB: %fms\n", 
+      setSize, delayMsB);
+    clockBefore = clock();
+    for (int run = 40; run--;)
+      GSetShuffleC(&set);
+    clockAfter = clock();
+    float delayMsC = 0.025 * ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    printf("Delay to shuffle %ld elements with GSetShuffleC: %fms\n", 
+      setSize, delayMsC);
+    printf("\n");
+    GSetFlush(&set);
+    if (setSize <= 1500 &&
+      (delayMsB > delayMsA ||
+      delayMsB > delayMsC)) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "UnitTestSpeedShuffle NOK");
+      PBErrCatch(GSetErr);
+    } else if (setSize > 1500 &&
+      (delayMsA > delayMsB ||
+      delayMsA > delayMsC)) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "UnitTestSpeedShuffle NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  printf("UnitTestSpeedShuffle OK\n");
+}
+
 void UnitTestAll() {
   UnitTestGSetElem();
   UnitTestGSet();
   UnitTestGSetIteratorForward();
   UnitTestGSetIteratorBackward();
+  UnitTestSpeedShuffle();
   printf("UnitTestAll OK\n");
 }
 

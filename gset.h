@@ -577,7 +577,12 @@ const GSetElem* GSetElemPrev(const GSetElem* const that);
 // The random generator must have been initialized before calling 
 // this function
 // This function modifies the _sortVal of each elements in 'that'
+// Use different algorithm according to the number of elements for
+// speed performance
 void GSetShuffle(GSet* const that);
+void GSetShuffleA(GSet* const that);
+void GSetShuffleB(GSet* const that);
+void GSetShuffleC(GSet* const that);
 
 // ================= Typed GSet ==================
 
