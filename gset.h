@@ -9,6 +9,7 @@
 #include <string.h>
 #include <math.h>
 #include "pberr.h"
+#include "pbcextension.h"
 
 // ================= Define ==================
 

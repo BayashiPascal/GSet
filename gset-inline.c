@@ -711,12 +711,8 @@ void _GSetSwitch(GSet* const that, const long iElem, const long jElem) {
   GSetElem* iPtr = (GSetElem*)GSetElement(that, iElem);
   GSetElem* jPtr = (GSetElem*)GSetElement(that, jElem);
   // Switch the elements
-  float v = GSetElemGetSortVal(iPtr);
-  GSetElemSetSortVal(iPtr, GSetElemGetSortVal(jPtr));
-  GSetElemSetSortVal(jPtr, v);
-  void* dat = GSetElemData(iPtr);
-  GSetElemSetData(iPtr, GSetElemData(jPtr));
-  GSetElemSetData(jPtr, dat);
+  swap(iPtr->_sortVal, jPtr->_sortVal);
+  swap(iPtr->_data, jPtr->_data);
 }
 
 // Set the sort value of the GSetElem 'that' to 'v'
