@@ -377,8 +377,11 @@ void* _GSetHead(const GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Return the data of the first element
-  return GSetElemData(GSetHeadElem(that));
+  // Return the data of the first element if there is one, or NULL
+  if (GSetHeadElem(that) != NULL)
+    return GSetElemData(GSetHeadElem(that));
+  else
+    return NULL;
 }
 
 // Function to get the data at last position of the GSet
@@ -394,8 +397,11 @@ void* _GSetTail(const GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // Return the data of the last element
-  return GSetElemData(GSetTailElem(that));
+  // Return the data of the last element if there is one, or NULL
+  if (GSetTailElem(that) != NULL)
+    return GSetElemData(GSetTailElem(that));
+  else
+    return NULL;
 }
 
 // Function to get the GSetElem at first position of the GSet
