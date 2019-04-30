@@ -1217,12 +1217,59 @@ void UnitTestSpeedShuffle() {
   printf("UnitTestSpeedShuffle OK\n");
 }
 
+void UnitTestGSetJump() {
+  GSet set = GSetCreateStatic();
+  const long nb = 100000;
+  long check[nb];
+  for (long i = 0; i < nb; ++i) {
+    check[i] = i;
+    GSetAppend(&set, check + i);
+  }
+  clock_t clockBefore = clock();
+  for (long i = 0; i < nb; ++i) {
+    long* v = GSetGet(&set, i);
+    if (*v != check[i]) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetGet NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  clock_t clockAfter = clock();
+  float delayMsA = ((double)(clockAfter - clockBefore)) / 
+    CLOCKS_PER_SEC * 1000.0;
+  clockBefore = clock();
+  (void)GSetGet(&set, 0);
+  for (long i = 0; i < nb; ++i) {
+    long* v = GSetGetJump(&set, i);
+    if (*v != check[i]) {
+      GSetErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(GSetErr->_msg, "GSetGetJump NOK");
+      PBErrCatch(GSetErr);
+    }
+  }
+  clockAfter = clock();
+  float delayMsB = ((double)(clockAfter - clockBefore)) / 
+    CLOCKS_PER_SEC * 1000.0;
+  printf("Delay to access %ld elements with GSet: %fms\n", 
+    nb, delayMsA);
+  printf("Delay to access %ld elements with GSetJump: %fms\n", 
+    nb, delayMsB);
+  if (delayMsA < 1.1 * delayMsB) {
+    GSetErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(GSetErr->_msg, "GSetGetJump NOK");
+    PBErrCatch(GSetErr);
+  }
+  GSetFlush(&set);
+  printf("UnitTestGSetJump OK\n");
+}
+
 void UnitTestAll() {
   UnitTestGSetElem();
   UnitTestGSet();
   UnitTestGSetIteratorForward();
   UnitTestGSetIteratorBackward();
   UnitTestSpeedShuffle();
+  UnitTestGSetJump();
   printf("UnitTestAll OK\n");
 }
 

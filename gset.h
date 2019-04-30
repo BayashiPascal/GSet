@@ -40,6 +40,10 @@ typedef struct GSet {
   GSetElem* _tail;
   // Number of element in the GSet
   long _nbElem;
+  // Index of the last got element
+  long _indexLastGot;
+  // Pointer to the last got element
+  GSetElem* _lastGot;
 } GSet;
 
 // Structures of the GSet iterators
@@ -189,6 +193,15 @@ inline
 #endif 
 void* _GSetGet(const GSet* const that, const long iElem);
 
+// Function to get the data at the 'iElem'-th position of the GSet
+// without removing it
+// Fast version, move in the set from the last got element. The set must
+// not have been modified since we've last got an element.
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetJump(const GSet* const that, const long iElem);
+
 // Function to get the data at first position of the GSet
 // without removing it
 #if BUILDMODE != 0
@@ -224,6 +237,16 @@ inline
 #endif 
 const GSetElem* _GSetElement(const GSet* const that, const long iElem);
 
+// Function to get the element at the 'iElem'-th position of the GSet
+// without removing it
+// Fast version, move in the set from the last got element. The set must
+// not have been modified since we've last got an element.
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetElementJump(const GSet* const that, 
+  const long iElem);
+  
 // Function to get the index of the first element of the GSet
 // which point to 'data'
 // Return -1 if 'data' is not in the set
@@ -605,6 +628,9 @@ inline GSetVecFloat* GSetVecFloatClone(GSetVecFloat* const that)
 inline VecFloat* _GSetVecFloatGet(const GSetVecFloat* const that, 
   const long iElem)
   {return (VecFloat*)_GSetGet((GSet* const)that, iElem);}
+inline VecFloat* _GSetVecFloatGetJump(const GSetVecFloat* const that, 
+  const long iElem)
+  {return (VecFloat*)_GSetGetJump((GSet* const)that, iElem);}
 inline VecFloat* _GSetVecFloatGetHead(const GSetVecFloat* const that)
   {return (VecFloat*)_GSetHead((const GSet* const)that);}
 inline VecFloat* _GSetVecFloatGetTail(const GSetVecFloat* const that)
@@ -641,6 +667,9 @@ inline GSetVecShort* GSetVecShortClone(const GSetVecShort* const that)
 inline VecShort* _GSetVecShortGet(const GSetVecShort* const that, 
   const long iElem)
   {return (VecShort*)_GSetGet((const GSet* const)that, iElem);}
+inline VecShort* _GSetVecShortGetJump(const GSetVecShort* const that, 
+  const long iElem)
+  {return (VecShort*)_GSetGetJump((const GSet* const)that, iElem);}
 inline VecShort* _GSetVecShortGetHead(const GSetVecShort* const that)
   {return (VecShort*)_GSetHead((const GSet* const)that);}
 inline VecShort* _GSetVecShortGetTail(const GSetVecShort* const that)
@@ -668,6 +697,9 @@ inline GSetBCurve* GSetBCurveClone(const GSetBCurve* const that)
 inline BCurve* _GSetBCurveGet(const GSetBCurve* const that, 
   const long iElem)
   {return (BCurve*)_GSetGet((const GSet* const)that, iElem);}
+inline BCurve* _GSetBCurveGetJump(const GSetBCurve* const that, 
+  const long iElem)
+  {return (BCurve*)_GSetGetJump((const GSet* const)that, iElem);}
 inline BCurve* _GSetBCurveGetHead(const GSetBCurve* const that)
   {return (BCurve*)_GSetHead((const GSet* const)that);}
 inline BCurve* _GSetBCurveGetTail(const GSetBCurve* const that)
@@ -694,6 +726,9 @@ inline GSetSCurve* GSetSCurveClone(const GSetSCurve* const that)
 inline SCurve* _GSetSCurveGet(const GSetSCurve* const that, 
   const long iElem)
   {return (SCurve*)_GSetGet((const GSet* const)that, iElem);}
+inline SCurve* _GSetSCurveGetJump(const GSetSCurve* const that, 
+  const long iElem)
+  {return (SCurve*)_GSetGetJump((const GSet* const)that, iElem);}
 inline SCurve* _GSetSCurveGetHead(const GSetSCurve* const that)
   {return (SCurve*)_GSetHead((const GSet* const)that);}
 inline SCurve* _GSetSCurveGetTail(const GSetSCurve* const that)
@@ -730,6 +765,9 @@ inline GSetShapoid* GSetShapoidClone(const GSetShapoid* const that)
 inline Shapoid* _GSetShapoidGet(const GSetShapoid* const that, 
   const long iElem)
   {return (Shapoid*)_GSetGet((const GSet* const)that, iElem);}
+inline Shapoid* _GSetShapoidGetJump(const GSetShapoid* const that, 
+  const long iElem)
+  {return (Shapoid*)_GSetGetJump((const GSet* const)that, iElem);}
 inline Shapoid* _GSetShapoidGetHead(const GSetShapoid* const that)
   {return (Shapoid*)_GSetHead((const GSet* const)that);}
 inline Shapoid* _GSetShapoidGetTail(const GSetShapoid* const that)
@@ -758,6 +796,9 @@ inline GSetKnapSackPod* GSetKnapSackPodClone(
 inline KnapSackPod* _GSetKnapSackPodGet(
   const GSetKnapSackPod* const that, const long iElem)
   {return (KnapSackPod*)_GSetGet((const GSet* const)that, iElem);}
+inline KnapSackPod* _GSetKnapSackPodGetJump(
+  const GSetKnapSackPod* const that, const long iElem)
+  {return (KnapSackPod*)_GSetGetJump((const GSet* const)that, iElem);}
 inline KnapSackPod* _GSetKnapSackPodGetHead(
   const GSetKnapSackPod* const that)
   {return (KnapSackPod*)_GSetHead((const GSet* const)that);}
@@ -788,6 +829,9 @@ inline GSetPBPhysParticle* GSetPBPhysParticleClone(
 inline PBPhysParticle* _GSetPBPhysParticleGet(
   const GSetPBPhysParticle* const that, const long iElem)
   {return (PBPhysParticle*)_GSetGet((const GSet* const)that, iElem);}
+inline PBPhysParticle* _GSetPBPhysParticleGetJump(
+  const GSetPBPhysParticle* const that, const long iElem)
+  {return (PBPhysParticle*)_GSetGetJump((const GSet* const)that, iElem);}
 inline PBPhysParticle* _GSetPBPhysParticleGetHead(
   const GSetPBPhysParticle* const that)
   {return (PBPhysParticle*)_GSetHead((const GSet* const)that);}
@@ -818,6 +862,8 @@ inline GSetGenTree* GSetGenTreeClone(const GSetGenTree* const that)
   {return (GSetGenTree*)GSetClone((const GSet* const)that);}
 inline GenTree* _GSetGenTreeGet(const GSetGenTree* const that, const long iElem)
   {return (GenTree*)_GSetGet((const GSet* const)that, iElem);}
+inline GenTree* _GSetGenTreeGetJump(const GSetGenTree* const that, const long iElem)
+  {return (GenTree*)_GSetGetJump((const GSet* const)that, iElem);}
 inline GenTree* _GSetGenTreeGetHead(const GSetGenTree* const that)
   {return (GenTree*)_GSetHead((const GSet* const)that);}
 inline GenTree* _GSetGenTreeGetTail(const GSetGenTree* const that)
@@ -840,6 +886,8 @@ inline GSetStr* GSetStrClone(const GSetStr* const that)
   {return (GSetStr*)GSetClone((const GSet* const)that);}
 inline char* _GSetStrGet(const GSetStr* const that, const long iElem)
   {return (char*)_GSetGet((const GSet* const)that, iElem);}
+inline char* _GSetStrGetJump(const GSetStr* const that, const long iElem)
+  {return (char*)_GSetGetJump((const GSet* const)that, iElem);}
 inline char* _GSetStrGetHead(const GSetStr* const that)
   {return (char*)_GSetHead((const GSet* const)that);}
 inline char* _GSetStrGetTail(const GSetStr* const that)
@@ -865,6 +913,9 @@ inline GSetGenTreeStr* GSetGenTreeStrClone(const GSetGenTreeStr* const that)
 inline GenTreeStr* _GSetGenTreeStrGet(const GSetGenTreeStr* const that, 
   const long iElem)
   {return (GenTreeStr*)_GSetGet((const GSet* const)that, iElem);}
+inline GenTreeStr* _GSetGenTreeStrGetJump(
+  const GSetGenTreeStr* const that, const long iElem)
+  {return (GenTreeStr*)_GSetGetJump((const GSet* const)that, iElem);}
 inline GenTreeStr* _GSetGenTreeStrGetHead(const GSetGenTreeStr* const that)
   {return (GenTreeStr*)_GSetHead((const GSet* const)that);}
 inline GenTreeStr* _GSetGenTreeStrGetTail(const GSetGenTreeStr* const that)
@@ -1675,6 +1726,31 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetGenTreeStr*: _GSetGenTreeStrGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
+#define GSetGetJump(Set, Pos) _Generic(Set, \
+  GSet*: _GSetGetJump, \
+  const GSet*: _GSetGetJump, \
+  GSetVecFloat*: _GSetVecFloatGetJump, \
+  const GSetVecFloat*: _GSetVecFloatGetJump, \
+  GSetVecShort*: _GSetVecShortGetJump, \
+  const GSetVecShort*: _GSetVecShortGetJump, \
+  GSetBCurve*: _GSetBCurveGetJump, \
+  const GSetBCurve*: _GSetBCurveGetJump, \
+  GSetSCurve*: _GSetSCurveGetJump, \
+  const GSetSCurve*: _GSetSCurveGetJump, \
+  GSetShapoid*: _GSetShapoidGetJump, \
+  const GSetShapoid*: _GSetShapoidGetJump, \
+  GSetKnapSackPod*: _GSetKnapSackPodGetJump, \
+  const GSetKnapSackPod*: _GSetKnapSackPodGetJump, \
+  GSetPBPhysParticle*: _GSetPBPhysParticleGetJump, \
+  const GSetPBPhysParticle*: _GSetPBPhysParticleGetJump, \
+  GSetGenTree*: _GSetGenTreeGetJump, \
+  const GSetGenTree*: _GSetGenTreeGetJump, \
+  GSetStr*: _GSetStrGetJump, \
+  const GSetStr*: _GSetStrGetJump, \
+  GSetGenTreeStr*: _GSetGenTreeStrGetJump, \
+  const GSetGenTreeStr*: _GSetGenTreeStrGetJump, \
+  default: PBErrInvalidPolymorphism)(Set, Pos)
+
 #define GSetHead(Set) _Generic(Set, \
   GSet*: _GSetHead, \
   const GSet*: _GSetHead, \
@@ -1798,6 +1874,31 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetElement, \
   GSetGenTreeStr*: _GSetElement, \
   const GSetGenTreeStr*: _GSetElement, \
+  default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
+
+#define GSetElementJump(Set, Pos) _Generic(Set, \
+  GSet*: _GSetElementJump, \
+  const GSet*: _GSetElementJump, \
+  GSetVecFloat*: _GSetElementJump, \
+  const GSetVecFloat*: _GSetElementJump, \
+  GSetVecShort*: _GSetElementJump, \
+  const GSetVecShort*: _GSetElementJump, \
+  GSetBCurve*: _GSetElementJump, \
+  const GSetBCurve*: _GSetElementJump, \
+  GSetSCurve*: _GSetElementJump, \
+  const GSetSCurve*: _GSetElementJump, \
+  GSetShapoid*: _GSetElementJump, \
+  const GSetShapoid*: _GSetElementJump, \
+  GSetKnapSackPod*: _GSetElementJump, \
+  const GSetKnapSackPod*: _GSetElementJump, \
+  GSetPBPhysParticle*: _GSetElementJump, \
+  const GSetPBPhysParticle*: _GSetElementJump, \
+  GSetGenTree*: _GSetElementJump, \
+  const GSetGenTree*: _GSetElementJump, \
+  GSetStr*: _GSetElementJump, \
+  const GSetStr*: _GSetElementJump, \
+  GSetGenTreeStr*: _GSetElementJump, \
+  const GSetGenTreeStr*: _GSetElementJump, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \

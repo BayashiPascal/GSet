@@ -8,7 +8,8 @@ inline
 #endif 
 GSet GSetCreateStatic(void) {
   // Declare a GSet and set the properties
-  GSet s = {._head = NULL, ._tail = NULL, ._nbElem = 0};
+  GSet s = {._head = NULL, ._tail = NULL, ._nbElem = 0, 
+    ._indexLastGot = 0, ._lastGot = NULL};
   // Return the GSet
   return s;
 }
@@ -292,7 +293,7 @@ void* _GSetRemove(GSet* const that, const long iElem) {
   return ret;
 }
 
-// Function to remove all the selement of the GSet pointing to 'data'
+// Function to remove all the element of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
 inline
@@ -362,6 +363,31 @@ void* _GSetGet(const GSet* const that, const long iElem) {
 #endif
   // Return the data of the iElem-th element
   return GSetElemData(GSetElement(that, iElem));
+}
+
+// Function to get the data at the 'iElem'-th position of the GSet
+// without removing it
+// Fast version, move in the set from the last got element. The set must
+// not have been modified since we've last got an element.
+#if BUILDMODE != 0
+inline
+#endif 
+void* _GSetGetJump(const GSet* const that, const long iElem) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (iElem < 0 || iElem >= that->_nbElem) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
+      iElem, that->_nbElem);
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // Return the data of the iElem-th element
+  return GSetElemData(GSetElementJump(that, iElem));
 }
 
 // Function to get the data at first position of the GSet
@@ -464,8 +490,54 @@ const GSetElem* _GSetElement(const GSet* const that, const long iElem) {
   // Move to the next element iElem times
   for (long i = iElem; i > 0 && ret != NULL; 
     --i, ret = (GSetElem*)GSetElemNext(ret));
+  // Memorize the last got element
+  ((GSet*)that)->_indexLastGot = iElem;
+  ((GSet*)that)->_lastGot = ret;
   // Return the element
   return ret;
+}
+
+// Function to get the element at the 'iElem'-th position of the GSet
+// without removing it
+// Fast version, move in the set from the last got element. The set must
+// not have been modified since we've last got an element.
+#if BUILDMODE != 0
+inline
+#endif 
+const GSetElem* _GSetElementJump(const GSet* const that, 
+  const long iElem) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (iElem < 0 || iElem >= that->_nbElem) {
+    GSetErr->_type = PBErrTypeInvalidArg;
+    sprintf(GSetErr->_msg, "'iElem' is invalid (0<=%ld<%ld)", 
+      iElem, that->_nbElem);
+    PBErrCatch(GSetErr);
+  }
+#endif
+  // If there is no last got element
+  if (that->_lastGot == NULL) {
+    // Use the normal verion
+    return _GSetElement(that, iElem);
+  } else {
+    // Set a pointer for the return value
+    GSetElem* ret = that->_lastGot;
+    // Move to the requested index
+    for (; that->_indexLastGot > iElem; 
+      ((GSet*)that)->_indexLastGot--, 
+      ret = (GSetElem*)GSetElemPrev(ret));
+    for (; that->_indexLastGot < iElem; 
+      ((GSet*)that)->_indexLastGot++, 
+      ret = (GSetElem*)GSetElemNext(ret));
+    // Memorize the last got element
+    ((GSet*)that)->_lastGot = ret;
+    // Return the element
+    return ret;
+  }
 }
 
 // Function to get the index of the first element of the GSet

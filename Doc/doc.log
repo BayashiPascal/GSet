@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  14 APR 2019 16:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.18)  30 APR 2019 11:34
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -531,13 +531,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--14
 File: ../gset.h  (verbatim)
 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17]
 [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32]
-[33] [34] [35] [36] [37]
+[33] [34] [35] [36] [37] [38] [39]
 File: ../gset.c  (verbatim)
- [38] [39] [40] [41] [42] [43] [44] [45] [46] [47]
+ [40] [41] [42] [43] [44] [45] [46] [47]
+[48]
 File: ../gset-inline.c  (verbatim)
-
-[48] [49] [50] [51] [52] [53] [54] [55] [56] [57] [58] [59] [60] [61] [62]
-[63] [64] [65] [66] [67] [68] [69] [70]
+ [49] [50] [51] [52] [53] [54] [55] [56] [57] [58] [59] [60] [61] [62]
+[63] [64] [65] [66] [67] [68] [69] [70] [71] [72] [73]
 File: ../Makefile  (verbatim)
 
 Overfull \hbox (787.2669pt too wide) in paragraph at lines 45--45
@@ -554,35 +554,35 @@ Overfull \hbox (196.50842pt too wide) in paragraph at lines 45--45
  
  []
 
-[71]
+
 Overfull \hbox (188.0083pt too wide) in paragraph at lines 45--45
 []\OT1/cmtt/m/n/8 $(COMPILER) $(BUILD_ARG) $($(repo)_BUILD_ARG) `echo "$($(repo
 )_INC_DIR)" | tr ' ' '\n' | sort -u` -c $($(repo)_DIR)/$($(repo)_EXENAME).c[] 
  []
 
 File: ../main.c  (verbatim)
-[72] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86]
-[87] [88] [89] [90] [91]
+[74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86] [87] [88]
+[89] [90] [91] [92] [93] [94]
 File: ../unitTestRef.txt  (verbatim)
- [92]) [93] (./doc.aux) ) 
+ [95] [96]) [97] (./doc.aux) ) 
 Here is how much of TeX's memory you used:
  13272 strings out of 494314
  255179 string characters out of 6163111
- 294773 words of memory out of 5000000
+ 293773 words of memory out of 5000000
  16363 multiletter control sequences out of 15000+600000
  12740 words of font info for 50 fonts, out of 8000000 for 9000
  372 hyphenation exceptions out of 8191
  55i,6n,54p,544b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 
 pdfTeX warning: pdflatex: no GlyphToUnicode entry has been inserted yet!
-Output written on doc.pdf (93 pages, 177988 bytes).
+Output written on doc.pdf (97 pages, 183393 bytes).
 PDF statistics:
- 324 PDF objects out of 1000 (max. 8388607)
+ 337 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

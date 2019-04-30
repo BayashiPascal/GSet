@@ -19,6 +19,8 @@ GSet* GSetCreate(void) {
   s->_head = NULL;
   s->_tail = NULL;
   s->_nbElem = 0;
+  s->_indexLastGot = 0;
+  s->_lastGot = NULL;
   // Return the new GSet
   return s;
 }
@@ -522,7 +524,7 @@ void GSetShuffle(GSet* const that) {
     PBErrCatch(GSetErr);
   }
 #endif
-  // If the set is empty there is nothong to do
+  // If the set is empty there is nothing to do
   if (GSetNbElem(that) <= 1500)
     GSetShuffleB(that);
   else 
