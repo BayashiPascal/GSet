@@ -931,6 +931,96 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr* const that, GSetElem** elem)
   {return (GenTreeStr*)_GSetRemoveElem((GSet* const)that, elem);}
 
+#ifndef SquidletInfo
+  typedef struct SquidletInfo SquidletInfo;
+#endif
+typedef struct GSetSquidletInfo {GSet _set;} GSetSquidletInfo;
+#define GSetSquidletInfoCreate() ((GSetSquidletInfo*)GSetCreate())
+inline GSetSquidletInfo GSetSquidletInfoCreateStatic(void) 
+  {GSetSquidletInfo ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetSquidletInfo* GSetSquidletInfoClone(const GSetSquidletInfo* const that)
+  {return (GSetSquidletInfo*)GSetClone((const GSet* const)that);}
+inline SquidletInfo* _GSetSquidletInfoGet(const GSetSquidletInfo* const that, 
+  const long iElem)
+  {return (SquidletInfo*)_GSetGet((const GSet* const)that, iElem);}
+inline SquidletInfo* _GSetSquidletInfoGetJump(
+  const GSetSquidletInfo* const that, const long iElem)
+  {return (SquidletInfo*)_GSetGetJump((const GSet* const)that, iElem);}
+inline SquidletInfo* _GSetSquidletInfoGetHead(const GSetSquidletInfo* const that)
+  {return (SquidletInfo*)_GSetHead((const GSet* const)that);}
+inline SquidletInfo* _GSetSquidletInfoGetTail(const GSetSquidletInfo* const that)
+  {return (SquidletInfo*)_GSetTail((const GSet* const)that);}
+inline SquidletInfo* _GSetSquidletInfoPop(GSetSquidletInfo* const that)
+  {return (SquidletInfo*)_GSetPop((GSet* const)that);}
+inline SquidletInfo* _GSetSquidletInfoDrop(GSetSquidletInfo* const that)
+  {return (SquidletInfo*)_GSetDrop((GSet* const)that);}
+inline SquidletInfo* _GSetSquidletInfoRemove(GSetSquidletInfo* const that, 
+  const long iElem)
+  {return (SquidletInfo*)_GSetRemove((GSet* const)that, iElem);}
+inline SquidletInfo* _GSetSquidletInfoRemoveElem(
+  GSetSquidletInfo* const that, GSetElem** elem)
+  {return (SquidletInfo*)_GSetRemoveElem((GSet* const)that, elem);}
+
+#ifndef SquidletTaskRequest
+  typedef struct SquidletTaskRequest SquidletTaskRequest;
+#endif
+typedef struct GSetSquidletTaskRequest {GSet _set;} GSetSquidletTaskRequest;
+#define GSetSquidletTaskRequestCreate() ((GSetSquidletTaskRequest*)GSetCreate())
+inline GSetSquidletTaskRequest GSetSquidletTaskRequestCreateStatic(void) 
+  {GSetSquidletTaskRequest ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetSquidletTaskRequest* GSetSquidletTaskRequestClone(const GSetSquidletTaskRequest* const that)
+  {return (GSetSquidletTaskRequest*)GSetClone((const GSet* const)that);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestGet(const GSetSquidletTaskRequest* const that, 
+  const long iElem)
+  {return (SquidletTaskRequest*)_GSetGet((const GSet* const)that, iElem);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestGetJump(
+  const GSetSquidletTaskRequest* const that, const long iElem)
+  {return (SquidletTaskRequest*)_GSetGetJump((const GSet* const)that, iElem);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestGetHead(const GSetSquidletTaskRequest* const that)
+  {return (SquidletTaskRequest*)_GSetHead((const GSet* const)that);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestGetTail(const GSetSquidletTaskRequest* const that)
+  {return (SquidletTaskRequest*)_GSetTail((const GSet* const)that);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestPop(GSetSquidletTaskRequest* const that)
+  {return (SquidletTaskRequest*)_GSetPop((GSet* const)that);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestDrop(GSetSquidletTaskRequest* const that)
+  {return (SquidletTaskRequest*)_GSetDrop((GSet* const)that);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestRemove(GSetSquidletTaskRequest* const that, 
+  const long iElem)
+  {return (SquidletTaskRequest*)_GSetRemove((GSet* const)that, iElem);}
+inline SquidletTaskRequest* _GSetSquidletTaskRequestRemoveElem(
+  GSetSquidletTaskRequest* const that, GSetElem** elem)
+  {return (SquidletTaskRequest*)_GSetRemoveElem((GSet* const)that, elem);}
+
+#ifndef SquadRunningTask
+  typedef struct SquadRunningTask SquadRunningTask;
+#endif
+typedef struct GSetSquadRunningTask {GSet _set;} GSetSquadRunningTask;
+#define GSetSquadRunningTaskCreate() ((GSetSquadRunningTask*)GSetCreate())
+inline GSetSquadRunningTask GSetSquadRunningTaskCreateStatic(void) 
+  {GSetSquadRunningTask ret = {._set=GSetCreateStatic()}; return ret;}
+inline GSetSquadRunningTask* GSetSquadRunningTaskClone(const GSetSquadRunningTask* const that)
+  {return (GSetSquadRunningTask*)GSetClone((const GSet* const)that);}
+inline SquadRunningTask* _GSetSquadRunningTaskGet(const GSetSquadRunningTask* const that, 
+  const long iElem)
+  {return (SquadRunningTask*)_GSetGet((const GSet* const)that, iElem);}
+inline SquadRunningTask* _GSetSquadRunningTaskGetJump(
+  const GSetSquadRunningTask* const that, const long iElem)
+  {return (SquadRunningTask*)_GSetGetJump((const GSet* const)that, iElem);}
+inline SquadRunningTask* _GSetSquadRunningTaskGetHead(const GSetSquadRunningTask* const that)
+  {return (SquadRunningTask*)_GSetHead((const GSet* const)that);}
+inline SquadRunningTask* _GSetSquadRunningTaskGetTail(const GSetSquadRunningTask* const that)
+  {return (SquadRunningTask*)_GSetTail((const GSet* const)that);}
+inline SquadRunningTask* _GSetSquadRunningTaskPop(GSetSquadRunningTask* const that)
+  {return (SquadRunningTask*)_GSetPop((GSet* const)that);}
+inline SquadRunningTask* _GSetSquadRunningTaskDrop(GSetSquadRunningTask* const that)
+  {return (SquadRunningTask*)_GSetDrop((GSet* const)that);}
+inline SquadRunningTask* _GSetSquadRunningTaskRemove(GSetSquadRunningTask* const that, 
+  const long iElem)
+  {return (SquadRunningTask*)_GSetRemove((GSet* const)that, iElem);}
+inline SquadRunningTask* _GSetSquadRunningTaskRemoveElem(
+  GSetSquadRunningTask* const that, GSetElem** elem)
+  {return (SquadRunningTask*)_GSetRemoveElem((GSet* const)that, elem);}
+
 // ================= Generic functions ==================
 
 #define GSetFree(Set) _Generic(Set, \
@@ -945,6 +1035,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree**: _GSetFree, \
   GSetStr**: _GSetFree, \
   GSetGenTreeStr**: _GSetFree, \
+  GSetSquidletInfo**: _GSetFree, \
+  GSetSquidletTaskRequest**: _GSetFree, \
+  GSetSquadRunningTask**: _GSetFree, \
   default: PBErrInvalidPolymorphism)((GSet**)(Set))
 
 #define GSetPush(Set, Data) _Generic(Set, \
@@ -989,6 +1082,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetPush, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetPush, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetAddSort(Set, Data, Value) _Generic(Set, \
@@ -1031,6 +1133,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetAddSort, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetAddSort, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Value)
 
@@ -1075,6 +1186,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetInsert, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetInsert, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data), Pos)
 
 #define GSetAppend(Set, Data) _Generic(Set, \
@@ -1117,6 +1237,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetAppend, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetAppend, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1161,6 +1290,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetRemoveFirst, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetRemoveFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveLast(Set, Data) _Generic(Set, \
@@ -1204,6 +1342,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetRemoveLast, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetRemoveLast, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetRemoveAll(Set, Data) _Generic(Set, \
@@ -1246,6 +1393,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetRemoveAll, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetRemoveAll, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1330,6 +1486,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetGetIndexFirst, \
     default: PBErrInvalidPolymorphism), \
+  const GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetGetIndexFirst, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetGetIndexLast(Set, Data) _Generic(Set, \
@@ -1412,6 +1577,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   const GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetGetIndexLast, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetGetIndexLast, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
@@ -1496,6 +1670,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetFirstElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetFirstElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetLastElem(Set, Data) _Generic(Set, \
@@ -1579,6 +1762,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetGenTreeStr*: _Generic(Data, \
     GenTreeStr*: _GSetLastElem, \
     default: PBErrInvalidPolymorphism), \
+  const GSetSquidletInfo*: _Generic(Data, \
+    SquidletInfo*: _GSetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquidletTaskRequest*: _Generic(Data, \
+    SquidletTaskRequest*: _GSetLastElem, \
+    default: PBErrInvalidPolymorphism), \
+  const GSetSquadRunningTask*: _Generic(Data, \
+    SquadRunningTask*: _GSetLastElem, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), (void*)(Data))
 
 #define GSetPrint(Set, Stream, Fun, Sep) _Generic(Set, \
@@ -1604,6 +1796,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetPrint, \
   GSetGenTreeStr*: _GSetPrint, \
   const GSetGenTreeStr*: _GSetPrint, \
+  GSetSquidletInfo*: _GSetPrint, \
+  const GSetSquidletInfo*: _GSetPrint, \
+  GSetSquidletTaskRequest*: _GSetPrint, \
+  const GSetSquidletTaskRequest*: _GSetPrint, \
+  GSetSquadRunningTask*: _GSetPrint, \
+  const GSetSquadRunningTask*: _GSetPrint, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Stream, Fun, Sep)
 
 #define GSetFlush(Set) _Generic(Set, \
@@ -1618,6 +1816,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetFlush, \
   GSetStr*: _GSetFlush, \
   GSetGenTreeStr*: _GSetFlush, \
+  GSetSquidletInfo*: _GSetFlush, \
+  GSetSquidletTaskRequest*: _GSetFlush, \
+  GSetSquadRunningTask*: _GSetFlush, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetNbElem(Set) _Generic(Set, \
@@ -1643,6 +1844,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetNbElem, \
   GSetGenTreeStr*: _GSetNbElem, \
   const GSetGenTreeStr*: _GSetNbElem, \
+  GSetSquidletInfo*: _GSetNbElem, \
+  const GSetSquidletInfo*: _GSetNbElem, \
+  GSetSquidletTaskRequest*: _GSetNbElem, \
+  const GSetSquidletTaskRequest*: _GSetNbElem, \
+  GSetSquadRunningTask*: _GSetNbElem, \
+  const GSetSquadRunningTask*: _GSetNbElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetPop(Set) _Generic(Set, \
@@ -1657,6 +1864,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetGenTreePop, \
   GSetStr*: _GSetStrPop, \
   GSetGenTreeStr*: _GSetGenTreeStrPop, \
+  GSetSquidletInfo*: _GSetSquidletInfoPop, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestPop, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskPop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetDrop(Set) _Generic(Set, \
@@ -1671,6 +1881,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetGenTreeDrop, \
   GSetStr*: _GSetStrDrop, \
   GSetGenTreeStr*: _GSetGenTreeStrDrop, \
+  GSetSquidletInfo*: _GSetSquidletInfoDrop, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestDrop, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskDrop, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetRemove(Set, Pos) _Generic(Set, \
@@ -1685,6 +1898,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetGenTreeRemove, \
   GSetStr*: _GSetStrRemove, \
   GSetGenTreeStr*: _GSetGenTreeStrRemove, \
+  GSetSquidletInfo*: _GSetSquidletInfoRemove, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestRemove, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskRemove, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetRemoveElem(Set, Elem) _Generic(Set, \
@@ -1699,6 +1915,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetGenTreeRemoveElem, \
   GSetStr*: _GSetStrRemoveElem, \
   GSetGenTreeStr*: _GSetGenTreeStrRemoveElem, \
+  GSetSquidletInfo*: _GSetSquidletInfoRemoveElem, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestRemoveElem, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskRemoveElem, \
   default: PBErrInvalidPolymorphism)(Set, Elem)
 
 #define GSetGet(Set, Pos) _Generic(Set, \
@@ -1724,6 +1943,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetStrGet, \
   GSetGenTreeStr*: _GSetGenTreeStrGet, \
   const GSetGenTreeStr*: _GSetGenTreeStrGet, \
+  GSetSquidletInfo*: _GSetSquidletInfoGet, \
+  const GSetSquidletInfo*: _GSetSquidletInfoGet, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGet, \
+  const GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGet, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskGet, \
+  const GSetSquadRunningTask*: _GSetSquadRunningTaskGet, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetGetJump(Set, Pos) _Generic(Set, \
@@ -1749,6 +1974,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetStrGetJump, \
   GSetGenTreeStr*: _GSetGenTreeStrGetJump, \
   const GSetGenTreeStr*: _GSetGenTreeStrGetJump, \
+  GSetSquidletInfo*: _GSetSquidletInfoGetJump, \
+  const GSetSquidletInfo*: _GSetSquidletInfoGetJump, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetJump, \
+  const GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetJump, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskGetJump, \
+  const GSetSquadRunningTask*: _GSetSquadRunningTaskGetJump, \
   default: PBErrInvalidPolymorphism)(Set, Pos)
 
 #define GSetHead(Set) _Generic(Set, \
@@ -1774,6 +2005,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetStrGetHead, \
   GSetGenTreeStr*: _GSetGenTreeStrGetHead, \
   const GSetGenTreeStr*: _GSetGenTreeStrGetHead, \
+  GSetSquidletInfo*: _GSetSquidletInfoGetHead, \
+  const GSetSquidletInfo*: _GSetSquidletInfoGetHead, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetHead, \
+  const GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetHead, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskGetHead, \
+  const GSetSquadRunningTask*: _GSetSquadRunningTaskGetHead, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetTail(Set) _Generic(Set, \
@@ -1799,6 +2036,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetStrGetTail, \
   GSetGenTreeStr*: _GSetGenTreeStrGetTail, \
   const GSetGenTreeStr*: _GSetGenTreeStrGetTail, \
+  GSetSquidletInfo*: _GSetSquidletInfoGetTail, \
+  const GSetSquidletInfo*: _GSetSquidletInfoGetTail, \
+  GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetTail, \
+  const GSetSquidletTaskRequest*: _GSetSquidletTaskRequestGetTail, \
+  GSetSquadRunningTask*: _GSetSquadRunningTaskGetTail, \
+  const GSetSquadRunningTask*: _GSetSquadRunningTaskGetTail, \
   default: PBErrInvalidPolymorphism)(Set)
 
 #define GSetHeadElem(Set) _Generic(Set, \
@@ -1824,6 +2067,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetHeadElem, \
   GSetGenTreeStr*: _GSetHeadElem, \
   const GSetGenTreeStr*: _GSetHeadElem, \
+  GSetSquidletInfo*: _GSetHeadElem, \
+  const GSetSquidletInfo*: _GSetHeadElem, \
+  GSetSquidletTaskRequest*: _GSetHeadElem, \
+  const GSetSquidletTaskRequest*: _GSetHeadElem, \
+  GSetSquadRunningTask*: _GSetHeadElem, \
+  const GSetSquadRunningTask*: _GSetHeadElem, \
   default: PBErrInvalidPolymorphism)((const GSet*)Set)
 
 #define GSetTailElem(Set) _Generic(Set, \
@@ -1849,6 +2098,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetTailElem, \
   GSetGenTreeStr*: _GSetTailElem, \
   const GSetGenTreeStr*: _GSetTailElem, \
+  GSetSquidletInfo*: _GSetTailElem, \
+  const GSetSquidletInfo*: _GSetTailElem, \
+  GSetSquidletTaskRequest*: _GSetTailElem, \
+  const GSetSquidletTaskRequest*: _GSetTailElem, \
+  GSetSquadRunningTask*: _GSetTailElem, \
+  const GSetSquadRunningTask*: _GSetTailElem, \
   default: PBErrInvalidPolymorphism)((const GSet*)Set)
 
 #define GSetElement(Set, Pos) _Generic(Set, \
@@ -1874,6 +2129,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetElement, \
   GSetGenTreeStr*: _GSetElement, \
   const GSetGenTreeStr*: _GSetElement, \
+  GSetSquidletInfo*: _GSetElement, \
+  const GSetSquidletInfo*: _GSetElement, \
+  GSetSquidletTaskRequest*: _GSetElement, \
+  const GSetSquidletTaskRequest*: _GSetElement, \
+  GSetSquadRunningTask*: _GSetElement, \
+  const GSetSquadRunningTask*: _GSetElement, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetElementJump(Set, Pos) _Generic(Set, \
@@ -1899,6 +2160,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetElementJump, \
   GSetGenTreeStr*: _GSetElementJump, \
   const GSetGenTreeStr*: _GSetElementJump, \
+  GSetSquidletInfo*: _GSetElementJump, \
+  const GSetSquidletInfo*: _GSetElementJump, \
+  GSetSquidletTaskRequest*: _GSetElementJump, \
+  const GSetSquidletTaskRequest*: _GSetElementJump, \
+  GSetSquadRunningTask*: _GSetElementJump, \
+  const GSetSquadRunningTask*: _GSetElementJump, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Pos)
 
 #define GSetSort(Set) _Generic(Set, \
@@ -1913,6 +2180,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetSort, \
   GSetStr*: _GSetSort, \
   GSetGenTreeStr*: _GSetSort, \
+  GSetSquidletInfo*: _GSetSort, \
+  GSetSquidletTaskRequest*: _GSetSort, \
+  GSetSquadRunningTask*: _GSetSort, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
 
 #define GSetMerge(IntoSet, MergedSet) _Generic(IntoSet, \
@@ -1954,6 +2224,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(MergedSet, \
     GSetGenTreeStr*: _GSetMerge, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(MergedSet, \
+    GSetSquidletInfo*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(MergedSet, \
+    GSetSquidletTaskRequest*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(MergedSet, \
+    GSetSquadRunningTask*: _GSetMerge, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(MergedSet))
 
@@ -1969,6 +2248,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetSplit, \
   GSetStr*: _GSetSplit, \
   GSetGenTreeStr*: _GSetSplit, \
+  GSetSquidletInfo*: _GSetSplit, \
+  GSetSquidletTaskRequest*: _GSetSplit, \
+  GSetSquadRunningTask*: _GSetSplit, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Elem)
 
 #define GSetAppendSet(IntoSet, AppendSet) _Generic(IntoSet, \
@@ -2009,6 +2291,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     default: PBErrInvalidPolymorphism), \
   GSetGenTreeStr*: _Generic(AppendSet, \
     GSetGenTreeStr*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(AppendSet, \
+    GSetSquidletInfo*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(AppendSet, \
+    GSetSquidletTaskRequest*: _GSetAppendSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(AppendSet, \
+    GSetSquadRunningTask*: _GSetAppendSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
@@ -2052,6 +2343,15 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTreeStr*: _Generic(AppendSet, \
     GSetGenTreeStr*: _GSetAppendSortedSet, \
     default: PBErrInvalidPolymorphism), \
+  GSetSquidletInfo*: _Generic(AppendSet, \
+    GSetSquidletInfo*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquidletTaskRequest*: _Generic(AppendSet, \
+    GSetSquidletTaskRequest*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
+  GSetSquadRunningTask*: _Generic(AppendSet, \
+    GSetSquadRunningTask*: _GSetAppendSortedSet, \
+    default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)((GSet*)(IntoSet), \
     (GSet*)(AppendSet))
 
@@ -2067,6 +2367,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetSwitch, \
   GSetStr*: _GSetSwitch, \
   GSetGenTreeStr*: _GSetSwitch, \
+  GSetSquidletInfo*: _GSetSwitch, \
+  GSetSquidletTaskRequest*: _GSetSwitch, \
+  GSetSquadRunningTask*: _GSetSwitch, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), PosA, PosB)
 
 #define GSetMoveElem(Set, From, To) _Generic(Set, \
@@ -2081,6 +2384,9 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   GSetGenTree*: _GSetMoveElem, \
   GSetStr*: _GSetMoveElem, \
   GSetGenTreeStr*: _GSetMoveElem, \
+  GSetSquidletInfo*: _GSetMoveElem, \
+  GSetSquidletTaskRequest*: _GSetMoveElem, \
+  GSetSquadRunningTask*: _GSetMoveElem, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), From, To)
 
 #define GSetCount(Set, Data) _Generic(Set, \
@@ -2106,6 +2412,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetCount, \
   GSetGenTreeStr*: _GSetCount, \
   const GSetGenTreeStr*: _GSetCount, \
+  GSetSquidletInfo*: _GSetCount, \
+  const GSetSquidletInfo*: _GSetCount, \
+  GSetSquidletTaskRequest*: _GSetCount, \
+  const GSetSquidletTaskRequest*: _GSetCount, \
+  GSetSquadRunningTask*: _GSetCount, \
+  const GSetSquadRunningTask*: _GSetCount, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set), Data)
 
 #define GSetGetBounds(Set) _Generic(Set, \
@@ -2136,6 +2448,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetIterForwardCreate, \
   GSetGenTreeStr*: _GSetIterForwardCreate, \
   const GSetGenTreeStr*: _GSetIterForwardCreate, \
+  GSetSquidletInfo*: _GSetIterForwardCreate, \
+  const GSetSquidletInfo*: _GSetIterForwardCreate, \
+  GSetSquidletTaskRequest*: _GSetIterForwardCreate, \
+  const GSetSquidletTaskRequest*: _GSetIterForwardCreate, \
+  GSetSquadRunningTask*: _GSetIterForwardCreate, \
+  const GSetSquadRunningTask*: _GSetIterForwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterForwardCreateStatic(Set) _Generic(Set, \
@@ -2161,6 +2479,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetIterForwardCreateStatic, \
   GSetGenTreeStr*: _GSetIterForwardCreateStatic, \
   const GSetGenTreeStr*: _GSetIterForwardCreateStatic, \
+  GSetSquidletInfo*: _GSetIterForwardCreateStatic, \
+  const GSetSquidletInfo*: _GSetIterForwardCreateStatic, \
+  GSetSquidletTaskRequest*: _GSetIterForwardCreateStatic, \
+  const GSetSquidletTaskRequest*: _GSetIterForwardCreateStatic, \
+  GSetSquadRunningTask*: _GSetIterForwardCreateStatic, \
+  const GSetSquadRunningTask*: _GSetIterForwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreate(Set) _Generic(Set, \
@@ -2184,6 +2508,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetGenTree*: _GSetIterBackwardCreate, \
   GSetGenTreeStr*: _GSetIterBackwardCreate, \
   const GSetGenTreeStr*: _GSetIterBackwardCreate, \
+  GSetSquidletInfo*: _GSetIterBackwardCreate, \
+  const GSetSquidletInfo*: _GSetIterBackwardCreate, \
+  GSetSquidletTaskRequest*: _GSetIterBackwardCreate, \
+  const GSetSquidletTaskRequest*: _GSetIterBackwardCreate, \
+  GSetSquadRunningTask*: _GSetIterBackwardCreate, \
+  const GSetSquadRunningTask*: _GSetIterBackwardCreate, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterBackwardCreateStatic(Set) _Generic(Set, \
@@ -2209,6 +2539,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
   const GSetStr*: _GSetIterBackwardCreateStatic, \
   GSetGenTreeStr*: _GSetIterBackwardCreateStatic, \
   const GSetGenTreeStr*: _GSetIterBackwardCreateStatic, \
+  GSetSquidletInfo*: _GSetIterBackwardCreateStatic, \
+  const GSetSquidletInfo*: _GSetIterBackwardCreateStatic, \
+  GSetSquidletTaskRequest*: _GSetIterBackwardCreateStatic, \
+  const GSetSquidletTaskRequest*: _GSetIterBackwardCreateStatic, \
+  GSetSquadRunningTask*: _GSetIterBackwardCreateStatic, \
+  const GSetSquadRunningTask*: _GSetIterBackwardCreateStatic, \
   default: PBErrInvalidPolymorphism)((GSet*)(Set))
   
 #define GSetIterSetGSet(Iter, Set) _Generic(Iter, \
@@ -2235,6 +2571,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     const GSetStr*: GSetIterForwardSetGSet, \
     GSetGenTreeStr*: GSetIterForwardSetGSet, \
     const GSetGenTreeStr*: GSetIterForwardSetGSet, \
+    GSetSquidletInfo*: GSetIterForwardSetGSet, \
+    const GSetSquidletInfo*: GSetIterForwardSetGSet, \
+    GSetSquidletTaskRequest*: GSetIterForwardSetGSet, \
+    const GSetSquidletTaskRequest*: GSetIterForwardSetGSet, \
+    GSetSquadRunningTask*: GSetIterForwardSetGSet, \
+    const GSetSquadRunningTask*: GSetIterForwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   GSetIterBackward*: _Generic(Set, \
     GSet*: GSetIterBackwardSetGSet, \
@@ -2259,6 +2601,12 @@ inline GenTreeStr* _GSetGenTreeStrRemoveElem(
     const GSetStr*: GSetIterBackwardSetGSet, \
     GSetGenTreeStr*: GSetIterBackwardSetGSet, \
     const GSetGenTreeStr*: GSetIterBackwardSetGSet, \
+    GSetSquidletInfo*: GSetIterBackwardSetGSet, \
+    const GSetSquidletInfo*: GSetIterBackwardSetGSet, \
+    GSetSquidletTaskRequest*: GSetIterBackwardSetGSet, \
+    const GSetSquidletTaskRequest*: GSetIterBackwardSetGSet, \
+    GSetSquadRunningTask*: GSetIterBackwardSetGSet, \
+    const GSetSquadRunningTask*: GSetIterBackwardSetGSet, \
     default: PBErrInvalidPolymorphism), \
   default: PBErrInvalidPolymorphism)(Iter, (GSet*)(Set))
 

@@ -1,7 +1,7 @@
 \contentsline {section}{\numberline {1}Interface}{2}
-\contentsline {section}{\numberline {2}Code}{40}
-\contentsline {subsection}{\numberline {2.1}gset.c}{40}
-\contentsline {subsection}{\numberline {2.2}gset-inline.c}{49}
-\contentsline {section}{\numberline {3}Makefile}{74}
-\contentsline {section}{\numberline {4}Unit tests}{74}
-\contentsline {section}{\numberline {5}Unit tests output}{95}
+\contentsline {section}{\numberline {2}Code}{45}
+\contentsline {subsection}{\numberline {2.1}gset.c}{45}
+\contentsline {subsection}{\numberline {2.2}gset-inline.c}{55}
+\contentsline {section}{\numberline {3}Makefile}{80}
+\contentsline {section}{\numberline {4}Unit tests}{80}
+\contentsline {section}{\numberline {5}Unit tests output}{101}
