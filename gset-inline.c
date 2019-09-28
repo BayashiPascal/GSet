@@ -1,10 +1,10 @@
-// *************** GSET-INLINE.C ***************
+// *************** GSET-static inline.C ***************
 
 // ================ Functions implementation ====================
 
 // Static constructors for GSet
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 GSet GSetCreateStatic(void) {
   // Declare a GSet and set the properties
@@ -16,7 +16,7 @@ GSet GSetCreateStatic(void) {
 
 // Function to empty the GSet
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetFlush(GSet* const that) {
 #if BUILDMODE == 0
@@ -34,7 +34,7 @@ void _GSetFlush(GSet* const that) {
 // head of the GSet
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetPush(GSet* const that, void* const data) {
 #if BUILDMODE == 0
@@ -65,7 +65,7 @@ void _GSetPush(GSet* const that, void* const data) {
 // Function to insert an element pointing toward 'data' at the 
 // tail of the GSet
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetAppend(GSet* const that, void* const data) {
 #if BUILDMODE == 0
@@ -94,7 +94,7 @@ void _GSetAppend(GSet* const that, void* const data) {
 // Return the data pointed to by the removed element, or null if the 
 // GSet is empty
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetPop(GSet* const that) {
 #if BUILDMODE == 0
@@ -125,7 +125,7 @@ void* _GSetPop(GSet* const that) {
 // Return the data pointed to by the removed element, or null if the 
 // GSet is empty
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetDrop(GSet* const that) {
 #if BUILDMODE == 0
@@ -156,7 +156,7 @@ void* _GSetDrop(GSet* const that) {
 // Return the data pointed to by the removed element
 // The GSetElem is freed and *elem == NULL after calling this function
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetRemoveElem(GSet* const that, GSetElem** elem) {
 #if BUILDMODE == 0
@@ -205,7 +205,7 @@ void* _GSetRemoveElem(GSet* const that, GSetElem** elem) {
 // Function to remove the first element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetRemoveFirst(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
@@ -226,7 +226,7 @@ void _GSetRemoveFirst(GSet* const that, const void* const data) {
 // Function to remove the last element of the GSet pointing to 'data'
 // If there is no element pointing to 'data' do nothing
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetRemoveLast(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
@@ -247,7 +247,7 @@ void _GSetRemoveLast(GSet* const that, const void* const data) {
 // Function to remove the element at the 'iElem'-th position of the GSet
 // Return the data pointed to by the removed element
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetRemove(GSet* const that, const long iElem) {
 #if BUILDMODE == 0
@@ -296,7 +296,7 @@ void* _GSetRemove(GSet* const that, const long iElem) {
 // Function to remove all the element of the GSet pointing to 'data'
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetRemoveAll(GSet* const that, const void* const data) {
 #if BUILDMODE == 0
@@ -328,7 +328,7 @@ void _GSetRemoveAll(GSet* const that, const void* const data) {
 
 // Function to get the data at the GSetElem
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* GSetElemData(const GSetElem* const that) {
 #if BUILDMODE == 0
@@ -345,7 +345,7 @@ void* GSetElemData(const GSetElem* const that) {
 // Function to get the data at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetGet(const GSet* const that, const long iElem) {
 #if BUILDMODE == 0
@@ -370,7 +370,7 @@ void* _GSetGet(const GSet* const that, const long iElem) {
 // Fast version, move in the set from the last got element. The set must
 // not have been modified since we've last got an element.
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetGetJump(const GSet* const that, const long iElem) {
 #if BUILDMODE == 0
@@ -393,7 +393,7 @@ void* _GSetGetJump(const GSet* const that, const long iElem) {
 // Function to get the data at first position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetHead(const GSet* const that) {
 #if BUILDMODE == 0
@@ -413,7 +413,7 @@ void* _GSetHead(const GSet* const that) {
 // Function to get the data at last position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* _GSetTail(const GSet* const that) {
 #if BUILDMODE == 0
@@ -433,7 +433,7 @@ void* _GSetTail(const GSet* const that) {
 // Function to get the GSetElem at first position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetHeadElem(const GSet* const that) {
 #if BUILDMODE == 0
@@ -450,7 +450,7 @@ const GSetElem* _GSetHeadElem(const GSet* const that) {
 // Function to get the GSetElem at last position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetTailElem(const GSet* const that) {
 #if BUILDMODE == 0
@@ -467,7 +467,7 @@ const GSetElem* _GSetTailElem(const GSet* const that) {
 // Function to get the element at the 'iElem'-th position of the GSet
 // without removing it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetElement(const GSet* const that, const long iElem) {
 #if BUILDMODE == 0
@@ -502,7 +502,7 @@ const GSetElem* _GSetElement(const GSet* const that, const long iElem) {
 // Fast version, move in the set from the last got element. The set must
 // not have been modified since we've last got an element.
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetElementJump(const GSet* const that, 
   const long iElem) {
@@ -544,7 +544,7 @@ const GSetElem* _GSetElementJump(const GSet* const that,
 // which point to 'data'
 // Return -1 if 'data' is not in the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 long _GSetGetIndexFirst(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
@@ -575,7 +575,7 @@ long _GSetGetIndexFirst(const GSet* const that, const void* const data) {
 // which point to 'data'
 // Return -1 if 'data' is not in the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 long _GSetGetIndexLast(const GSet* const that, const void* const data) {
 #if BUILDMODE == 0
@@ -603,7 +603,7 @@ long _GSetGetIndexLast(const GSet* const that, const void* const data) {
 // which point to 'data'
 // Return NULL if 'data' is not in the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetFirstElem(const GSet* const that, 
   const void* const data) {
@@ -628,7 +628,7 @@ const GSetElem* _GSetFirstElem(const GSet* const that,
 // which point to 'data'
 // Return NULL if 'data' is not in the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* _GSetLastElem(const GSet* const that, 
   const void* const data) {
@@ -653,7 +653,7 @@ const GSetElem* _GSetLastElem(const GSet* const that,
 // 'that' and 'set' can be empty
 // After calling this function 'set' is empty 
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetMerge(GSet* const that, GSet* const set) {
 #if BUILDMODE == 0
@@ -701,7 +701,7 @@ void _GSetMerge(GSet* const that, GSet* const set) {
 // Return a new GSet starting with 'e', or NULL if 'e' is not 
 // an element of the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
 #if BUILDMODE == 0
@@ -763,7 +763,7 @@ GSet* _GSetSplit(GSet* const that, GSetElem* const e) {
 
 // Switch the 'iElem'-th and 'jElem'-th element of the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetSwitch(GSet* const that, const long iElem, const long jElem) {
 #if BUILDMODE == 0
@@ -795,7 +795,7 @@ void _GSetSwitch(GSet* const that, const long iElem, const long jElem) {
 
 // Set the sort value of the GSetElem 'that' to 'v'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetElemSetSortVal(GSetElem* const that, const float v) {
 #if BUILDMODE == 0
@@ -810,7 +810,7 @@ void GSetElemSetSortVal(GSetElem* const that, const float v) {
 
 // Set the data of the GSetElem 'that' to 'd'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetElemSetData(GSetElem* const that, void* const d) {
 #if BUILDMODE == 0
@@ -826,7 +826,7 @@ void GSetElemSetData(GSetElem* const that, void* const d) {
 // Set the previous element of the GSetElem 'that' to 'e'
 // Do not set the link back in 'e'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetElemSetPrev(GSetElem* const that, GSetElem* const e) {
 #if BUILDMODE == 0
@@ -842,7 +842,7 @@ void GSetElemSetPrev(GSetElem* const that, GSetElem* const e) {
 // Set the next element of the GSetElem 'that' to 'e'
 // Do not set the link back in 'e'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetElemSetNext(GSetElem* const that, GSetElem* const e) {
 #if BUILDMODE == 0
@@ -858,7 +858,7 @@ void GSetElemSetNext(GSetElem* const that, GSetElem* const e) {
 // Create a new GSetIterForward for the GSet 'set'
 // The iterator is reset upon creation
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 GSetIterForward _GSetIterForwardCreateStatic(GSet* const set) {
 #if BUILDMODE == 0
@@ -877,7 +877,7 @@ GSetIterForward _GSetIterForwardCreateStatic(GSet* const set) {
 // Create a new GSetIterBackward for the GSet 'set'
 // The iterator is reset upon creation
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 GSetIterBackward _GSetIterBackwardCreateStatic(GSet* const set) {
 #if BUILDMODE == 0
@@ -896,7 +896,7 @@ GSetIterBackward _GSetIterBackwardCreateStatic(GSet* const set) {
 // Reset the GSetIterForward to its starting position
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterForwardReset(GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -913,7 +913,7 @@ void GSetIterForwardReset(GSetIterForward* const that) {
 // Reset the GSetIterBackward to its starting position
 // Do nothing if arguments are invalid
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterBackwardReset(GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -931,7 +931,7 @@ void GSetIterBackwardReset(GSetIterBackward* const that) {
 // Return false if arguments are invalid or we couldn't step
 // Return true else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterForwardStep(GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -953,7 +953,7 @@ bool GSetIterForwardStep(GSetIterForward* const that) {
 // Return false if arguments are invalid or we couldn't step
 // Return true else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterBackwardStep(GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -975,7 +975,7 @@ bool GSetIterBackwardStep(GSetIterBackward* const that) {
 // Return false if arguments are invalid or we couldn't step
 // Return true else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterForwardStepBack(GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -997,7 +997,7 @@ bool GSetIterForwardStepBack(GSetIterForward* const that) {
 // Return false if arguments are invalid or we couldn't step
 // Return true else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterBackwardStepBack(GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -1022,7 +1022,7 @@ bool GSetIterBackwardStepBack(GSetIterBackward* const that) {
 // property of the nodes, 'param' is a hook to allow the user to pass
 // parameters to the function through a user-defined structure
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterForwardApply(GSetIterForward* const that, 
   void(*fun)(void* data, void* param), void* param) {
@@ -1056,7 +1056,7 @@ void GSetIterForwardApply(GSetIterForward* const that,
 // property of the nodes, 'param' is a hook to allow the user to pass
 // parameters to the function through a user-defined structure
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterBackwardApply(GSetIterBackward* const that, 
   void(*fun)(void* data, void* param), void* param) {
@@ -1087,7 +1087,7 @@ void GSetIterBackwardApply(GSetIterBackward* const that,
 // its point of view, not the order in the GSet)
 // Return false else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterForwardIsFirst(const GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -1104,7 +1104,7 @@ bool GSetIterForwardIsFirst(const GSetIterForward* const that) {
 // its point of view, not the order in the GSet)
 // Return false else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterBackwardIsFirst(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -1121,7 +1121,7 @@ bool GSetIterBackwardIsFirst(const GSetIterBackward* const that) {
 // its point of view, not the order in the GSet)
 // Return false else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterForwardIsLast(const GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -1138,7 +1138,7 @@ bool GSetIterForwardIsLast(const GSetIterForward* const that) {
 // its point of view, not the order in the GSet)
 // Return false else
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterBackwardIsLast(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -1153,7 +1153,7 @@ bool GSetIterBackwardIsLast(const GSetIterBackward* const that) {
 
 // Change the attached set of the iterator, and reset it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterForwardSetGSet(GSetIterForward* const that, 
   GSet* const set) {
@@ -1177,7 +1177,7 @@ void GSetIterForwardSetGSet(GSetIterForward* const that,
 
 // Change the attached set of the iterator, and reset it
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterBackwardSetGSet(GSetIterBackward* const that, 
   GSet* const set) {
@@ -1201,7 +1201,7 @@ void GSetIterBackwardSetGSet(GSetIterBackward* const that,
 
 // Return the data currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* GSetIterForwardGet(const GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -1217,7 +1217,7 @@ void* GSetIterForwardGet(const GSetIterForward* const that) {
 
 // Return the data currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void* GSetIterBackwardGet(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -1233,7 +1233,7 @@ void* GSetIterBackwardGet(const GSetIterBackward* const that) {
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* GSetIterForwardGetElem(
   const GSetIterForward* const that) {
@@ -1250,7 +1250,7 @@ const GSetElem* GSetIterForwardGetElem(
 
 // Return the element currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* GSetIterBackwardGetElem(
   const GSetIterBackward* const that) {
@@ -1267,7 +1267,7 @@ const GSetElem* GSetIterBackwardGetElem(
 
 // Return the number of element in the set
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 long _GSetNbElem(const GSet* const that) {
 #if BUILDMODE == 0
@@ -1288,7 +1288,7 @@ long _GSetNbElem(const GSet* const that) {
 // It's the responsibility of the user to delete the content of the 
 // element prior to calling this function
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterForwardRemoveElem(GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -1314,7 +1314,7 @@ bool GSetIterForwardRemoveElem(GSetIterForward* const that) {
 // It's the responsibility of the user to delete the content of the 
 // element prior to calling this function
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 bool GSetIterBackwardRemoveElem(GSetIterBackward* const that) {
 #if BUILDMODE == 0
@@ -1336,7 +1336,7 @@ bool GSetIterBackwardRemoveElem(GSetIterBackward* const that) {
 // Append the element of the GSet 'set' at the end of the GSet 'that'
 // 'that' and 'set' can be empty
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetAppendSet(GSet* const that, const GSet* const set) {
 #if BUILDMODE == 0
@@ -1369,7 +1369,7 @@ void _GSetAppendSet(GSet* const that, const GSet* const set) {
 // Elements are kept sorted
 // 'that' and 'set' can be empty
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void _GSetAppendSortedSet(GSet* const that, const GSet* const set) {
 #if BUILDMODE == 0
@@ -1400,7 +1400,7 @@ void _GSetAppendSortedSet(GSet* const that, const GSet* const set) {
 
 // Return the sort value of GSetElem 'that'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 float GSetElemGetSortVal(const GSetElem* const that) {
 #if BUILDMODE == 0
@@ -1415,7 +1415,7 @@ float GSetElemGetSortVal(const GSetElem* const that) {
 
 // Return the next element of GSetElem 'that'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* GSetElemNext(const GSetElem* const that) {
 #if BUILDMODE == 0
@@ -1430,7 +1430,7 @@ const GSetElem* GSetElemNext(const GSetElem* const that) {
 
 // Return the previous element of GSetElem 'that'
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 const GSetElem* GSetElemPrev(const GSetElem* const that) {
 #if BUILDMODE == 0
@@ -1445,7 +1445,7 @@ const GSetElem* GSetElemPrev(const GSetElem* const that) {
 
 // Set the data of the element currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterForwardSetData(const GSetIterForward* const that, 
   void* data) {
@@ -1461,7 +1461,7 @@ void GSetIterForwardSetData(const GSetIterForward* const that,
 
 // Set the data of the element currently pointed to by the iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 void GSetIterBackwardSetData(const GSetIterBackward* const that,
   void* data) {
@@ -1478,7 +1478,7 @@ void GSetIterBackwardSetData(const GSetIterBackward* const that,
 // Return the sort value of the element currently pointed to by the 
 // iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 float GSetIterForwardGetSortVal(const GSetIterForward* const that) {
 #if BUILDMODE == 0
@@ -1494,7 +1494,7 @@ float GSetIterForwardGetSortVal(const GSetIterForward* const that) {
 // Return the sort value of the element currently pointed to by the 
 // iterator
 #if BUILDMODE != 0
-inline
+static inline
 #endif 
 float GSetIterBackwardGetSortVal(const GSetIterBackward* const that) {
 #if BUILDMODE == 0
