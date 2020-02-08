@@ -459,7 +459,7 @@ int compare_floats(const void* a, const void* b)
 
 void UnitTestGSetSortBig() {
   srandom(RANDOMSEED);
-  int nbTest = 100;
+  int nbTest = 10;
   float sumTime = 0.0;
   float minTime = 100000.0;
   float maxTime = 0.0;
@@ -1162,57 +1162,56 @@ void UnitTestSpeedShuffle() {
   GSet set = GSetCreateStatic();
   long setSizeMin = 100;
   long setSizeMax = 10000;
+  int nbRun = 100;
   printf("Start speed test for shuffling algorithms\n\n");
   for (long setSize = setSizeMin; setSize <= setSizeMax; setSize *= 2) {
     for (long i = setSize; i--;)
       GSetPush(&set, i);
-    clock_t clockBefore = clock();
-    for (int run = 40; run--;)
+    /*for (int run = 10; run--;) {
       GSetShuffle(&set);
-    clock_t clockAfter = clock();
-    float delayMs = 0.025 * ((double)(clockAfter - clockBefore)) / 
-      CLOCKS_PER_SEC * 1000.0;
-    printf("Delay to shuffle %ld elements with GSetShuffle: %fms\n", 
-      setSize, delayMs);
-    clockBefore = clock();
-    for (int run = 40; run--;)
       GSetShuffleA(&set);
-    clockAfter = clock();
-    float delayMsA = 0.025 * ((double)(clockAfter - clockBefore)) / 
+      GSetShuffleB(&set);
+      GSetShuffleC(&set);
+    }*/
+    clock_t clockBefore = clock();
+    for (int run = nbRun; run--;)
+      GSetShuffleA(&set);
+    clock_t clockAfter = clock();
+    float delayMsA = 1.0 / ((double)nbRun) * ((double)(clockAfter - clockBefore)) / 
       CLOCKS_PER_SEC * 1000.0;
     printf("Delay to shuffle %ld elements with GSetShuffleA: %fms\n", 
       setSize, delayMsA);
     clockBefore = clock();
-    for (int run = 40; run--;)
+    for (int run = nbRun; run--;)
       GSetShuffleB(&set);
     clockAfter = clock();
-    float delayMsB = 0.025 * ((double)(clockAfter - clockBefore)) / 
+    float delayMsB = 1.0 / ((double)nbRun) * ((double)(clockAfter - clockBefore)) / 
       CLOCKS_PER_SEC * 1000.0;
     printf("Delay to shuffle %ld elements with GSetShuffleB: %fms\n", 
       setSize, delayMsB);
     clockBefore = clock();
-    for (int run = 40; run--;)
+    for (int run = nbRun; run--;)
       GSetShuffleC(&set);
     clockAfter = clock();
-    float delayMsC = 0.025 * ((double)(clockAfter - clockBefore)) / 
+    float delayMsC = 1.0 / ((double)nbRun) * ((double)(clockAfter - clockBefore)) / 
       CLOCKS_PER_SEC * 1000.0;
     printf("Delay to shuffle %ld elements with GSetShuffleC: %fms\n", 
       setSize, delayMsC);
+    clockBefore = clock();
+    for (int run = nbRun; run--;)
+      GSetShuffle(&set);
+    clockAfter = clock();
+    float delayMs = 1.0 / ((double)nbRun) * ((double)(clockAfter - clockBefore)) / 
+      CLOCKS_PER_SEC * 1000.0;
+    printf("Delay to shuffle %ld elements with GSetShuffle: %fms\n", 
+      setSize, delayMs);
     printf("\n");
-    GSetFlush(&set);
-    if (setSize <= 1500 &&
-      (delayMsB > delayMsA ||
-      delayMsB > delayMsC)) {
-      GSetErr->_type = PBErrTypeUnitTestFailed;
-      sprintf(GSetErr->_msg, "UnitTestSpeedShuffle NOK");
-      PBErrCatch(GSetErr);
-    } else if (setSize > 1500 &&
-      (delayMsA > delayMsB ||
-      delayMsA > delayMsC)) {
+    if (delayMs > 1.1 * MIN(delayMsA, MIN(delayMsB, delayMsC))) {
       GSetErr->_type = PBErrTypeUnitTestFailed;
       sprintf(GSetErr->_msg, "UnitTestSpeedShuffle NOK");
       PBErrCatch(GSetErr);
     }
+    GSetFlush(&set);
   }
   printf("UnitTestSpeedShuffle OK\n");
 }

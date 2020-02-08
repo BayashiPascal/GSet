@@ -525,7 +525,11 @@ void GSetShuffle(GSet* const that) {
   }
 #endif
   // If the set is empty there is nothing to do
-  if (GSetNbElem(that) <= 1500)
+#if BUILDMODE == 0
+  if (GSetNbElem(that) <= 800)
+#else
+  if (GSetNbElem(that) <= 650)
+#endif
     GSetShuffleB(that);
   else 
     GSetShuffleA(that);
