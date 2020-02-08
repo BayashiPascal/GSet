@@ -31,9 +31,9 @@ UnitTestGSetInsertRemove OK
 UnitTestGSetNbElemGet OK
 UnitTestGSetGetIndex OK
 UnitTestGSetSort OK
-Min/Avg/Max time to sort 1000000 elements: 1292.2/1708.3/1865.9ms
+Min/Avg/Max time to sort 1000000 elements: 661.1/1044.2/1174.4ms
 For comparison, using qsort on an array of 1000000 floats:
-  Min/Avg/Max time : 221.2/224.9/516.9ms
+  Min/Avg/Max time : 115.2/137.0/332.0ms
 UnitTestGSetSortBig OK
 UnitTestGSetSplitMerge OK
 UnitTestGSetSwitch OK
@@ -61,43 +61,43 @@ UnitTestGSetIteratorBackwardSet OK
 UnitTestGSetIteratorBackward OK
 Start speed test for shuffling algorithms
 
-Delay to shuffle 100 elements with GSetShuffle: 0.009200ms
-Delay to shuffle 100 elements with GSetShuffleA: 0.043050ms
-Delay to shuffle 100 elements with GSetShuffleB: 0.009125ms
-Delay to shuffle 100 elements with GSetShuffleC: 0.010050ms
+Delay to shuffle 100 elements with GSetShuffleA: 0.018280ms
+Delay to shuffle 100 elements with GSetShuffleB: 0.005320ms
+Delay to shuffle 100 elements with GSetShuffleC: 0.009840ms
+Delay to shuffle 100 elements with GSetShuffle: 0.005250ms
 
-Delay to shuffle 200 elements with GSetShuffle: 0.024525ms
-Delay to shuffle 200 elements with GSetShuffleA: 0.094800ms
-Delay to shuffle 200 elements with GSetShuffleB: 0.024200ms
-Delay to shuffle 200 elements with GSetShuffleC: 0.036900ms
+Delay to shuffle 200 elements with GSetShuffleA: 0.040440ms
+Delay to shuffle 200 elements with GSetShuffleB: 0.015520ms
+Delay to shuffle 200 elements with GSetShuffleC: 0.034680ms
+Delay to shuffle 200 elements with GSetShuffle: 0.015540ms
 
-Delay to shuffle 400 elements with GSetShuffle: 0.072975ms
-Delay to shuffle 400 elements with GSetShuffleA: 0.212450ms
-Delay to shuffle 400 elements with GSetShuffleB: 0.072875ms
-Delay to shuffle 400 elements with GSetShuffleC: 0.145575ms
+Delay to shuffle 400 elements with GSetShuffleA: 0.090000ms
+Delay to shuffle 400 elements with GSetShuffleB: 0.052910ms
+Delay to shuffle 400 elements with GSetShuffleC: 0.132050ms
+Delay to shuffle 400 elements with GSetShuffle: 0.053250ms
 
-Delay to shuffle 800 elements with GSetShuffle: 0.243125ms
-Delay to shuffle 800 elements with GSetShuffleA: 0.473150ms
-Delay to shuffle 800 elements with GSetShuffleB: 0.243475ms
-Delay to shuffle 800 elements with GSetShuffleC: 0.581075ms
+Delay to shuffle 800 elements with GSetShuffleA: 0.198960ms
+Delay to shuffle 800 elements with GSetShuffleB: 0.301050ms
+Delay to shuffle 800 elements with GSetShuffleC: 0.767300ms
+Delay to shuffle 800 elements with GSetShuffle: 0.199880ms
 
-Delay to shuffle 1600 elements with GSetShuffle: 1.038800ms
-Delay to shuffle 1600 elements with GSetShuffleA: 1.035850ms
-Delay to shuffle 1600 elements with GSetShuffleB: 1.260600ms
-Delay to shuffle 1600 elements with GSetShuffleC: 2.994925ms
+Delay to shuffle 1600 elements with GSetShuffleA: 0.433220ms
+Delay to shuffle 1600 elements with GSetShuffleB: 2.049560ms
+Delay to shuffle 1600 elements with GSetShuffleC: 4.537180ms
+Delay to shuffle 1600 elements with GSetShuffle: 0.434320ms
 
-Delay to shuffle 3200 elements with GSetShuffle: 2.254050ms
-Delay to shuffle 3200 elements with GSetShuffleA: 2.244050ms
-Delay to shuffle 3200 elements with GSetShuffleB: 10.425850ms
-Delay to shuffle 3200 elements with GSetShuffleC: 21.226274ms
+Delay to shuffle 3200 elements with GSetShuffleA: 0.945110ms
+Delay to shuffle 3200 elements with GSetShuffleB: 10.385190ms
+Delay to shuffle 3200 elements with GSetShuffleC: 21.993650ms
+Delay to shuffle 3200 elements with GSetShuffle: 0.951680ms
 
-Delay to shuffle 6400 elements with GSetShuffle: 4.827150ms
-Delay to shuffle 6400 elements with GSetShuffleA: 4.781950ms
-Delay to shuffle 6400 elements with GSetShuffleB: 51.949051ms
-Delay to shuffle 6400 elements with GSetShuffleC: 99.935478ms
+Delay to shuffle 6400 elements with GSetShuffleA: 2.109740ms
+Delay to shuffle 6400 elements with GSetShuffleB: 60.087730ms
+Delay to shuffle 6400 elements with GSetShuffleC: 147.022751ms
+Delay to shuffle 6400 elements with GSetShuffle: 2.112940ms
 
 UnitTestSpeedShuffle OK
-Delay to access 100000 elements with GSet: 11623.296875ms
-Delay to access 100000 elements with GSetJump: 0.304000ms
+Delay to access 100000 elements with GSet: 17141.695312ms
+Delay to access 100000 elements with GSetJump: 0.313000ms
 UnitTestGSetJump OK
 UnitTestAll OK
