@@ -1507,3 +1507,47 @@ float GSetIterBackwardGetSortVal(const GSetIterBackward* const that) {
   return GSetElemGetSortVal(GSetIterGetElem(that));
 }
 
+// Set the sort value of the element currently pointed to by the 
+// iterator
+// The user must sort the set himself after calling this method
+#if BUILDMODE != 0
+static inline
+#endif 
+void GSetIterForwardSetSortVal(GSetIterForward* const that, float val) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (that->_curElem == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that->_curElem' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  GSetElemSetSortVal(that->_curElem, val);
+}
+
+// Set the sort value of the element currently pointed to by the 
+// iterator
+// The user must sort the set himself after calling this method
+#if BUILDMODE != 0
+static inline
+#endif 
+void GSetIterBackwardSetSortVal(GSetIterBackward* const that, float val) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that' is null");
+    PBErrCatch(GSetErr);
+  }
+  if (that->_curElem == NULL) {
+    GSetErr->_type = PBErrTypeNullPointer;
+    sprintf(GSetErr->_msg, "'that->_curElem' is null");
+    PBErrCatch(GSetErr);
+  }
+#endif  
+  GSetElemSetSortVal(that->_curElem, val);
+}
+

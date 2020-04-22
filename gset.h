@@ -543,6 +543,22 @@ static inline
 #endif 
 float GSetIterBackwardGetSortVal(const GSetIterBackward* const that);
 
+// Set the sort value of the element currently pointed to by the 
+// iterator
+// The user must sort the set himself after calling this method
+#if BUILDMODE != 0
+static inline
+#endif 
+void GSetIterForwardSetSortVal(GSetIterForward* const that, float val);
+
+// Set the sort value of the element currently pointed to by the 
+// iterator
+// The user must sort the set himself after calling this method
+#if BUILDMODE != 0
+static inline
+#endif 
+void GSetIterBackwardSetSortVal(GSetIterBackward* const that, float val);
+
 // Set the data of the element currently pointed to by the iterator
 #if BUILDMODE != 0
 static inline
@@ -2681,6 +2697,11 @@ static inline SquadRunningTask* _GSetSquadRunningTaskRemoveElem(
   GSetIterBackward*: GSetIterBackwardGetSortVal, \
   const GSetIterBackward*: GSetIterBackwardGetSortVal, \
   default: PBErrInvalidPolymorphism)(Iter)
+
+#define GSetIterSetSortVal(Iter, Val) _Generic(Iter, \
+  GSetIterForward*: GSetIterForwardSetSortVal, \
+  GSetIterBackward*: GSetIterBackwardSetSortVal, \
+  default: PBErrInvalidPolymorphism)(Iter, Val)
 
 #define GSetIterRemoveElem(Iter) _Generic(Iter, \
   GSetIterForward*: GSetIterForwardRemoveElem, \
