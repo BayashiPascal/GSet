@@ -8,6 +8,14 @@ struct UserData {
 
 };
 
+void UserDataFree(struct UserData** const that) {
+
+  if (that == NULL || *that == NULL) return;
+  free(*that);
+  *that = NULL;
+
+}
+
 // Create typed GSet for UserData
 DefineGSet(UserData, struct UserData)
 
@@ -31,6 +39,10 @@ int main() {
     printf("The set is empty\n");
 
   } EndTry;
+  GSetIntPush(
+    setInt,
+    malloc(sizeof(int)));
+  GSetIntFlush(setInt);
   GSetIntFree(&setInt);
 
   // Example of typed GSet

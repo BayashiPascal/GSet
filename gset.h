@@ -122,14 +122,38 @@ void* GSetPop(
     {GSetPush((struct GSet*)that, (void*)data);}                       \
   static inline T * GSet ## N ## Pop(struct GSet ## N * const that)    \
     {return (T *)GSetPop((struct GSet*)that);}                         \
+  static inline void GSet ## N ## Flush(struct GSet ## N * const that) \
+    {T * d=NULL; while(that->s.size>0){                                \
+    d=GSet ## N ## Pop(that);N ## Free(&d);}}                          \
 
 // Define typed GSets
+static inline void IntFree(int** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(Int, int)
+static inline void LongFree(long** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(Long, long)
+static inline void FloatFree(float** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(Float, float)
+static inline void DoubleFree(double** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(Double, double)
+static inline void UIntFree(unsigned int** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(UInt, unsigned int)
+static inline void ULongFree(unsigned long** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(ULong, unsigned long)
+static inline void StrFree(char*** const that) {
+  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
+}
 DefineGSet(Str, char*)
 
 // End of the guard against multiple inclusion
