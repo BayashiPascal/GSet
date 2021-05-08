@@ -76,12 +76,78 @@ void GSetPush(
   struct GSet* const that,
          void* const data);
 
+// Add data at the tail of the GSet
+// Inputs:
+//   that: the GSet
+//   data: the data to add
+void GSetAdd(
+  struct GSet* const that,
+         void* const data);
+
 // Remove and return the data at the head of the GSet
 // Input:
 //   that: the GSet
 // Output:
-//   Return the data
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
 void* GSetPop(
+  struct GSet* const that);
+
+// Remove and return the data at the tail of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
+void* GSetDrop(
+  struct GSet* const that);
+
+// Remove and return the data of the current element of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
+void* GSetPick(
+  struct GSet* const that);
+
+// Reset the current element of the iterator according to the direction
+// of the iteration.
+// Input:
+//   that: the GSet
+void GSetIterReset(
+  struct GSet* const that);
+
+// Move the current element in the GSet one step in the direction of the
+// iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   If there is no element, do nothing and return false. If there are
+//   elements and the iterator can move in the requested direction,
+//   udpate the current element and return true. If there are elements
+//   and the iterator can't move in the requested direction, do nothing
+//   and return false.
+bool GSetIterNext(
+  struct GSet* const that);
+
+// Move the current element in the GSet one step in the opposite
+// direction of the iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   If there is no element, do nothing and return false. If there are
+//   elements and the iterator can move in the requested direction,
+//   udpate the current element and return true. If there are elements
+//   and the iterator can't move in the requested direction, do nothing
+//   and return false.
+bool GSetIterPrev(
   struct GSet* const that);
 
 // ================== Typed GSet  =========================
@@ -102,8 +168,24 @@ void* GSetPop(
   static inline void GSet ## N ## Push(                                \
     struct GSet ## N * const that, T * data)                           \
     {GSetPush((struct GSet*)that, (void*)data);}                       \
+  static inline void GSet ## N ## Add(                                 \
+    struct GSet ## N * const that, T * data)                           \
+    {GSetAdd((struct GSet*)that, (void*)data);}                        \
   static inline T * GSet ## N ## Pop(struct GSet ## N * const that)    \
     {return (T *)GSetPop((struct GSet*)that);}                         \
+  static inline T * GSet ## N ## Drop(struct GSet ## N * const that)   \
+    {return (T *)GSetDrop((struct GSet*)that);}                        \
+  static inline T * GSet ## N ## Pick(struct GSet ## N * const that)   \
+    {return (T *)GSetPick((struct GSet*)that);}                        \
+  static inline void GSet ## N ## IterReset(                           \
+    struct GSet ## N * const that)                                     \
+    {GSetIterReset((struct GSet*)that);}                               \
+  static inline bool GSet ## N ## IterNext(                            \
+    struct GSet ## N * const that)                                     \
+    {return GSetIterNext((struct GSet*)that);}                         \
+  static inline bool GSet ## N ## IterPrev(                            \
+    struct GSet ## N * const that)                                     \
+    {return GSetIterPrev((struct GSet*)that);}                         \
   static inline void GSet ## N ## Flush(struct GSet ## N * const that) \
     {T * d=NULL; while(that->s.size>0){                                \
     d=GSet ## N ## Pop(that);N ## Free(&d);}}                          \

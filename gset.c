@@ -162,6 +162,38 @@ void GSetPush(
   // Add the element to the head of the set
   elem->next = that->first;
   that->first = elem;
+  if (that->size == 0) {
+
+    that->last = elem;
+    that->curElem = elem;
+
+  }
+
+  ++(that->size);
+
+}
+
+// Add data at the tail of the GSet
+// Inputs:
+//   that: the GSet
+//   data: the data to add
+void GSetAdd(
+  struct GSet* const that,
+         void* const data) {
+
+  // Create a new element with the data
+  struct GSetElem* elem = GSetElemAlloc(data);
+
+  // Add the element to the tail of the set
+  elem->prev = that->last;
+  that->last = elem;
+  if (that->size == 0) {
+
+    that->first = elem;
+    that->curElem = elem;
+
+  }
+
   ++(that->size);
 
 }
@@ -170,12 +202,29 @@ void GSetPush(
 // Input:
 //   that: the GSet
 // Output:
-//   Return the data
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
 void* GSetPop(
   struct GSet* const that) {
 
   // If there is no data to pop, raise an exception
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);
+
+  // If the removed element is the current element
+  if (that->curElem == that->first) {
+
+    // Try to move to the next element
+    bool flag = GSetIterNext(that);
+
+    // If we couldn't move to the next, try to move to the previous
+    if(flag == false) flag = GSetIterNext(that);
+
+    // If we still couldn't move, reset the current element
+    if(flag == false) that->curElem = NULL;
+
+  }
 
   // Remove the first element
   struct GSetElem* elem = that->first;
@@ -188,6 +237,244 @@ void* GSetPop(
 
   // Return the element's data
   return data;
+
+}
+
+// Remove and return the data at the tail of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
+void* GSetDrop(
+  struct GSet* const that) {
+
+  // If there is no data to drop, raise an exception
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);
+
+  // If the removed element is the current element
+  if (that->curElem == that->last) {
+
+    // Try to move to the next element
+    bool flag = GSetIterNext(that);
+
+    // If we couldn't move to the next, try to move to the previous
+    if(flag == false) flag = GSetIterNext(that);
+
+    // If we still couldn't move, reset the current element
+    if(flag == false) that->curElem = NULL;
+
+  }
+
+  // Remove the last element
+  struct GSetElem* elem = that->last;
+  that->last = elem->prev;
+  --(that->size);
+
+  // Memorise the data and free the element
+  void* data = elem->data;
+  GSetElemFree(&elem);
+
+  // Return the element's data
+  return data;
+
+}
+
+// Remove and return the data of the current element of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the data, or raise TryCatchExc_OutOfRange if there is no
+//   data. If the current element is the removed one, try to move the
+//   iterator to the next element, if it fails, try to the previous,
+//   if it fails again, set the current element to null.
+void* GSetPick(
+  struct GSet* const that) {
+
+
+  // If there is no data to pick, raise an exception
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);
+
+  // Try to move to the next element
+  bool flag = GSetIterNext(that);
+
+  // Memorise the current element
+  struct GSetElem* elem = that->first;
+
+  // If we couldn't move to the next, try to move to the previous
+  if(flag == false) flag = GSetIterNext(that);
+
+  // If we still couldn't move, reset the current element
+  if(flag == false) that->curElem = NULL;
+
+  // Remove the current element
+  if (that->first == that->curElem) {
+
+    that->first = elem->next;
+    elem->next->prev = NULL;
+
+  } else if (that->last == that->curElem) {
+
+    that->last = elem->prev;
+    elem->prev->next = NULL;
+
+  } else {
+
+    elem->next->prev = elem->prev;
+    elem->prev->next = elem->next;
+
+  }
+
+  --(that->size);
+
+  // Memorise the data and free the element
+  void* data = elem->data;
+  GSetElemFree(&elem);
+
+  // Return the element's data
+  return data;
+
+}
+
+// Reset the current element of the iterator according to the direction
+// of the iteration.
+// Input:
+//   that: the GSet
+void GSetIterReset(
+  struct GSet* const that) {
+
+  // If there are elements in the set
+  if (that->size > 0) {
+
+    // Switch on the type of iteration
+    switch (that->iteration) {
+
+      case GSetIteration_forward:
+
+        // Move to the head of the GSet
+        that->curElem = that->first;
+        break;
+
+      case GSetIteration_backward:
+
+        // Move to the tail of the GSet
+        that->curElem = that->last;
+        break;
+
+      default:
+        break;
+
+    }
+
+  // Else there is no element in the dataset
+  } else that->curElem = NULL;
+
+}
+
+// Move the current element in the GSet one step in the direction of the
+// iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   If there is no element, do nothing and return false. If there are
+//   elements and the iterator can move in the requested direction,
+//   udpate the current element and return true. If there are elements
+//   and the iterator can't move in the requested direction, do nothing
+//   and return false.
+bool GSetIterNext(
+  struct GSet* const that) {
+
+  // Variable to memorise the returned flag
+  bool flag = true;
+
+  // If there are elements in the set
+  if (that->size > 0) {
+
+    // Switch on the type of iteration
+    switch (that->iteration) {
+
+      case GSetIteration_forward:
+
+        // If there is a next element, move to it
+        if (that->curElem->next != NULL)
+          that->curElem = that->curElem->next;
+        // Else, there is no next element, update the flag
+        else flag = false;
+        break;
+
+      case GSetIteration_backward:
+
+        // If there is a previous element, move to it
+        if (that->curElem->prev != NULL)
+          that->curElem = that->curElem->prev;
+        // Else, there is no next element, update the flag
+        else flag = false;
+        break;
+
+      default:
+        break;
+
+    }
+
+  // Else, there is no element in the set, update the flag
+  } else flag = false;
+
+  // Return the flag
+  return flag;
+
+}
+
+// Move the current element in the GSet one step in the opposite
+// direction of the iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   If there is no element, do nothing and return false. If there are
+//   elements and the iterator can move in the requested direction,
+//   udpate the current element and return true. If there are elements
+//   and the iterator can't move in the requested direction, do nothing
+//   and return false.
+bool GSetIterPrev(
+  struct GSet* const that) {
+  // Variable to memorise the returned flag
+  bool flag = true;
+
+  // If there are elements in the set
+  if (that->size > 0) {
+
+    // Switch on the type of iteration
+    switch (that->iteration) {
+
+      case GSetIteration_forward:
+
+        // If there is a previous element, move to it
+        if (that->curElem->prev != NULL)
+          that->curElem = that->curElem->prev;
+        // Else, there is no next element, update the flag
+        else flag = false;
+        break;
+
+      case GSetIteration_backward:
+
+        // If there is a next element, move to it
+        if (that->curElem->next != NULL)
+          that->curElem = that->curElem->next;
+        // Else, there is no next element, update the flag
+        else flag = false;
+        break;
+
+      default:
+        break;
+
+    }
+
+  // Else, there is no element in the set, update the flag
+  } else flag = false;
+
+  // Return the flag
+  return flag;
 
 }
 
