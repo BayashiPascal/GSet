@@ -1,25 +1,65 @@
 # GSet
-GSet library is a C library to manipulate sets of data.
 
-Elements of the GSet are void pointers toward any kind of data. These data must be allocated and freed separately. The GSet only provides a mean to manipulate sets of pointers toward these data.
+GSet is a C library providing a set data structure and the functions to interact with it.
 
-The GSet offers functions to add elements (at first position, last position, given position, or sorting based on a float value), to access elements (at first position, last position, given position), to get index of first/last element pointing to a given data, to remove elements (at first position, last position, given position, or first/last/all pointing toward a given data), to search for data in elements (first one or last one), to print the set on a stream, to split, merge and sort the set.
+A GSet is a collection of element, each containing a pointer to data. These data are of type `void*` for the default `GSet` structure, but typed version of this structure can be defined in one line with a provided macro.
 
-The library provides also GSetVecFloat, GSetVecShort, GSetBCurve, GSetSCurve structure with same interface as a GSet but whose contents is restrained to, respectively, VecFloat, VecShort, BCurve, SCurve structures.
+## Table Of Content
 
-The library also provides two iterator structures to run through a GSet forward or backward, and apply a user defined function on each element.
+1 [Install](https://github.com/BayashiPascal/GSet/tree/master#1-install)
 
-## How to install this repository
-1) Create a directory which will contains this repository and all the repositories it is depending on. Lets call it "Repos"
-2) Download the master branch of this repository into "Repos". Unzip it if necessary.
-3) The folder's name for the repository should be followed by "-master", rename the folder by removing "-master".
-4) cd to the repository's folder
-5) If wget is not installed: ```sudo apt-get update && sudo apt-get install wget``` on Ubuntu 16.04, or ```brew install wget``` on Mac OSx
-6) If gawk is not installed: ```sudo apt-get update && sudo apt-get install gawk```  on Ubuntu 16.04, ```brew install gawk``` on Mac OSx
-7) If this repository is the first one you are installing in "Repos", run the command ```make -k pbmake_wget```
-8) Run the command ```make``` to compile the repository. 
-9) Eventually, run the command ```main``` to run the unit tests and check everything is ok.
-10) Refer to the documentation to learn how to use this repository.
+2 [Usage](https://github.com/BayashiPascal/GSet/tree/master#2-usage)
 
-The dependancies to other repositories should be resolved automatically and needed repositories should be installed in the "Repos" folder. However this process is not completely functional and some repositories may need to be installed manually. In this case, you will see a message from the compiler saying it cannot find some headers. Then install the missing repository with the following command, e.g. if "pbmath.h" is missing: ```make pbmath_wget```. The repositories should compile fine on Ubuntu 16.04. On Mac OSx, there is currently a problem with the linker.
-If you need assistance feel free to contact me with my gmail address: at bayashipascal.
+3 [License](https://github.com/BayashiPascal/GSet/tree/master#3-license)
+
+# 1 Install
+
+Download this repository into a folder of your choice, in the examples below I'll call it `Repos`, as follow:
+```
+cd Repos
+wget https://github.com/BayashiPascal/GSet/archive/main.zip
+unzip main.zip
+mv GSet-main GSet
+rm main.zip
+cd GSet
+make all
+sudo make install
+```
+
+The [TryCatchC](https://github.com/BayashiPascal/TryCatchC) libraries will automatically be installed during installation. You may be asked for your password during installation.
+
+# 2 Usage
+
+# 2.1 Define a typed GSet
+
+To create a typed `GSet` containing data of type, for example, `struct UserData`, one can use the macro `DefineGSet(UserData, struct UserData)`. Then, all the functions defined for a `GSet` are redefined with an equivalen function for the type `struct UserData`. Below is an example of how it could be used:
+
+```
+DefineGSet(UserData, struct UserData)
+int main() {
+  struct GSetUserData* set = GSetUserDataAlloc();
+  struct UserData userData = { ... };
+  GSetUserDataPush(set, &userData);
+  struct UserData* ptrUserData = GSetUserDataPop(set);
+  GSetUserDataFree(&set);
+}
+```
+
+## 3 License
+
+GSet, a C library providing a set data structure and the functions to interact with it.
+Copyright (C) 2021  Pascal Baillehache
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+

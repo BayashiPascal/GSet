@@ -1,30 +1,50 @@
-# Build mode
-# 0: development (max safety, no optimisation)
-# 1: release (min safety, optimisation)
-# 2: fast and furious (no safety, optimisation)
-BUILD_MODE?=1
+# Compiler
+COMPILER=gcc
 
-all: pbmake_wget main
-	
-# Automatic installation of the repository PBMake in the parent folder
-pbmake_wget:
-	if [ ! -d ../PBMake ]; then wget https://github.com/BayashiPascal/PBMake/archive/master.zip; unzip master.zip; rm -f master.zip; sed -i '' 's@ROOT_DIR=.*@ROOT_DIR='"`pwd | gawk -F/ 'NF{NF-=1};1' | sed -e 's@ @/@g'`"'@' PBMake-master/Makefile.inc; mv PBMake-master ../PBMake; fi
+# Build mode 0:dev, 1:prod
+BUILD_MODE=0
 
-# Makefile definitions
-MAKEFILE_INC=../PBMake/Makefile.inc
-include $(MAKEFILE_INC)
+# Compiler arguments depending on BUILD_MODE
+ifeq ($(BUILD_MODE), 0)
+	BUILD_ARG=-I./ -Wall -Wextra -Og -ggdb -g3 -DBUILDMODE=$(BUILD_MODE)
+	LINK_ARG=-lm -ltrycatchc
+else ifeq ($(BUILD_MODE), 1)
+	BUILD_ARG=-I./ -Wall -Wextra -Werror -Wfatal-errors -Wno-clobbered -O3 -DBUILDMODE=$(BUILD_MODE)
+	LINK_ARG=-lm -ltrycatchc
+endif
 
-# Rules to make the executable
-repo=gset
-$($(repo)_EXENAME): \
-		$($(repo)_EXENAME).o \
-		$($(repo)_EXE_DEP) \
-		$($(repo)_DEP)
-	$(COMPILER) `echo "$($(repo)_EXE_DEP) $($(repo)_EXENAME).o" | tr ' ' '\n' | sort -u` $(LINK_ARG) $($(repo)_LINK_ARG) -o $($(repo)_EXENAME) 
-	
-$($(repo)_EXENAME).o: \
-		$($(repo)_DIR)/$($(repo)_EXENAME).c \
-		$($(repo)_INC_H_EXE) \
-		$($(repo)_EXE_DEP)
-	$(COMPILER) $(BUILD_ARG) $($(repo)_BUILD_ARG) `echo "$($(repo)_INC_DIR)" | tr ' ' '\n' | sort -u` -c $($(repo)_DIR)/$($(repo)_EXENAME).c
-	
+# Rules
+
+all: main
+
+main: /usr/local/lib/libtrycatchc.a gset.o main.o Makefile
+	$(COMPILER) main.o gset.o $(LINK_ARG) -o main 
+
+main.o: main.c gset.h Makefile
+	$(COMPILER) $(BUILD_ARG) -c main.c 
+
+gset.o: gset.c gset.h Makefile
+	$(COMPILER) $(BUILD_ARG) -c gset.c
+
+/usr/local/lib/libtrycatchc.a:
+	wget https://github.com/BayashiPascal/TryCatchC/archive/main.zip
+	unzip main.zip
+	rm -rf TryCatchC
+	mv TryCatchC-main TryCatchC
+	rm main.zip
+	cd TryCatchC && make && sudo make install
+	rm -rf TryCatchC
+
+clean:
+	rm -f *.o main
+
+valgrind : main
+	valgrind -v --track-origins=yes --leak-check=full \
+	--gen-suppressions=yes --show-leak-kinds=all ./main
+
+install: gset.o
+	rm -rf /usr/local/include/GSet
+	mkdir /usr/local/include/GSet
+	cp gset.h /usr/local/include/GSet/gset.h
+	ar -r /usr/local/lib/libgset.a gset.o
+	cp gset /usr/local/bin/gset
