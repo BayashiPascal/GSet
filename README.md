@@ -45,6 +45,16 @@ int main() {
 }
 ```
 
+Be aware that to be able to free elements, GSet require a function `void <N>Free(T**)` to be defined before `DefineGSet(N, T)`. In the example above it could be:
+
+```
+void UserDataFree(struct UserData** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that);
+  *that = NULL;
+}
+```
+
 ## 3 License
 
 GSet, a C library providing a set data structure and the functions to interact with it.

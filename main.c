@@ -8,6 +8,7 @@ struct UserData {
 
 };
 
+// Function to free the dummy structure, required to create GSetUserData
 void UserDataFree(struct UserData** const that) {
 
   if (that == NULL || *that == NULL) return;
