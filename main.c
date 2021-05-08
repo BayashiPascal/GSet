@@ -35,7 +35,7 @@ int main() {
 
     ptrInt = GSetIntPop(setInt);
 
-  } Catch (GSetExc_EmptySet) {
+  } Catch (TryCatchExc_OutOfRange) {
 
     printf("The set is empty\n");
 

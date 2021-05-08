@@ -8,15 +8,6 @@
 #include <stdlib.h>
 #include <TryCatchC/trycatchc.h>
 
-// ================== RunRecorder Exceptions =========================
-
-enum GSetException {
-
-  GSetExc_EmptySet = 200,
-  GSetExc_LastID
-
-};
-
 // ================== Public type definitions =========================
 
 // Type of iteration on the set
@@ -51,15 +42,6 @@ struct GSet {
 };
 
 // ================== Public functions declarations =========================
-
-// Function to convert a GSet exception ID to char*
-// Input:
-//   exc: the exception ID
-// Output:
-//   Return a pointer to a static string describing the exception, or
-//   NULL if the ID is not one of GSetException
-char const* GSetExcToStr(
-  int exc);
 
 // Create a new GSet
 // Output:
