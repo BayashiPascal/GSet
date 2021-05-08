@@ -22,6 +22,15 @@ int main() {
     &val);
   int* ptrInt = GSetIntPop(setInt);
   printf("%d\n", *ptrInt);
+  Try {
+
+    ptrInt = GSetIntPop(setInt);
+
+  } Catch (GSetExc_EmptySet) {
+
+    printf("The set is empty\n");
+
+  } EndTry;
   GSetIntFree(&setInt);
 
   // Example of typed GSet

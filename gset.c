@@ -19,6 +19,17 @@ static void GSetElemFree(struct GSetElem**);
     if (T == NULL) Raise(TryCatchExc_MallocFailed); \
   } while(false)
 
+// Number of exceptions in GSetException
+#define NbExceptions GSetExc_LastID - GSetExc_EmptySet
+
+// ================== Static variables =========================
+
+// Labels for the conversion of GSetException to char*
+static char* exceptionStr[NbExceptions] = {
+
+  "Trying to access element in an empty GSet",
+
+};
 
 // ================== Private type definitions =========================
 
@@ -62,6 +73,33 @@ static void GSetElemFree(
   struct GSetElem** const that);
 
 // ================== Public functions definition =========================
+
+// Function to convert a GSet exception ID to char*
+// Input:
+//   exc: the exception ID
+// Output:
+//   Return a pointer to a static string describing the exception, or
+//   NULL if the ID is not one of GSetException
+char const* GSetExcToStr(
+  int exc) {
+
+  // If the exception ID is one of GSetException
+  if (
+    exc >= GSetExc_EmptySet &&
+    exc < GSetExc_LastID) {
+
+    // Return the conversion
+    return exceptionStr[exc - GSetExc_EmptySet];
+
+  // Else, the exception ID is not one of GSetException
+  } else {
+
+    // Return NULL to indicate there is no conversion
+    return NULL;
+
+  }
+
+}
 
 // Create a new GSet
 // Output:
@@ -173,7 +211,7 @@ void* GSetPop(
   struct GSet* const that) {
 
   // If there is no data to pop, raise an exception
-  // TODO if (that->size == 0) Raise();
+  if (that->size == 0) Raise(GSetExc_EmptySet);
 
   // Remove the first element
   struct GSetElem* elem = that->first;
