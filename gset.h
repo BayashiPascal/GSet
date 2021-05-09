@@ -244,7 +244,7 @@ bool GSetIterNext(
 bool GSetIterPrev(
   struct GSet* const that);
 
-// Set the iteration of a GSet
+// Set the iteration type of a GSet
 // Inputs:
 //        that: the GSet
 //   iteration: the type of iteration
@@ -310,6 +310,7 @@ void GSetIterSet(
     {return (T **)GSetToArrayOfPtr((struct GSet*)that);}                 \
   static inline T * GSet ## N ## ToArrayOfData(                          \
     struct GSet ## N * const that) {                                     \
+    if (that->s.size == 0) return NULL;                                  \
     T ** ptrs = (T**)GSetToArrayOfPtr((struct GSet*)that);               \
     T * arr = malloc(sizeof(T) * that->s.size);                          \
     if (arr == NULL) Raise(TryCatchExc_MallocFailed);                    \

@@ -799,7 +799,7 @@ bool GSetIterPrev(
 
 }
 
-// Set the iteration of a GSet
+// Set the iteration type of a GSet
 // Inputs:
 //        that: the GSet
 //   iteration: the type of iteration
