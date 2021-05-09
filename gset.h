@@ -55,6 +55,24 @@ struct GSet GSetCreate(
 struct GSet* GSetAlloc(
   void);
 
+// Copy a GSet, the data in elements are not clone, they are shared by both
+// the original GSet and the clone GSet
+// Input:
+//   that: the GSet to be cloned
+// Output:
+//   Return the copy of the GSet
+struct GSet GSetCopy( 
+  struct GSet* const that);
+
+// Clone a GSet, the data in elements are not clone, they are shared by both
+// the original GSet and the clone GSet
+// Input:
+//   that: the GSet to be cloned
+// Output:
+//   Return the clone GSet
+struct GSet* GSetClone( 
+  struct GSet* const that);
+
 // Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
@@ -117,6 +135,32 @@ void* GSetDrop(
 void* GSetPick(
   struct GSet* const that);
 
+// Sort the elements of a GSet
+// Inputs:
+//   that: the GSet to sort
+//   cmp: the comparison function used to sort
+// It uses qsort, see man page for details. Elements are sorted in ascending
+// order, relative to the comparison function cmp(a,b) which much returns
+// a negative value if a<b, a positive value if a>b, and 0 if a=b
+void GSetSort(
+  struct GSet* const that,
+                 int (*cmp)(void const*, void const*));
+
+// Shuffle the elements of a GSet
+// Input:
+//   that: the GSet to sort
+void GSetShuffle(
+  struct GSet* const that);
+
+// Convert the GSet to an array of pointers to its data
+// Input:
+//   that: the GSet to sort
+// Output:
+//   Return an array of pointers to data in the same order as the current
+//   element order
+void** GSetToArrayPtr(
+  struct GSet* const that);
+
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
@@ -153,14 +197,20 @@ bool GSetIterPrev(
 // ================== Typed GSet  =========================
 
 // Declare a typed GSet containing data of type T and name GSet<N>
-// A function void <N>Free(T**) must exists to free the data of type T in the
-// GSet<N>
+// A function void <N>Free(T** d) must exists to free the data of type T in the
+// GSet<N> pointed to by *d
 #define DefineGSet(N, T)                                               \
   struct GSet ## N { struct GSet s; };                                 \
   static inline struct GSet ## N GSet ## N ## Create(void)             \
     {return (struct GSet ## N ){.s=GSetCreate()};}                     \
   static inline struct GSet ## N * GSet ## N ## Alloc(void)            \
     {return (struct GSet ## N *)GSetAlloc();}                          \
+  static inline struct GSet ## N GSet ## N ## Copy(                    \
+    struct GSet ## N * const that)                                     \
+    {return (struct GSet ## N ){.s=GSetCopy((struct GSet*)that)};}     \
+  static inline struct GSet ## N * GSet ## N ## Clone(                 \
+    struct GSet ## N * const that)                                     \
+    {return (struct GSet ## N *)GSetClone((struct GSet*)that);}        \
   static inline void GSet ## N ## Free(struct GSet ## N ** const that) \
     {GSetFree((struct GSet**)that);}                                   \
   static inline void GSet ## N ## Empty(struct GSet ## N * const that) \
@@ -186,39 +236,45 @@ bool GSetIterPrev(
   static inline bool GSet ## N ## IterPrev(                            \
     struct GSet ## N * const that)                                     \
     {return GSetIterPrev((struct GSet*)that);}                         \
+  void N ## Free(T ** const that);                                     \
   static inline void GSet ## N ## Flush(struct GSet ## N * const that) \
     {T * d=NULL; while(that->s.size>0){                                \
     d=GSet ## N ## Pop(that);N ## Free(&d);}}                          \
+  static inline void GSet ## N ## Sort(                                \
+    struct GSet ## N * const that,                                     \
+    int (*cmp)(void const*, void const*))                              \
+    {GSetSort((struct GSet*)that, cmp);}                               \
+  static inline void GSet ## N ## Shuffle(                             \
+    struct GSet ## N * const that)                                     \
+    {GSetShuffle((struct GSet*)that);}                                 \
+  static inline T ** GSet ## N ## ToArrayPtr(                          \
+    struct GSet ## N * const that)                                     \
+    {return (T **)GSetToArrayPtr((struct GSet*)that);}                 \
+  static inline T * GSet ## N ## ToArrayData(                          \
+    struct GSet ## N * const that) {                                   \
+    T ** ptrs = (T**)GSetToArrayPtr((struct GSet*)that);               \
+    T * arr = malloc(sizeof(T) * that->s.size);                        \
+    if (arr == NULL) Raise(TryCatchExc_MallocFailed);                  \
+    for (int i; i<that->s.size; ++i) arr[i] = *(ptrs[i]);              \
+    free(ptrs); return arr;}                                           \
 
-// Define typed GSets
-static inline void IntFree(int** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
+// Define some default typed GSets
 DefineGSet(Int, int)
-static inline void LongFree(long** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(Long, long)
-static inline void FloatFree(float** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(Float, float)
-static inline void DoubleFree(double** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(Double, double)
-static inline void UIntFree(unsigned int** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(UInt, unsigned int)
-static inline void ULongFree(unsigned long** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(ULong, unsigned long)
-static inline void StrFree(char*** const that) {
-  if (that == NULL || *that == NULL) {return;} free(*that); *that = NULL;
-}
 DefineGSet(Str, char*)
+
+// Comparison function for the default typed GSets
+int GSetIntCmp(void const* a, void const* b);
+int GSetLongCmp(void const* a, void const* b);
+int GSetFloatCmp(void const* a, void const* b);
+int GSetDoubleCmp(void const* a, void const* b);
+int GSetUIntCmp(void const* a, void const* b);
+int GSetULongCmp(void const* a, void const* b);
+int GSetStrCmp(void const* a, void const* b);
 
 // End of the guard against multiple inclusion
 #endif

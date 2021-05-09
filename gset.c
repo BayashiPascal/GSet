@@ -1,6 +1,9 @@
 // ------------------ gset.c ------------------
 
 // Include the header
+#include <string.h>
+#include <float.h>
+#include <math.h>
 #include "gset.h"
 
 // ================== Macros =========================
@@ -19,8 +22,7 @@ static void GSetElemFree(struct GSetElem**);
     if (T == NULL) Raise(TryCatchExc_MallocFailed); \
   } while(false)
 
-// Number of exceptions in GSetException
-#define NbExceptions GSetExc_LastID - GSetExc_EmptySet
+#define rnd() (float)(rand())/(float)(RAND_MAX)
 
 // ================== Private type definitions =========================
 
@@ -65,6 +67,93 @@ static void GSetElemFree(
 
 // ================== Public functions definition =========================
 
+// Deallocation function for default typed GSet
+void IntFree(int** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void LongFree(long** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void FloatFree(float** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void DoubleFree(double** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void UIntFree(unsigned int** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void ULongFree(unsigned long** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+void StrFree(char*** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
+}
+
+// Comparison function for the default typed GSets
+int GSetIntCmp(void const* a, void const* b) {
+
+  return (*(int const*)a < *(int const*)b ? -1 :
+          *(int const*)a > *(int const*)b ? 1 : 0);
+
+}
+
+int GSetLongCmp(void const* a, void const* b) {
+
+  return (*(long const*)a < *(long const*)b ? -1 :
+          *(long const*)a > *(long const*)b ? 1 : 0);
+
+}
+
+int GSetFloatCmp(void const* a, void const* b) {
+
+  float x = *(float*)a;
+  float y = *(float*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+
+}
+
+int GSetDoubleCmp(void const* a, void const* b) {
+
+  double x = *(double*)a;
+  double y = *(double*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+
+}
+
+int GSetUIntCmp(void const* a, void const* b) {
+
+  return (*(unsigned int const*)a < *(unsigned int const*)b ? -1 :
+          *(unsigned int const*)a > *(unsigned int const*)b ? 1 : 0);
+
+}
+
+int GSetULongCmp(void const* a, void const* b) {
+
+  return (*(unsigned long const*)a < *(unsigned long const*)b ? -1 :
+          *(unsigned long const*)a > *(unsigned long const*)b ? 1 : 0);
+
+}
+
+int GSetStrCmp(void const* a, void const* b) {
+
+  char* sa = *(char* const*)a;
+  char* sb = *(char* const*)b;
+  return strcmp(sa, sb);
+
+}
+
 // Create a new GSet
 // Output:
 //   Return the new GSet.
@@ -104,6 +193,57 @@ struct GSet* GSetAlloc(
 
   // Return the GSet
   return that;
+
+}
+
+// Copy a GSet, the data in elements are not clone, they are shared by both
+// the original GSet and the clone GSet
+// Input:
+//   that: the GSet to be cloned
+// Output:
+//   Return the copy of the GSet
+struct GSet GSetCopy( 
+  struct GSet* const that) {
+
+  // Create the copy of the GSet
+  struct GSet copy = GSetCreate();
+
+  // Loop on the element of the GSet
+  struct GSetElem* elem = that->first;
+  while (elem != NULL) {
+
+    // Copy the element
+    GSetAdd(
+      &copy,
+      elem->data);
+
+    // Move to the next elem
+    elem = elem->next;
+
+  }
+
+  // Return the copy
+  return copy;
+
+}
+
+// Clone a GSet, the data in elements are not clone, they are shared by both
+// the original GSet and the clone GSet
+// Input:
+//   that: the GSet to be cloned
+// Output:
+//   Return the clone GSet
+struct GSet* GSetClone( 
+  struct GSet* const that) {
+
+  // Allocate memory for the clone
+  struct GSet* clone = GSetAlloc();
+
+  // Copy the GSet
+  *clone = GSetCopy(that);
+
+  // Return the clone
+  return clone;
 
 }
 
@@ -165,7 +305,7 @@ void GSetPush(
   if (that->size == 0) {
 
     that->last = elem;
-    that->curElem = elem;
+    that->elem = elem;
 
   }
 
@@ -190,7 +330,7 @@ void GSetAdd(
   if (that->size == 0) {
 
     that->first = elem;
-    that->curElem = elem;
+    that->elem = elem;
 
   }
 
@@ -213,7 +353,7 @@ void* GSetPop(
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);
 
   // If the removed element is the current element
-  if (that->curElem == that->first) {
+  if (that->elem == that->first) {
 
     // Try to move to the next element
     bool flag = GSetIterNext(that);
@@ -222,7 +362,7 @@ void* GSetPop(
     if(flag == false) flag = GSetIterNext(that);
 
     // If we still couldn't move, reset the current element
-    if(flag == false) that->curElem = NULL;
+    if(flag == false) that->elem = NULL;
 
   }
 
@@ -255,7 +395,7 @@ void* GSetDrop(
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);
 
   // If the removed element is the current element
-  if (that->curElem == that->last) {
+  if (that->elem == that->last) {
 
     // Try to move to the next element
     bool flag = GSetIterNext(that);
@@ -264,7 +404,7 @@ void* GSetDrop(
     if(flag == false) flag = GSetIterNext(that);
 
     // If we still couldn't move, reset the current element
-    if(flag == false) that->curElem = NULL;
+    if(flag == false) that->elem = NULL;
 
   }
 
@@ -307,15 +447,15 @@ void* GSetPick(
   if(flag == false) flag = GSetIterNext(that);
 
   // If we still couldn't move, reset the current element
-  if(flag == false) that->curElem = NULL;
+  if(flag == false) that->elem = NULL;
 
   // Remove the current element
-  if (that->first == that->curElem) {
+  if (that->first == that->elem) {
 
     that->first = elem->next;
     elem->next->prev = NULL;
 
-  } else if (that->last == that->curElem) {
+  } else if (that->last == that->elem) {
 
     that->last = elem->prev;
     elem->prev->next = NULL;
@@ -338,6 +478,110 @@ void* GSetPick(
 
 }
 
+// Sort the elements of a GSet
+// Inputs:
+//   that: the GSet to sort
+//   cmp: the comparison function used to sort
+// It uses qsort, see man page for details. Elements are sorted in ascending
+// order, relative to the comparison function cmp(a,b) which much returns
+// a negative value if a<b, a positive value if a>b, and 0 if a=b
+void GSetSort(
+  struct GSet* const that,
+                 int (*cmp)(void const*, void const*)) {
+
+  // If there is less than 2 elements there is no need to sort
+  if (that->size < 2) return;
+  
+  // Convert the GSet into an array of pointers to data
+  void** arr = GSetToArrayPtr(that);
+
+  // Sort the array
+  qsort(
+    arr,
+    sizeof(void*),
+    that->size,
+    cmp);
+
+  // Copy the sorted data back in the elements
+  struct GSetElem* ptr = that->first;
+  int i = 0;
+  while (ptr != NULL) {
+
+    ptr->data = arr[i];
+    ptr = ptr->next;
+    ++i;
+
+  }
+
+  // Free memory used by the temporary array
+  free(arr);
+
+}
+
+// Shuffle the elements of a GSet
+// Input:
+//   that: the GSet to sort
+void GSetShuffle(
+  struct GSet* const that) {
+
+  // Convert the GSet into an array of pointers to data
+  void** arr = GSetToArrayPtr(that);
+
+  // Shuffle the array
+  for (int i = 0; i < that->size; ++i) {
+
+     int j = (int)round(rnd() * (int)i);
+     void* ptr = arr[j];
+     arr[j] = arr[i];
+     arr[i] = ptr;
+
+  }
+
+  // Copy the shuffled data back in the elements
+  struct GSetElem* ptr = that->first;
+  int i = 0;
+  while (ptr != NULL) {
+
+    ptr->data = arr[i];
+    ptr = ptr->next;
+    ++i;
+
+  }
+
+  // Free memory used by the temporary array
+  free(arr);
+
+}
+
+// Convert the GSet to an array of pointers to its data
+// Input:
+//   that: the GSet to sort
+// Output:
+//   Return an array of pointers to data in the same order as the current
+//   element order
+void** GSetToArrayPtr(
+  struct GSet* const that) {
+
+  // Create the array of pointers
+  void** arr = malloc(sizeof(void*) * that->size);
+  if (arr == NULL) Raise(TryCatchExc_MallocFailed);
+
+  // Copy the pointers in the array
+  struct GSetElem* ptr = that->first;
+  int i = 0;
+  while (ptr != NULL) {
+
+    arr[i] = ptr->data;
+    ptr = ptr->next;
+    ++i;
+
+  }
+
+  // Return the array
+  return arr;
+
+}
+
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
@@ -354,13 +598,13 @@ void GSetIterReset(
       case GSetIteration_forward:
 
         // Move to the head of the GSet
-        that->curElem = that->first;
+        that->elem = that->first;
         break;
 
       case GSetIteration_backward:
 
         // Move to the tail of the GSet
-        that->curElem = that->last;
+        that->elem = that->last;
         break;
 
       default:
@@ -369,7 +613,7 @@ void GSetIterReset(
     }
 
   // Else there is no element in the dataset
-  } else that->curElem = NULL;
+  } else that->elem = NULL;
 
 }
 
@@ -398,8 +642,8 @@ bool GSetIterNext(
       case GSetIteration_forward:
 
         // If there is a next element, move to it
-        if (that->curElem->next != NULL)
-          that->curElem = that->curElem->next;
+        if (that->elem->next != NULL)
+          that->elem = that->elem->next;
         // Else, there is no next element, update the flag
         else flag = false;
         break;
@@ -407,8 +651,8 @@ bool GSetIterNext(
       case GSetIteration_backward:
 
         // If there is a previous element, move to it
-        if (that->curElem->prev != NULL)
-          that->curElem = that->curElem->prev;
+        if (that->elem->prev != NULL)
+          that->elem = that->elem->prev;
         // Else, there is no next element, update the flag
         else flag = false;
         break;
@@ -450,8 +694,8 @@ bool GSetIterPrev(
       case GSetIteration_forward:
 
         // If there is a previous element, move to it
-        if (that->curElem->prev != NULL)
-          that->curElem = that->curElem->prev;
+        if (that->elem->prev != NULL)
+          that->elem = that->elem->prev;
         // Else, there is no next element, update the flag
         else flag = false;
         break;
@@ -459,8 +703,8 @@ bool GSetIterPrev(
       case GSetIteration_backward:
 
         // If there is a next element, move to it
-        if (that->curElem->next != NULL)
-          that->curElem = that->curElem->next;
+        if (that->elem->next != NULL)
+          that->elem = that->elem->next;
         // Else, there is no next element, update the flag
         else flag = false;
         break;
