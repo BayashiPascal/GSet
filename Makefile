@@ -47,4 +47,3 @@ install: gset.o
 	mkdir /usr/local/include/GSet
 	cp gset.h /usr/local/include/GSet/gset.h
 	ar -r /usr/local/lib/libgset.a gset.o
-	cp gset /usr/local/bin/gset
