@@ -22,6 +22,10 @@ static void GSetElemFree(struct GSetElem**);
     if (T == NULL) Raise(TryCatchExc_MallocFailed); \
   } while(false)
 
+// Loop from 0 to (n - 1)
+#define ForZeroTo(I, N) for (int I = 0; I < N; ++I)
+
+// Get a random number in [0.0, 1.0]
 #define rnd() (float)(rand())/(float)(RAND_MAX)
 
 // ================== Private type definitions =========================
@@ -493,7 +497,7 @@ void GSetSort(
   if (that->size < 2) return;
   
   // Convert the GSet into an array of pointers to data
-  void** arr = GSetToArrayPtr(that);
+  void** arr = GSetToArrayOfPtr(that);
 
   // Sort the array
   qsort(
@@ -520,12 +524,12 @@ void GSetSort(
 
 // Shuffle the elements of a GSet
 // Input:
-//   that: the GSet to sort
+//   that: the GSet to shuffle
 void GSetShuffle(
   struct GSet* const that) {
 
   // Convert the GSet into an array of pointers to data
-  void** arr = GSetToArrayPtr(that);
+  void** arr = GSetToArrayOfPtr(that);
 
   // Shuffle the array
   for (int i = 0; i < that->size; ++i) {
@@ -555,11 +559,11 @@ void GSetShuffle(
 
 // Convert the GSet to an array of pointers to its data
 // Input:
-//   that: the GSet to sort
+//   that: the GSet to convert
 // Output:
 //   Return an array of pointers to data in the same order as the current
 //   element order
-void** GSetToArrayPtr(
+void** GSetToArrayOfPtr(
   struct GSet* const that) {
 
   // Create the array of pointers
@@ -579,6 +583,27 @@ void** GSetToArrayPtr(
 
   // Return the array
   return arr;
+
+}
+
+// Convert an array of pointers to a GSet
+// Inputs:
+//   that: the GSet
+//    arr: the array to convert
+//   size: the size of the array
+// Output:
+//   The GSet is first emptied and then filled with elements whose data is the
+//   pointers in the array in the order of the array
+void GSetFromArrayOfPtr(
+  struct GSet* const that,
+        void** const arr,
+           int const size) {
+
+  // Empty the GSet
+  GSetEmpty(that);
+
+  // Loop on the element of the array, and add the pointer to the GSet
+  ForZeroTo(iVal, size) GSetAdd(that, arr[iVal]);
 
 }
 
