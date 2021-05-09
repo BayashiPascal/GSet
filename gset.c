@@ -423,37 +423,36 @@ void* GSetDrop(
 void* GSetPick(
   struct GSet* const that) {
 
-
   // If there is no data to pick, raise an exception
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);
+
+  // Memorise the current element
+  struct GSetElem* elem = that->elem;
 
   // Try to move to the next element
   bool flag = GSetIterNext(that);
 
-  // Memorise the current element
-  struct GSetElem* elem = that->first;
-
   // If we couldn't move to the next, try to move to the previous
-  if(flag == false) flag = GSetIterNext(that);
+  if(flag == false) flag = GSetIterPrev(that);
 
   // If we still couldn't move, reset the current element
   if(flag == false) that->elem = NULL;
 
   // Remove the current element
-  if (that->first == that->elem) {
+  if (that->first == elem) {
 
     that->first = elem->next;
-    elem->next->prev = NULL;
+    if (elem->next != NULL) elem->next->prev = NULL;
 
-  } else if (that->last == that->elem) {
+  } else if (that->last == elem) {
 
     that->last = elem->prev;
-    elem->prev->next = NULL;
+    if (elem->prev != NULL) elem->prev->next = NULL;
 
   } else {
 
-    elem->next->prev = elem->prev;
-    elem->prev->next = elem->next;
+    if (elem->next != NULL) elem->next->prev = elem->prev;
+    if (elem->prev != NULL) elem->prev->next = elem->next;
 
   }
 
@@ -797,6 +796,18 @@ bool GSetIterPrev(
 
   // Return the flag
   return flag;
+
+}
+
+// Set the iteration of a GSet
+// Inputs:
+//        that: the GSet
+//   iteration: the type of iteration
+void GSetIterSet(
+        struct GSet* const that,
+  enum GSetIteration const iteration) {
+
+  that->iteration = iteration;
 
 }
 

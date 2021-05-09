@@ -76,10 +76,26 @@ int main() {
   int* arrB = GSetIntToArrayOfData(&setIntB);
   for (int i = 0; i < 10; ++i) assert(arrB[i] == arr[i]);
 
+  // Append two sets
+  GSetIntAppend(
+    setInt,
+    &setIntB);
+  assert(GSetIntGetSize(setInt) == 20);
+  assert(GSetIntGetSize(&setIntB) == 0);
+  GSetForEach(setInt, int, assert(*data == (iData % 10)));
+  for (int i = 0; i < 10; ++i) (void)GSetIntDrop(setInt);
+
   // Free memory
-  GSetIntEmpty(&setIntB);
   free(arrB);
   free(arrPtr);
+
+  // Copy a GSet
+  GSetIntCopy(
+    &setIntB,
+    setInt);
+  assert(GSetIntGetSize(&setIntB) == 10);
+  GSetForEach(setInt, int, assert(*data == iData));
+  GSetIntEmpty(&setIntB);
 
   // Pop the data
   int* ptrInt = GSetIntPop(setInt);
@@ -127,6 +143,43 @@ int main() {
   GSetForEach(setInt, int, assert(*data == iData));
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 9);
+
+  // Iteration
+  assert(GSetIntIterNext(setInt) == false);
+  assert(*(GSetIntCurData(setInt)) == 9);
+  assert(GSetIntIterPrev(setInt) == true);
+  assert(*(GSetIntCurData(setInt)) == 8);
+  GSetIntIterReset(setInt);
+  assert(*(GSetIntCurData(setInt)) == 0);
+  assert(GSetIntIterPrev(setInt) == false);
+  assert(*(GSetIntCurData(setInt)) == 0);
+  assert(GSetIntIterNext(setInt) == true);
+  assert(*(GSetIntCurData(setInt)) == 1);
+  GSetIntIterReset(setInt);
+  GSetIntIterSet(
+    setInt,
+    GSetIteration_backward);
+  assert(GSetIntIterNext(setInt) == false);
+  assert(*(GSetIntCurData(setInt)) == 0);
+  assert(GSetIntIterPrev(setInt) == true);
+  assert(*(GSetIntCurData(setInt)) == 1);
+  GSetIntIterReset(setInt);
+  assert(*(GSetIntCurData(setInt)) == 9);
+  assert(GSetIntIterPrev(setInt) == false);
+  assert(*(GSetIntCurData(setInt)) == 9);
+  assert(GSetIntIterNext(setInt) == true);
+  assert(*(GSetIntCurData(setInt)) == 8);
+  GSetIntIterSet(
+    setInt,
+    GSetIteration_forward);
+
+  // Pick
+  ptrInt = GSetIntPick(setInt);
+  assert(*ptrInt == 8);
+  assert(GSetIntGetSize(setInt) == 9);
+  assert(*(GSetIntCurData(setInt)) == 9);
+  GSetForEach(setInt, int, printf("%d ", *data));printf("\n");
+  GSetForEach(setInt, int, assert(*data == (iData == 8 ? 9 : iData)));
 
   // Free the GSet
   GSetIntFree(&setInt);

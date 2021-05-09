@@ -244,6 +244,14 @@ bool GSetIterNext(
 bool GSetIterPrev(
   struct GSet* const that);
 
+// Set the iteration of a GSet
+// Inputs:
+//        that: the GSet
+//   iteration: the type of iteration
+void GSetIterSet(
+        struct GSet* const that,
+  enum GSetIteration const iteration);
+
 // ================== Typed GSet  =========================
 
 // Declare a typed GSet containing data of type T and name GSet<N>
@@ -324,6 +332,9 @@ bool GSetIterPrev(
   static inline int GSet ## N ## GetSize(                                \
     struct GSet ## N const * const that)                                 \
     {return that->s.size;}                                               \
+  static inline void GSet ## N ## IterSet(                               \
+    struct GSet ## N * const that, enum GSetIteration const iteration)   \
+    {GSetIterSet((struct GSet*)that, iteration);}                        \
 
 // Define some default typed GSets
 DefineGSet(Int, int)
