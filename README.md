@@ -30,22 +30,92 @@ The [TryCatchC](https://github.com/BayashiPascal/TryCatchC) libraries will autom
 
 # 2 Usage
 
-# 2.1 Define a typed GSet
+# 2.1 Minimal example
 
-To create a typed `GSet` containing data of type, for example, `struct UserData`, one can use the macro `DefineGSet(UserData, struct UserData)`. Then, all the functions defined for a `GSet` are redefined with an equivalen function for the type `struct UserData`. Below is an example of how it could be used:
+Below is a minimal example of how to use a GSet.
 
 ```
-DefineGSet(UserData, struct UserData)
+#include <stdio.h>
+#include <GSet/gset.h>
+
+// Main function
 int main() {
-  struct GSetUserData* set = GSetUserDataAlloc();
-  struct UserData userData = { ... };
-  GSetUserDataPush(set, &userData);
-  struct UserData* ptrUserData = GSetUserDataPop(set);
-  GSetUserDataFree(&set);
+
+  // Create the GSet
+  struct GSetInt* setInt = GSetIntAlloc();
+
+  // Push a data
+  int val = 1;
+  GSetIntPush(
+    setInt,
+    &val);
+
+  // Pop the data
+  int* ptrInt = GSetIntPop(setInt);
+  printf("%d\n", *ptrInt);
+
+  // Free the GSet
+  GSetIntFree(&setInt);
+
+  // Return the sucess code
+  return EXIT_SUCCESS;
+
 }
 ```
 
-Be aware that to be able to free elements, GSet require a function `void <N>Free(T**)` to be defined before `DefineGSet(N, T)`. In the example above it could be:
+It can be compiled as follow:
+
+```
+gcc -c main.c
+gcc main.o -lgset -lm -ltrycatchc -o main 
+```
+
+# 2.2 Define a typed GSet
+
+To create a typed `GSet` containing data of type, for example, `struct UserData`, one can use the macro `DefineGSet(UserData, struct UserData)`. Then, all the functions defined for a `GSet` are redefined with an equivalen function named `GSetUserData...` for the type `struct UserData`. Below is an example of how it could be used:
+
+```
+#include <stdio.h>
+#include <GSet/gset.h>
+
+// Dummy structure to test typed GSet
+struct UserData {
+
+  int val;
+
+};
+
+// Create a typed GSet for UserData
+DefineGSet(UserData, struct UserData)
+
+// Main function
+int main() {
+
+  // Example of typed GSet
+
+  // Create the GSet
+  struct GSetUserData* setUserData = GSetUserDataAlloc();
+
+  // Push a data
+  struct UserData userData = { .val = 2 };
+  GSetUserDataPush(
+    setUserData,
+    &userData);
+
+  // Pop the data
+  struct UserData* ptrUserData = GSetUserDataPop(setUserData);
+  printf("%d\n", ptrUserData->val);
+
+  // Free the GSet
+  GSetUserDataFree(&setUserData);
+
+  // Return the sucess code
+  return EXIT_SUCCESS;
+
+}
+```
+
+Be aware that to be able to free elements in the GSetFlush, GSet requires a function `void <N>Free(T**)` to be defined before `DefineGSet(N, T)`. In the example above it could be:
 
 ```
 void UserDataFree(struct UserData** const that) {

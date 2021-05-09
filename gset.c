@@ -287,6 +287,7 @@ void GSetPush(
 
   // Add the element to the head of the set
   elem->next = that->first;
+  if (that->first != NULL) that->first->prev = elem;
   that->first = elem;
   if (that->size == 0) {
 
@@ -312,6 +313,7 @@ void GSetAdd(
 
   // Add the element to the tail of the set
   elem->prev = that->last;
+  if (that->last != NULL) that->last->next = elem;
   that->last = elem;
   if (that->size == 0) {
 
@@ -355,6 +357,7 @@ void* GSetPop(
   // Remove the first element
   struct GSetElem* elem = that->first;
   that->first = elem->next;
+  if (that->first != NULL) that->first->prev = NULL;
   --(that->size);
 
   // Memorise the data and free the element
@@ -387,7 +390,7 @@ void* GSetDrop(
     bool flag = GSetIterNext(that);
 
     // If we couldn't move to the next, try to move to the previous
-    if(flag == false) flag = GSetIterNext(that);
+    if(flag == false) flag = GSetIterPrev(that);
 
     // If we still couldn't move, reset the current element
     if(flag == false) that->elem = NULL;
@@ -397,6 +400,7 @@ void* GSetDrop(
   // Remove the last element
   struct GSetElem* elem = that->last;
   that->last = elem->prev;
+  if (that->last != NULL) that->last->next = NULL;
   --(that->size);
 
   // Memorise the data and free the element
@@ -484,8 +488,8 @@ void GSetSort(
   // Sort the array
   qsort(
     arr,
-    sizeof(void*),
     that->size,
+    sizeof(void*),
     cmp);
 
   // Copy the sorted data back in the elements
@@ -515,12 +519,16 @@ void GSetShuffle(
 
   // Shuffle the array
   // (Fischer-Yates algorithm)
-  for (int i = that->size; i > 1; --i) {
+  for (int i = that->size - 1; i > 0; --i) {
 
      int j = (int)round(rnd() * (int)i);
-     void* ptr = arr[j];
-     arr[j] = arr[i];
-     arr[i] = ptr;
+     if (i != j) {
+
+       void* ptr = arr[j];
+       arr[j] = arr[i];
+       arr[i] = ptr;
+
+     }
 
   }
 
@@ -631,8 +639,24 @@ void GSetAppend(
 void* GSetCurData(
   struct GSet const* const that) {
 
+  // If there is no data to get, raise an exception
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);
+
   // Return the data of the current element
   return that->elem->data;
+
+}
+
+// Get the size of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the size of the data set
+int GSetGetSize(
+  struct GSet const* const that) {
+
+  // Return the data of the current element
+  return that->size;
 
 }
 

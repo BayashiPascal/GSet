@@ -14,6 +14,7 @@
 // the current data can be accessed through the variable 'data', and its
 // index is 'iData'. The loop iters using the GSet operator which is first
 // reset.
+// TODO: Type is not enforced to be the type of data in Set
 #define GSetForEach(Set, Type, Code)                          \
   do {                                                        \
     int iData = 0;                                            \
@@ -202,6 +203,14 @@ void GSetAppend(
 void* GSetCurData(
   struct GSet const* const that);
 
+// Get the size of the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the size of the data set
+int GSetGetSize(
+  struct GSet const* const that);
+
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
@@ -296,7 +305,7 @@ bool GSetIterPrev(
     T ** ptrs = (T**)GSetToArrayOfPtr((struct GSet*)that);               \
     T * arr = malloc(sizeof(T) * that->s.size);                          \
     if (arr == NULL) Raise(TryCatchExc_MallocFailed);                    \
-    for (int i; i<that->s.size; ++i) arr[i] = *(ptrs[i]);                \
+    for (int i = 0; i<that->s.size; ++i) arr[i] = *(ptrs[i]);            \
     free(ptrs); return arr;}                                             \
   static inline void GSet ## N ## FromArrayOfPtr(                        \
     struct GSet ## N * const that, T** const arr, int size)              \
@@ -312,6 +321,9 @@ bool GSetIterPrev(
   static inline T * GSet ## N ## CurData(                                \
     struct GSet ## N const * const that)                                 \
     {return (T *)GSetCurData((struct GSet*)that);}                       \
+  static inline int GSet ## N ## GetSize(                                \
+    struct GSet ## N const * const that)                                 \
+    {return that->s.size;}                                               \
 
 // Define some default typed GSets
 DefineGSet(Int, int)
