@@ -71,7 +71,7 @@ static void GSetElemFree(
 
 // ================== Public functions definition =========================
 
-// Deallocation function for default typed GSet
+// Deallocation functions for default typed GSet
 void IntFree(int** const that) {
   if (that == NULL || *that == NULL) return;
   free(*that); *that = NULL;
@@ -101,7 +101,7 @@ void StrFree(char*** const that) {
   free(*that); *that = NULL;
 }
 
-// Comparison function for the default typed GSets
+// Comparison functions for the default typed GSets
 int GSetIntCmp(void const* a, void const* b) {
 
   return (*(int const*)a < *(int const*)b ? -1 :
@@ -200,54 +200,33 @@ struct GSet* GSetAlloc(
 
 }
 
-// Copy a GSet, the data in elements are not clone, they are shared by both
-// the original GSet and the clone GSet
-// Input:
-//   that: the GSet to be cloned
+// Copy a GSet into another GSet
+// Inputs:
+//   that: the GSet
+//    tho: the other GSet
 // Output:
-//   Return the copy of the GSet
-struct GSet GSetCopy( 
-  struct GSet* const that) {
+//   tho is first emptied and then filled with elements whose data is the
+//   the data of the elements of that, in same order
+void GSetCopy( 
+        struct GSet* const that,
+  struct GSet const* const tho) {
 
-  // Create the copy of the GSet
-  struct GSet copy = GSetCreate();
+  // Empty the GSet
+  GSetEmpty(that);
 
   // Loop on the element of the GSet
-  struct GSetElem* elem = that->first;
+  struct GSetElem* elem = tho->first;
   while (elem != NULL) {
 
     // Copy the element
     GSetAdd(
-      &copy,
+      that,
       elem->data);
 
     // Move to the next elem
     elem = elem->next;
 
   }
-
-  // Return the copy
-  return copy;
-
-}
-
-// Clone a GSet, the data in elements are not clone, they are shared by both
-// the original GSet and the clone GSet
-// Input:
-//   that: the GSet to be cloned
-// Output:
-//   Return the clone GSet
-struct GSet* GSetClone( 
-  struct GSet* const that) {
-
-  // Allocate memory for the clone
-  struct GSet* clone = GSetAlloc();
-
-  // Copy the GSet
-  *clone = GSetCopy(that);
-
-  // Return the clone
-  return clone;
 
 }
 
@@ -286,6 +265,9 @@ void GSetEmpty(
     --(that->size);
 
   }
+
+  // Update the current element
+  that->elem = NULL;
 
   // Update the size of the set
   that->size = 0;
@@ -532,7 +514,8 @@ void GSetShuffle(
   void** arr = GSetToArrayOfPtr(that);
 
   // Shuffle the array
-  for (int i = 0; i < that->size; ++i) {
+  // (Fischer-Yates algorithm)
+  for (int i = that->size; i > 1; --i) {
 
      int j = (int)round(rnd() * (int)i);
      void* ptr = arr[j];
@@ -604,6 +587,52 @@ void GSetFromArrayOfPtr(
 
   // Loop on the element of the array, and add the pointer to the GSet
   ForZeroTo(iVal, size) GSetAdd(that, arr[iVal]);
+
+}
+
+// Append a GSet at the end of another GSet
+// Inputs:
+//   that: the GSet
+//    tho: the other GSet
+// Output:
+//   tho is appended at the end of that and becomes empty after this operation
+void GSetAppend(
+  struct GSet* const that,
+  struct GSet* const tho) {
+
+  // If the other set is empty, nothing to do
+  if (tho->first == NULL) return;
+
+  // If the set is empty, it simply becames the other set
+  if (that->first == NULL) *that = *tho;
+  // Else, both set contain elements
+  else {
+
+    // Append tho at the end of that
+    that->last->next = tho->first;
+    tho->first->prev = that->last;
+    that->last = tho->last;
+    that->size += tho->size;
+    if (that->elem == NULL) that->elem = that->first;
+
+    // Disconnect tho from its elements, else there is an inconsistency in
+    // the fact that tho->first->prev is not null
+    *tho = GSetCreate();
+
+  }
+
+}
+
+// Get the data of the current element in the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the pointer to the data of the current element
+void* GSetCurData(
+  struct GSet const* const that) {
+
+  // Return the data of the current element
+  return that->elem->data;
 
 }
 

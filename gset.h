@@ -8,6 +8,23 @@
 #include <stdlib.h>
 #include <TryCatchC/trycatchc.h>
 
+// ================== Macros =========================
+
+// Apply Code to data (of type Type) of each element of the GSet Set. In Code
+// the current data can be accessed through the variable 'data', and its
+// index is 'iData'. The loop iters using the GSet operator which is first
+// reset.
+#define GSetForEach(Set, Type, Code)                          \
+  do {                                                        \
+    int iData = 0;                                            \
+    GSetIterReset((struct GSet*)(Set));                       \
+    while (iData == 0 || GSetIterNext((struct GSet*)(Set))) { \
+      Type* data = GSetCurData((struct GSet*)(Set));          \
+      Code;                                                   \
+      ++iData;                                                \
+    }                                                         \
+  } while(false)
+
 // ================== Public type definitions =========================
 
 // Type of iteration on the set
@@ -55,23 +72,16 @@ struct GSet GSetCreate(
 struct GSet* GSetAlloc(
   void);
 
-// Copy a GSet, the data in elements are not clone, they are shared by both
-// the original GSet and the clone GSet
-// Input:
-//   that: the GSet to be cloned
+// Copy a GSet into another GSet
+// Inputs:
+//   that: the GSet
+//    tho: the other GSet
 // Output:
-//   Return the copy of the GSet
-struct GSet GSetCopy( 
-  struct GSet* const that);
-
-// Clone a GSet, the data in elements are not clone, they are shared by both
-// the original GSet and the clone GSet
-// Input:
-//   that: the GSet to be cloned
-// Output:
-//   Return the clone GSet
-struct GSet* GSetClone( 
-  struct GSet* const that);
+//   tho is first emptied and then filled with elements whose data is the
+//   the data of the elements of that, in same order
+void GSetCopy( 
+        struct GSet* const that,
+  struct GSet const* const tho);
 
 // Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
@@ -174,6 +184,24 @@ void GSetFromArrayOfPtr(
         void** const arr,
            int const size);
 
+// Append a GSet at the end of another GSet
+// Inputs:
+//   that: the GSet
+//    tho: the other GSet
+// Output:
+//   tho is appended at the end of that and becomes empty after this operation
+void GSetAppend(
+  struct GSet* const that,
+  struct GSet* const tho);
+
+// Get the data of the current element in the GSet
+// Input:
+//   that: the GSet
+// Output:
+//   Return the pointer to the data of the current element
+void* GSetCurData(
+  struct GSet const* const that);
+
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
@@ -221,12 +249,9 @@ bool GSetIterPrev(
     {return (struct GSet ## N ){.s=GSetCreate()};}                       \
   static inline struct GSet ## N * GSet ## N ## Alloc(void)              \
     {return (struct GSet ## N *)GSetAlloc();}                            \
-  static inline struct GSet ## N GSet ## N ## Copy(                      \
-    struct GSet ## N * const that)                                       \
-    {return (struct GSet ## N ){.s=GSetCopy((struct GSet*)that)};}       \
-  static inline struct GSet ## N * GSet ## N ## Clone(                   \
-    struct GSet ## N * const that)                                       \
-    {return (struct GSet ## N *)GSetClone((struct GSet*)that);}          \
+  static inline void GSet ## N ## Copy(                                  \
+    struct GSet ## N * const that, struct GSet ## N const* const tho)    \
+    {GSetCopy((struct GSet*)that, (struct GSet const*)tho);}             \
   static inline void GSet ## N ## Free(struct GSet ## N ** const that)   \
     {GSetFree((struct GSet**)that);}                                     \
   static inline void GSet ## N ## Empty(struct GSet ## N * const that)   \
@@ -280,6 +305,13 @@ bool GSetIterPrev(
     struct GSet ## N * const that, T* const arr, int size)               \
     {GSetEmpty((struct GSet*)that);                                      \
     for(int i = 0; i < size; ++i) GSetAdd((struct GSet*)that, arr + i);} \
+  static inline void GSet ## N ## Append(                                \
+    struct GSet ## N * const that,                                       \
+    struct GSet ## N * const tho)                                        \
+    {GSetAppend((struct GSet*)that, (struct GSet*)tho);}                 \
+  static inline T * GSet ## N ## CurData(                                \
+    struct GSet ## N const * const that)                                 \
+    {return (T *)GSetCurData((struct GSet*)that);}                       \
 
 // Define some default typed GSets
 DefineGSet(Int, int)
@@ -290,7 +322,7 @@ DefineGSet(UInt, unsigned int)
 DefineGSet(ULong, unsigned long)
 DefineGSet(Str, char*)
 
-// Comparison function for the default typed GSets
+// Comparison functions for the default typed GSets
 int GSetIntCmp(void const* a, void const* b);
 int GSetLongCmp(void const* a, void const* b);
 int GSetFloatCmp(void const* a, void const* b);
