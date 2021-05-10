@@ -1,6 +1,6 @@
 # GSet
 
-GSet is a C library providing a set data structure and the functions to interact with it.
+GSet is a C library providing a polymorphic set data structure and the functions to interact with it.
 
 A GSet is a collection of element, each containing a pointer to data. These data are of type `void*` for the default `GSet` structure, but typed version of this structure can be defined in one line with a provided macro.
 
@@ -372,7 +372,7 @@ static inline void GSet<N>FromArrayOfData(struct GSet<N>* const that, <T>* const
 
 # 4 License
 
-GSet, a C library providing a set data structure and the functions to interact with it.
+GSet, a C library providing a polymorphic set data structure and the functions to interact with it.
 Copyright (C) 2021  Pascal Baillehache
 
 This program is free software: you can redistribute it and/or modify
