@@ -96,7 +96,7 @@ void ULongFree(unsigned long** const that) {
   if (that == NULL || *that == NULL) return;
   free(*that); *that = NULL;
 }
-void StrFree(char*** const that) {
+void StrFree(char** const that) {
   if (that == NULL || *that == NULL) return;
   free(*that); *that = NULL;
 }

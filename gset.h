@@ -344,7 +344,7 @@ DefineGSet(Float, float)
 DefineGSet(Double, double)
 DefineGSet(UInt, unsigned int)
 DefineGSet(ULong, unsigned long)
-DefineGSet(Str, char*)
+DefineGSet(Str, char)
 
 // Comparison functions for the default typed GSets
 int GSetIntCmp(void const* a, void const* b);
