@@ -23,7 +23,7 @@ static void GSetElemFree(struct GSetElem**);
   } while(false)
 
 // Loop from 0 to (n - 1)
-#define ForZeroTo(I, N) for (int I = 0; I < N; ++I)
+#define ForZeroTo(I, N) for (size_t I = 0; I < N; ++I)
 
 // Get a random number in [0.0, 1.0]
 #define rnd() (float)(rand())/(float)(RAND_MAX)
@@ -493,7 +493,7 @@ void GSetSort(
 
   // Copy the sorted data back in the elements
   struct GSetElem* ptr = that->first;
-  int i = 0;
+  size_t i = 0;
   while (ptr != NULL) {
 
     ptr->data = arr[i];
@@ -518,9 +518,9 @@ void GSetShuffle(
 
   // Shuffle the array
   // (Fischer-Yates algorithm)
-  for (int i = that->size - 1; i > 0; --i) {
+  for (size_t i = that->size - 1; i > 0; --i) {
 
-     int j = (int)round(rnd() * (int)i);
+     size_t j = (size_t)round(rnd() * (double)i);
      if (i != j) {
 
        void* ptr = arr[j];
@@ -533,7 +533,7 @@ void GSetShuffle(
 
   // Copy the shuffled data back in the elements
   struct GSetElem* ptr = that->first;
-  int i = 0;
+  size_t i = 0;
   while (ptr != NULL) {
 
     ptr->data = arr[i];
@@ -562,7 +562,7 @@ void** GSetToArrayOfPtr(
 
   // Copy the pointers in the array
   struct GSetElem* ptr = that->first;
-  int i = 0;
+  size_t i = 0;
   while (ptr != NULL) {
 
     arr[i] = ptr->data;
@@ -587,7 +587,7 @@ void** GSetToArrayOfPtr(
 void GSetFromArrayOfPtr(
   struct GSet* const that,
         void** const arr,
-           int const size) {
+        size_t const size) {
 
   // Empty the GSet
   GSetEmpty(that);
@@ -651,7 +651,7 @@ void* GSetCurData(
 //   that: the GSet
 // Output:
 //   Return the size of the data set
-int GSetGetSize(
+size_t GSetGetSize(
   struct GSet const* const that) {
 
   // Return the data of the current element

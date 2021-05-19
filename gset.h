@@ -17,7 +17,7 @@
 // TODO: Type is not enforced to be the type of data in Set
 #define GSetForEach(Set, Type, Code)                          \
   do {                                                        \
-    int iData = 0;                                            \
+    size_t iData = 0;                                         \
     GSetIterReset((struct GSet*)(Set));                       \
     while (iData == 0 || GSetIterNext((struct GSet*)(Set))) { \
       Type* data = GSetCurData((struct GSet*)(Set));          \
@@ -43,7 +43,7 @@ struct GSetElem;
 struct GSet {
 
   // Size of the GSet (i.e. number of GSetElem currently in it)
-  int size;
+  size_t size;
 
   // First element of the set
   struct GSetElem* first;
@@ -183,7 +183,7 @@ void** GSetToArrayOfPtr(
 void GSetFromArrayOfPtr(
   struct GSet* const that,
         void** const arr,
-           int const size);
+        size_t const size);
 
 // Append a GSet at the end of another GSet
 // Inputs:
@@ -208,7 +208,7 @@ void* GSetCurData(
 //   that: the GSet
 // Output:
 //   Return the size of the data set
-int GSetGetSize(
+size_t GSetGetSize(
   struct GSet const* const that);
 
 // Reset the current element of the iterator according to the direction
@@ -314,15 +314,16 @@ void GSetIterSet(
     T ** ptrs = (T**)GSetToArrayOfPtr((struct GSet*)that);               \
     T * arr = malloc(sizeof(T) * that->s.size);                          \
     if (arr == NULL) Raise(TryCatchExc_MallocFailed);                    \
-    for (int i = 0; i<that->s.size; ++i) arr[i] = *(ptrs[i]);            \
+    for (size_t i = 0; i<that->s.size; ++i) arr[i] = *(ptrs[i]);         \
     free(ptrs); return arr;}                                             \
   static inline void GSet ## N ## FromArrayOfPtr(                        \
-    struct GSet ## N * const that, T** const arr, int size)              \
+    struct GSet ## N * const that, T** const arr, size_t size)           \
     {GSetFromArrayOfPtr((struct GSet*)that, (void**)arr, size);}         \
   static inline void GSet ## N ## FromArrayOfData(                       \
-    struct GSet ## N * const that, T* const arr, int size)               \
+    struct GSet ## N * const that, T* const arr, size_t size)            \
     {GSetEmpty((struct GSet*)that);                                      \
-    for(int i = 0; i < size; ++i) GSetAdd((struct GSet*)that, arr + i);} \
+    for(size_t i = 0; i < size; ++i)                                     \
+    GSetAdd((struct GSet*)that, arr + i);}                               \
   static inline void GSet ## N ## Append(                                \
     struct GSet ## N * const that,                                       \
     struct GSet ## N * const tho)                                        \
@@ -330,7 +331,7 @@ void GSetIterSet(
   static inline T * GSet ## N ## CurData(                                \
     struct GSet ## N const * const that)                                 \
     {return (T *)GSetCurData((struct GSet*)that);}                       \
-  static inline int GSet ## N ## GetSize(                                \
+  static inline size_t GSet ## N ## GetSize(                             \
     struct GSet ## N const * const that)                                 \
     {return that->s.size;}                                               \
   static inline void GSet ## N ## IterSet(                               \

@@ -82,7 +82,7 @@ int main() {
     &setIntB);
   assert(GSetIntGetSize(setInt) == 20);
   assert(GSetIntGetSize(&setIntB) == 0);
-  GSetForEach(setInt, int, assert(*data == (iData % 10)));
+  GSetForEach(setInt, int, assert(*data == (int)(iData % 10)));
   for (int i = 0; i < 10; ++i) (void)GSetIntDrop(setInt);
 
   // Free memory
@@ -94,7 +94,7 @@ int main() {
     &setIntB,
     setInt);
   assert(GSetIntGetSize(&setIntB) == 10);
-  GSetForEach(setInt, int, assert(*data == iData));
+  GSetForEach(setInt, int, assert(*data == (int)iData));
   GSetIntEmpty(&setIntB);
 
   // Pop the data
@@ -140,7 +140,7 @@ int main() {
     setInt,
     GSetIntCmp);
   GSetForEach(setInt, int, printf("%d ", *data));printf("\n");
-  GSetForEach(setInt, int, assert(*data == iData));
+  GSetForEach(setInt, int, assert(*data == (int)iData));
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 9);
 
@@ -179,7 +179,7 @@ int main() {
   assert(GSetIntGetSize(setInt) == 9);
   assert(*(GSetIntCurData(setInt)) == 9);
   GSetForEach(setInt, int, printf("%d ", *data));printf("\n");
-  GSetForEach(setInt, int, assert(*data == (iData == 8 ? 9 : iData)));
+  GSetForEach(setInt, int, assert(*data == (int)(iData == 8 ? 9 : iData)));
 
   // Free the GSet
   GSetIntFree(&setInt);
