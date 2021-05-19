@@ -15,15 +15,15 @@
 // index is 'iData'. The loop iters using the GSet operator which is first
 // reset.
 // TODO: Type is not enforced to be the type of data in Set
-#define GSetForEach(Set, Type, Code)                          \
-  do {                                                        \
-    size_t iData = 0;                                         \
-    GSetIterReset((struct GSet*)(Set));                       \
-    while (iData == 0 || GSetIterNext((struct GSet*)(Set))) { \
-      Type* data = GSetCurData((struct GSet*)(Set));          \
-      Code;                                                   \
-      ++iData;                                                \
-    }                                                         \
+#define GSetForEach(Type, Elem, Set, Code)                          \
+  do {                                                              \
+    size_t Elem ## Idx = 0;                                         \
+    GSetIterReset((struct GSet*)(Set));                             \
+    while (Elem ## Idx == 0 || GSetIterNext((struct GSet*)(Set))) { \
+      Type* Elem = GSetCurData((struct GSet*)(Set));                \
+      Code;                                                         \
+      ++Elem ## Idx;                                                \
+    }                                                               \
   } while(false)
 
 // ================== Public type definitions =========================
