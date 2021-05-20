@@ -19,7 +19,7 @@
 #define GSetForEach(Type, Data, Set)                            \
   GSetIterReset((struct GSet*)(Set));                           \
   if (GSetGetSize((struct GSet*)(Set)) > 0) for (               \
-    Type* Data = GSetCurData((struct GSet*)(Set));              \
+    Type Data = GSetCurData((struct GSet*)(Set));               \
     GSetIterEnded((struct GSet*)(Set)) == false;                \
     GSetIterNext((struct GSet*)(Set)),                          \
     Data = GSetCurData((struct GSet*)(Set)))
