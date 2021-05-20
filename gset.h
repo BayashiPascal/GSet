@@ -6,25 +6,23 @@
 
 // Include external modules header
 #include <stdlib.h>
+#include <stdbool.h>
 #include <TryCatchC/trycatchc.h>
 
 // ================== Macros =========================
 
-// Apply Code to data (of type Type) of each element of the GSet Set. In Code
-// the current data can be accessed through the variable 'data', and its
-// index is 'iData'. The loop iters using the GSet operator which is first
-// reset.
+// Loop on each data Data (of type Type) of the GSet Set.
+// The current data can be accessed through the variable <Data>,
+// and its index with GSetIterIdx(). Uses Set's iterator, which is first
+// reset, to iterate on the data.
 // TODO: Type is not enforced to be the type of data in Set
-#define GSetForEach(Type, Elem, Set, Code)                          \
-  do {                                                              \
-    size_t Elem ## Idx = 0;                                         \
-    GSetIterReset((struct GSet*)(Set));                             \
-    while (Elem ## Idx == 0 || GSetIterNext((struct GSet*)(Set))) { \
-      Type* Elem = GSetCurData((struct GSet*)(Set));                \
-      Code;                                                         \
-      ++Elem ## Idx;                                                \
-    }                                                               \
-  } while(false)
+#define GSetForEach(Type, Data, Set)                            \
+  GSetIterReset((struct GSet*)(Set));                           \
+  if (GSetGetSize((struct GSet*)(Set)) > 0) for (               \
+    Type* Data = GSetCurData((struct GSet*)(Set));              \
+    GSetIterEnded((struct GSet*)(Set)) == false;                \
+    GSetIterNext((struct GSet*)(Set)),                          \
+    Data = GSetCurData((struct GSet*)(Set)))
 
 // ================== Public type definitions =========================
 
@@ -53,6 +51,13 @@ struct GSet {
 
   // Current element (according to iteration operations)
   struct GSetElem* elem;
+
+  // Index of the iterator, set to 0 by GSetIterReset, incremented by
+  // GSetIterNext, decremented by GSetIterPrev
+  size_t idx;
+
+  // Flag raised when the iterator reaches its end
+  bool iterEnd;
 
   // Type of iteration
   enum GSetIteration iteration;
@@ -218,6 +223,23 @@ size_t GSetGetSize(
 void GSetIterReset(
   struct GSet* const that);
 
+// Get the index of the current element of the iterator according to the
+// direction of the iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   Return the index
+size_t GSetIterIdx(
+  struct GSet const* const that);
+
+// Get the flag about the end of iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   Return the flag
+bool GSetIterEnded(
+  struct GSet const* const that);
+
 // Move the current element in the GSet one step in the direction of the
 // iteration.
 // Input:
@@ -288,6 +310,12 @@ void GSetIterSet(
   static inline void GSet ## N ## IterReset(                             \
     struct GSet ## N * const that)                                       \
     {GSetIterReset((struct GSet*)that);}                                 \
+  static inline size_t GSet ## N ## IterIdx(                             \
+    struct GSet ## N const* const that)                                  \
+    {return GSetIterIdx((struct GSet const*)that);}                      \
+  static inline bool GSet ## N ## IterEnded(                             \
+    struct GSet ## N const* const that)                                  \
+    {return GSetIterEnded((struct GSet const*)that);}                    \
   static inline bool GSet ## N ## IterNext(                              \
     struct GSet ## N * const that)                                       \
     {return GSetIterNext((struct GSet*)that);}                           \

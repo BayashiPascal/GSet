@@ -171,6 +171,8 @@ struct GSet GSetCreate(
     .first = NULL,
     .last = NULL,
     .elem = NULL,
+    .idx = 0,
+    .iterEnd = false,
     .iteration = GSetIteration_forward,
 
   };
@@ -268,6 +270,7 @@ void GSetEmpty(
 
   // Update the current element
   that->elem = NULL;
+  that->idx = 0;
 
   // Update the size of the set
   that->size = 0;
@@ -347,10 +350,10 @@ void* GSetPop(
     bool flag = GSetIterNext(that);
 
     // If we couldn't move to the next, try to move to the previous
-    if(flag == false) flag = GSetIterNext(that);
+    if (flag == false) flag = GSetIterNext(that);
 
     // If we still couldn't move, reset the current element
-    if(flag == false) that->elem = NULL;
+    if (flag == false) that->elem = NULL;
 
   }
 
@@ -390,10 +393,10 @@ void* GSetDrop(
     bool flag = GSetIterNext(that);
 
     // If we couldn't move to the next, try to move to the previous
-    if(flag == false) flag = GSetIterPrev(that);
+    if (flag == false) flag = GSetIterPrev(that);
 
     // If we still couldn't move, reset the current element
-    if(flag == false) that->elem = NULL;
+    if (flag == false) that->elem = NULL;
 
   }
 
@@ -666,6 +669,10 @@ size_t GSetGetSize(
 void GSetIterReset(
   struct GSet* const that) {
 
+  // Reset the index
+  that->idx = 0;
+  that->iterEnd = false;
+
   // If there are elements in the set
   if (that->size > 0) {
 
@@ -694,6 +701,33 @@ void GSetIterReset(
 
 }
 
+// Get the index of the current element of the iterator according to the
+// direction of the iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   Return the index
+size_t GSetIterIdx(
+  struct GSet const* const that) {
+
+  // Return the index
+  return that->idx;
+
+}
+
+// Get the flag about the end of iteration.
+// Input:
+//   that: the GSet
+// Output:
+//   Return the flag
+bool GSetIterEnded(
+  struct GSet const* const that) {
+
+  // Return the flag
+  return that->iterEnd;
+
+}
+
 // Move the current element in the GSet one step in the direction of the
 // iteration.
 // Input:
@@ -707,8 +741,8 @@ void GSetIterReset(
 bool GSetIterNext(
   struct GSet* const that) {
 
-  // Variable to memorise the returned flag
-  bool flag = true;
+  // Set the flag a-priori
+  that->iterEnd = false;
 
   // If there are elements in the set
   if (that->size > 0) {
@@ -722,7 +756,7 @@ bool GSetIterNext(
         if (that->elem->next != NULL)
           that->elem = that->elem->next;
         // Else, there is no next element, update the flag
-        else flag = false;
+        else that->iterEnd = true;
         break;
 
       case GSetIteration_backward:
@@ -731,7 +765,7 @@ bool GSetIterNext(
         if (that->elem->prev != NULL)
           that->elem = that->elem->prev;
         // Else, there is no next element, update the flag
-        else flag = false;
+        else that->iterEnd = true;
         break;
 
       default:
@@ -740,10 +774,13 @@ bool GSetIterNext(
     }
 
   // Else, there is no element in the set, update the flag
-  } else flag = false;
+  } else that->iterEnd = true;
 
-  // Return the flag
-  return flag;
+  // If the iterator has moved, increment the index
+  if (that->iterEnd == false) ++(that->idx);
+
+  // Return true if the iteration hasn't reached its end, false else
+  return !(that->iterEnd);
 
 }
 
@@ -759,8 +796,9 @@ bool GSetIterNext(
 //   and return false.
 bool GSetIterPrev(
   struct GSet* const that) {
-  // Variable to memorise the returned flag
-  bool flag = true;
+
+  // Set the flag a-priori
+  that->iterEnd = false;
 
   // If there are elements in the set
   if (that->size > 0) {
@@ -774,7 +812,7 @@ bool GSetIterPrev(
         if (that->elem->prev != NULL)
           that->elem = that->elem->prev;
         // Else, there is no next element, update the flag
-        else flag = false;
+        else that->iterEnd = true;
         break;
 
       case GSetIteration_backward:
@@ -783,7 +821,7 @@ bool GSetIterPrev(
         if (that->elem->next != NULL)
           that->elem = that->elem->next;
         // Else, there is no next element, update the flag
-        else flag = false;
+        else that->iterEnd = true;
         break;
 
       default:
@@ -792,10 +830,13 @@ bool GSetIterPrev(
     }
 
   // Else, there is no element in the set, update the flag
-  } else flag = false;
+  } else that->iterEnd = true;
 
-  // Return the flag
-  return flag;
+  // If the iterator has moved, decrement the index
+  if (that->iterEnd == false) --(that->idx);
+
+  // Return true if the iteration hasn't reached its end, false else
+  return !(that->iterEnd);
 
 }
 
