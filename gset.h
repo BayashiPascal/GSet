@@ -16,6 +16,7 @@
 // and its index with GSetIterIdx(). Uses Set's iterator, which is first
 // reset, to iterate on the data.
 // !! typeof is a gcc keyword !!
+#ifdef __GNUC__
 #define GSetForEach(Data, Set)                       \
   GSetIterReset((Set)->s);                           \
   if (GSetGetSize((Set)->s) > 0) for (               \
@@ -23,6 +24,7 @@
     GSetIterEnded((Set)->s) == false;                \
     GSetIterNext((Set)->s),                          \
     Data = GSetCurData((Set)->s))
+#endif
 
 // ================== Private type declarations =========================
 

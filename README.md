@@ -13,7 +13,7 @@ Available operations on a GSet are:
 * pick the current data
 * shuffle the data
 * sort the data with a user-defined comparison function
-* foreach macro to execute a block of code on each data
+* foreach macro to execute a block of code on each data (available only if compiling with gcc)
 * append a set at the tail of another set
 * copy a GSet
 * empty a GSet with/without freeing its data
@@ -336,18 +336,18 @@ void GSetIterSet(
         struct GSet* const that,
   enum GSetIteration const iteration);
 
-// Apply Code to data (of type Type) of each element of the GSet Set. In Code
-// the current data can be accessed through the variable 'data', and its
-// index is 'iData'. The loop iters using the GSet operator which is first
-// reset.
-#define GSetForEach(Set, Type, Code)
+// Loop on each data Data (of type Type) of the GSet Set.
+// The current data can be accessed through the variable <Data>,
+// and its index with GSetIterIdx(). Uses Set's iterator, which is first
+// reset, to iterate on the data.
+#define GSetForEach(Data, Set)
 ```
 Available only on typed GSet:
 ```
 // Empty a GSet and free the data it contains
 // Input:
 //   that: the GSet
-static inline void GSet<N>Flush(struct GSet<N>* const that)
+static inline void GSet<N>Flush(struct GSet<N>* const that);
 
 // Convert a GSet to an array
 // Input:
@@ -356,7 +356,7 @@ static inline void GSet<N>Flush(struct GSet<N>* const that)
 //   Return an array of data in the same order as the current
 //   element order. The data of the array are shallow copies of the
 //   data of the elements.
-static inline <T>* GSet<N>ToArrayOfData(struct GSet<N>* const that)
+static inline <T>* GSet<N>ToArrayOfData(struct GSet<N>* const that);
 
 // Convert an array to a GSet
 // Inputs:
@@ -366,7 +366,12 @@ static inline <T>* GSet<N>ToArrayOfData(struct GSet<N>* const that)
 // Output:
 //   The GSet is first emptied and then filled with elements whose data is a
 //   a pointer to the data in the array in the order of the array
-static inline void GSet<N>FromArrayOfData(struct GSet<N>* const that, <T>* const arr, int size)
+static inline void GSet<N>FromArrayOfData(struct GSet<N>* const that, <T>* const arr, int size);
+
+// Release memory used by an automatically allocated GSet
+// Input:
+//   that: the GSet
+static inline void GSet<N>Release(struct GSet<N>* const that);
 
 ```
 
