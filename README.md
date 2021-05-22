@@ -83,7 +83,7 @@ int main() {
 It can be compiled as follow:
 
 ```
-gcc -c main.c
+gcc -std=gnu11 -c main.c
 gcc main.o -lgset -lm -ltrycatchc -o main 
 ```
 

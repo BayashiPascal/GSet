@@ -6,10 +6,10 @@ BUILD_MODE=1
 
 # Compiler arguments depending on BUILD_MODE
 ifeq ($(BUILD_MODE), 0)
-	BUILD_ARG=-I./ -Wall -Wextra -Og -ggdb -g3 -DBUILDMODE=$(BUILD_MODE)
+	BUILD_ARG=-std=gnu11 -I./ -Wall -Wextra -Og -ggdb -g3 -DBUILDMODE=$(BUILD_MODE)
 	LINK_ARG=-lm -ltrycatchc
 else ifeq ($(BUILD_MODE), 1)
-	BUILD_ARG=-I./ -Wall -Wextra -Werror -Wfatal-errors -Wno-clobbered -O3 -DBUILDMODE=$(BUILD_MODE)
+	BUILD_ARG=-std=gnu11 -I./ -Wall -Wextra -Werror -Wfatal-errors -Wno-clobbered -O3 -DBUILDMODE=$(BUILD_MODE)
 	LINK_ARG=-lm -ltrycatchc
 endif
 
