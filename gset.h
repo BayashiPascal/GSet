@@ -26,9 +26,6 @@
 
 // ================== Private type declarations =========================
 
-// Structure of a GSet element
-struct GSetElem;
-
 // Structure of a GSet
 struct GSet;
 

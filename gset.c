@@ -9,6 +9,7 @@
 // ================== Macros =========================
 
 // Polymorphic free
+struct GSetElem;
 static void GSetElemFree(struct GSetElem**);
 #define PolyFree(P) _Generic(P, \
   struct GSet**: GSetFree, \
