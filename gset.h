@@ -15,14 +15,22 @@
 // The current data can be accessed through the variable <Data>,
 // and its index with GSetIterIdx(). Uses Set's iterator, which is first
 // reset, to iterate on the data.
-// TODO: Type is not enforced to be the type of data in Set
-#define GSetForEach(Type, Data, Set)                            \
-  GSetIterReset((struct GSet*)(Set));                           \
-  if (GSetGetSize((struct GSet*)(Set)) > 0) for (               \
-    Type Data = GSetCurData((struct GSet*)(Set));               \
-    GSetIterEnded((struct GSet*)(Set)) == false;                \
-    GSetIterNext((struct GSet*)(Set)),                          \
-    Data = GSetCurData((struct GSet*)(Set)))
+// !! typeof is a gcc keyword !!
+#define GSetForEach(Data, Set)                       \
+  GSetIterReset((Set)->s);                           \
+  if (GSetGetSize((Set)->s) > 0) for (               \
+    typeof((Set)->t)* Data = GSetCurData((Set)->s);  \
+    GSetIterEnded((Set)->s) == false;                \
+    GSetIterNext((Set)->s),                          \
+    Data = GSetCurData((Set)->s))
+
+// ================== Private type declarations =========================
+
+// Structure of a GSet element
+struct GSetElem;
+
+// Structure of a GSet
+struct GSet;
 
 // ================== Public type definitions =========================
 
@@ -31,36 +39,6 @@ enum GSetIteration {
 
   GSetIteration_forward,
   GSetIteration_backward,
-
-};
-
-// Structure of a GSet element
-struct GSetElem;
-
-// Structure of a GSet
-struct GSet {
-
-  // Size of the GSet (i.e. number of GSetElem currently in it)
-  size_t size;
-
-  // First element of the set
-  struct GSetElem* first;
-
-  // Last element of the set
-  struct GSetElem* last;
-
-  // Current element (according to iteration operations)
-  struct GSetElem* elem;
-
-  // Index of the iterator, set to 0 by GSetIterReset, incremented by
-  // GSetIterNext, decremented by GSetIterPrev
-  size_t idx;
-
-  // Flag raised when the iterator reaches its end
-  bool iterEnd;
-
-  // Type of iteration
-  enum GSetIteration iteration;
 
 };
 
@@ -283,88 +261,94 @@ void GSetIterSet(
 // fill it with elements whose data is a pointer to the array's element in the
 //  order of the array
 #define DefineGSet(N, T)                                                 \
-  struct GSet ## N { struct GSet s; };                                   \
+  struct GSet ## N { struct GSet* s; T t;};                              \
   static inline struct GSet ## N GSet ## N ## Create(void)               \
-    {return (struct GSet ## N ){.s=GSetCreate()};}                       \
+    {return (struct GSet ## N ){.s=GSetAlloc()};}                        \
   static inline struct GSet ## N * GSet ## N ## Alloc(void)              \
-    {return (struct GSet ## N *)GSetAlloc();}                            \
+    {struct GSet ## N * that = malloc(sizeof(struct GSet ## N));         \
+    if (that == NULL) Raise(TryCatchExc_MallocFailed);                   \
+    *that = GSet ## N ## Create(); return that;}                         \
   static inline void GSet ## N ## Copy(                                  \
     struct GSet ## N * const that, struct GSet ## N const* const tho)    \
-    {GSetCopy((struct GSet*)that, (struct GSet const*)tho);}             \
+    {GSetCopy(that->s, tho->s);}                                         \
   static inline void GSet ## N ## Free(struct GSet ## N ** const that)   \
-    {GSetFree((struct GSet**)that);}                                     \
+    {if(that == NULL || *that == NULL) return;                           \
+    GSetFree(&((*that)->s));                                             \
+    free(*that); *that = NULL;}                                          \
+  static inline void GSet ## N ## Release(struct GSet ## N * const that) \
+    {if(that == NULL) return; GSetFree(&(that->s));}                     \
   static inline void GSet ## N ## Empty(struct GSet ## N * const that)   \
-    {GSetEmpty((struct GSet*)that);}                                     \
+    {GSetEmpty(that->s);}                                                \
   static inline void GSet ## N ## Push(                                  \
     struct GSet ## N * const that, T * data)                             \
-    {GSetPush((struct GSet*)that, (void*)data);}                         \
+    {GSetPush(that->s, (void*)data);}                                    \
   static inline void GSet ## N ## Add(                                   \
     struct GSet ## N * const that, T * data)                             \
-    {GSetAdd((struct GSet*)that, (void*)data);}                          \
+    {GSetAdd(that->s, (void*)data);}                                     \
   static inline T * GSet ## N ## Pop(struct GSet ## N * const that)      \
-    {return (T *)GSetPop((struct GSet*)that);}                           \
+    {return (T *)GSetPop(that->s);}                                      \
   static inline T * GSet ## N ## Drop(struct GSet ## N * const that)     \
-    {return (T *)GSetDrop((struct GSet*)that);}                          \
+    {return (T *)GSetDrop(that->s);}                                     \
   static inline T * GSet ## N ## Pick(struct GSet ## N * const that)     \
-    {return (T *)GSetPick((struct GSet*)that);}                          \
+    {return (T *)GSetPick(that->s);}                                     \
   static inline void GSet ## N ## IterReset(                             \
     struct GSet ## N * const that)                                       \
-    {GSetIterReset((struct GSet*)that);}                                 \
+    {GSetIterReset(that->s);}                                            \
   static inline size_t GSet ## N ## IterIdx(                             \
     struct GSet ## N const* const that)                                  \
-    {return GSetIterIdx((struct GSet const*)that);}                      \
+    {return GSetIterIdx(that->s);}                                       \
   static inline bool GSet ## N ## IterEnded(                             \
     struct GSet ## N const* const that)                                  \
-    {return GSetIterEnded((struct GSet const*)that);}                    \
+    {return GSetIterEnded(that->s);}                                     \
   static inline bool GSet ## N ## IterNext(                              \
     struct GSet ## N * const that)                                       \
-    {return GSetIterNext((struct GSet*)that);}                           \
+    {return GSetIterNext(that->s);}                                      \
   static inline bool GSet ## N ## IterPrev(                              \
     struct GSet ## N * const that)                                       \
-    {return GSetIterPrev((struct GSet*)that);}                           \
+    {return GSetIterPrev(that->s);}                                      \
   void N ## Free(T ** const that);                                       \
   static inline void GSet ## N ## Flush(struct GSet ## N * const that)   \
-    {T * d=NULL; while(that->s.size>0){                                  \
+    {T * d=NULL; while(GSetGetSize(that->s)>0){                          \
     d=GSet ## N ## Pop(that);N ## Free(&d);}}                            \
   static inline void GSet ## N ## Sort(                                  \
     struct GSet ## N * const that,                                       \
     int (*cmp)(void const*, void const*))                                \
-    {GSetSort((struct GSet*)that, cmp);}                                 \
+    {GSetSort(that->s, cmp);}                                            \
   static inline void GSet ## N ## Shuffle(                               \
     struct GSet ## N * const that)                                       \
-    {GSetShuffle((struct GSet*)that);}                                   \
+    {GSetShuffle(that->s);}                                              \
   static inline T ** GSet ## N ## ToArrayOfPtr(                          \
     struct GSet ## N * const that)                                       \
-    {return (T **)GSetToArrayOfPtr((struct GSet*)that);}                 \
+    {return (T **)GSetToArrayOfPtr(that->s);}                            \
   static inline T * GSet ## N ## ToArrayOfData(                          \
     struct GSet ## N * const that) {                                     \
-    if (that->s.size == 0) return NULL;                                  \
-    T ** ptrs = (T**)GSetToArrayOfPtr((struct GSet*)that);               \
-    T * arr = malloc(sizeof(T) * that->s.size);                          \
+    if (GSetGetSize(that->s) == 0) return NULL;                          \
+    T ** ptrs = (T**)GSetToArrayOfPtr(that->s);                          \
+    T * arr = malloc(sizeof(T) * GSetGetSize(that->s));                  \
     if (arr == NULL) Raise(TryCatchExc_MallocFailed);                    \
-    for (size_t i = 0; i<that->s.size; ++i) arr[i] = *(ptrs[i]);         \
-    free(ptrs); return arr;}                                             \
+    for (size_t i = 0; i < GSetGetSize(that->s); ++i)                    \
+    {arr[i] = *(ptrs[i]);} free(ptrs); return arr;}                      \
   static inline void GSet ## N ## FromArrayOfPtr(                        \
     struct GSet ## N * const that, T** const arr, size_t size)           \
-    {GSetFromArrayOfPtr((struct GSet*)that, (void**)arr, size);}         \
+    {GSetFromArrayOfPtr(that->s, (void**)arr, size);}                    \
   static inline void GSet ## N ## FromArrayOfData(                       \
     struct GSet ## N * const that, T* const arr, size_t size)            \
-    {GSetEmpty((struct GSet*)that);                                      \
+    {GSetEmpty(that->s);                                                 \
     for(size_t i = 0; i < size; ++i)                                     \
-    GSetAdd((struct GSet*)that, arr + i);}                               \
+    GSetAdd(that->s, arr + i);}                                          \
   static inline void GSet ## N ## Append(                                \
     struct GSet ## N * const that,                                       \
     struct GSet ## N * const tho)                                        \
-    {GSetAppend((struct GSet*)that, (struct GSet*)tho);}                 \
+    {GSetAppend(that->s, tho->s);}                                       \
   static inline T * GSet ## N ## CurData(                                \
     struct GSet ## N const * const that)                                 \
-    {return (T *)GSetCurData((struct GSet*)that);}                       \
+    {return (T *)GSetCurData(that->s);}                                  \
   static inline size_t GSet ## N ## GetSize(                             \
     struct GSet ## N const * const that)                                 \
-    {return that->s.size;}                                               \
+    {return GSetGetSize(that->s);}                                       \
   static inline void GSet ## N ## IterSet(                               \
     struct GSet ## N * const that, enum GSetIteration const iteration)   \
-    {GSetIterSet((struct GSet*)that, iteration);}                        \
+    {GSetIterSet(that->s, iteration);}                                   \
 
 // Define some default typed GSets
 DefineGSet(Int, int)

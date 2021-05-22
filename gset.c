@@ -44,6 +44,33 @@ struct GSetElem {
 
 };
 
+// Structure of a GSet
+struct GSet {
+
+  // Size of the GSet (i.e. number of GSetElem currently in it)
+  size_t size;
+
+  // First element of the set
+  struct GSetElem* first;
+
+  // Last element of the set
+  struct GSetElem* last;
+
+  // Current element (according to iteration operations)
+  struct GSetElem* elem;
+
+  // Index of the iterator, set to 0 by GSetIterReset, incremented by
+  // GSetIterNext, decremented by GSetIterPrev
+  size_t idx;
+
+  // Flag raised when the iterator reaches its end
+  bool iterEnd;
+
+  // Type of iteration
+  enum GSetIteration iteration;
+
+};
+
 // ================== Private functions declaration =========================
 
 // Create a new GSetElem

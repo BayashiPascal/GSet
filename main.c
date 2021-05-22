@@ -58,7 +58,7 @@ int main() {
     10);
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 0);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
 
   // Convert the GSet to an array of pointer
@@ -71,7 +71,7 @@ int main() {
     &setIntB,
     arrPtr,
     10);
-  GSetForEach(int*, data, &setIntB)
+  GSetForEach(data, &setIntB)
     assert(*data == arr[GSetIntIterIdx(&setIntB)]);
 
   // Convert the GSet to an array of pointer
@@ -84,7 +84,7 @@ int main() {
     &setIntB);
   assert(GSetIntGetSize(setInt) == 20);
   assert(GSetIntGetSize(&setIntB) == 0);
-  GSetForEach(int*, data, setInt)
+  GSetForEach(data, setInt)
     assert(*data == (int)(GSetIntIterIdx(setInt) % 10));
   for (int i = 0; i < 10; ++i) (void)GSetIntDrop(setInt);
 
@@ -97,7 +97,7 @@ int main() {
     &setIntB,
     setInt);
   assert(GSetIntGetSize(&setIntB) == 10);
-  GSetForEach(int*, data, setInt)
+  GSetForEach(data, setInt)
     assert(*data == (int)GSetIntIterIdx(setInt));
   GSetIntEmpty(&setIntB);
 
@@ -106,7 +106,7 @@ int main() {
   assert(*ptrInt == 0);
   assert(GSetIntGetSize(setInt) == 9);
   assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
 
   // Push back the data
@@ -115,7 +115,7 @@ int main() {
     ptrInt);
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
 
   // Drop the data
@@ -123,7 +123,7 @@ int main() {
   assert(*ptrInt == 9);
   assert(GSetIntGetSize(setInt) == 9);
   assert(*(GSetIntCurData(setInt)) == 8);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
 
   // Add back the data
@@ -132,15 +132,15 @@ int main() {
     ptrInt);
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 8);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
 
   // Shuffle the data
   GSetIntShuffle(setInt);
   int check[10] = {9, 0, 2, 4, 1, 6, 7, 5, 3, 8};
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
-  GSetForEach(int*, data, setInt)
+  GSetForEach(data, setInt)
     assert(*data == check[GSetIntIterIdx(setInt)]);
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 8);
@@ -149,9 +149,9 @@ int main() {
   GSetIntSort(
     setInt,
     GSetIntCmp);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
-  GSetForEach(int*, data, setInt)
+  GSetForEach(data, setInt)
     assert(*data == (int)GSetIntIterIdx(setInt));
   assert(GSetIntGetSize(setInt) == 10);
   assert(*(GSetIntCurData(setInt)) == 9);
@@ -190,14 +190,15 @@ int main() {
   assert(*ptrInt == 8);
   assert(GSetIntGetSize(setInt) == 9);
   assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(int*, data, setInt) printf("%d ", *data);
+  GSetForEach(data, setInt) printf("%d ", *data);
   printf("\n");
-  GSetForEach(int*, data, setInt)
+  GSetForEach(data, setInt)
     assert(*data == (int)(GSetIntIterIdx(setInt) == 8 ?
       9 : GSetIntIterIdx(setInt)));
 
   // Free the GSet
   GSetIntFree(&setInt);
+  GSetIntRelease(&setIntB);
 
   // Example of typed GSet
 
