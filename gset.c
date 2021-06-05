@@ -8,22 +8,14 @@
 
 // ================== Macros =========================
 
-// Polymorphic free
-struct GSetElem;
-static void GSetElemFree(struct GSetElem**);
-#define PolyFree(P) _Generic(P, \
-  struct GSet**: GSetFree, \
-  struct GSetElem**: GSetElemFree)(P)
-
-// Malloc freeing the assigned variable and raising exception if it fails
+// Malloc raising exception if it fails
 #define SafeMalloc(T, S)  \
   do { \
-    PolyFree(&(T)); \
     T = malloc(S); \
     if (T == NULL) Raise(TryCatchExc_MallocFailed); \
   } while(false)
 
-// Loop from 0 to (n - 1)
+// Loop from 0 to (N - 1)
 #define ForZeroTo(I, N) for (size_t I = 0; I < N; ++I)
 
 // Get a random number in [0.0, 1.0]
@@ -67,19 +59,6 @@ struct GSet {
   // Last element of the set
   struct GSetElem* last;
 
-  // Current element (according to iteration operations)
-  struct GSetElem* elem;
-
-  // Index of the iterator, set to 0 by GSetIterReset, incremented by
-  // GSetIterNext, decremented by GSetIterPrev
-  size_t idx;
-
-  // Flag raised when the iterator reaches its end
-  bool iterEnd;
-
-  // Type of iteration
-  enum GSetIteration iteration;
-
 };
 
 // ================== Private functions declaration =========================
@@ -109,6 +88,38 @@ static void GSetElemFree(
 static struct GSet GSetCreate(
   void);
 
+// Push an element at the head of the set
+// Inputs:
+//   that: the set
+//   elem: the element
+static void GSetPushElem(
+      struct GSet* const that,
+  struct GSetElem* const elem);
+
+// Add an element at the tail of the set
+// Inputs:
+//   that: the set
+//   elem: the element
+static void GSetAddElem(
+      struct GSet* const that,
+  struct GSetElem* const elem);
+
+// Pop an element from the head of the set
+// Input:
+//   that: the set
+// Output:
+//   Return the element
+static struct GSetElem* GSetPopElem(
+  struct GSet* const that);
+
+// Drop an element from the tail of the set
+// Input:
+//   that: the set
+// Output:
+//   Return the element
+static struct GSetElem* GSetDropElem(
+  struct GSet* const that);
+
 // ================== Public functions definition =========================
 
 // Allocate memory for a new GSet
@@ -134,7 +145,7 @@ struct GSet* GSetAlloc(
 // Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
-void GSetFree(
+void GSetFree_(
   struct GSet** const that) {
 
   // If the memory is already freed, nothing to do
@@ -149,41 +160,97 @@ void GSetFree(
 
 }
 
-void GSetPush_Int(struct GSet* that, int data) {
-
-  that->first->data.Int = data;
-
+// Push data at the head of the set
+// Inputs:
+//   that: the set
+//   data: the data
+#define GSetPush__(N, T)                                                     \
+void GSetPush_ ## N(                                                         \
+  struct GSet* const that,                                                   \
+             T const data) {                                                 \
+  struct GSetElem* elem = GSetElemAlloc();                                   \
+  elem->data.N = data;                                                       \
+  GSetPushElem(that, elem);                                                  \
 }
+GSetPush__(Char, char)
+GSetPush__(UChar, unsigned char)
+GSetPush__(Int, int)
+GSetPush__(UInt, unsigned int)
+GSetPush__(Long, long)
+GSetPush__(ULong, unsigned long)
+GSetPush__(Float, float)
+GSetPush__(Double, double)
+GSetPush__(Ptr, void*)
 
-void GSetPush_UInt(struct GSet* that, unsigned int data) {
-
-  that->first->data.UInt = data;
-
+// Add data at the tail of the set
+// Inputs:
+//   that: the set
+//   data: the data
+#define GSetAdd__(N, T)                                                      \
+void GSetAdd_ ## N(                                                          \
+  struct GSet* const that,                                                   \
+             T const data) {                                                 \
+  struct GSetElem* elem = GSetElemAlloc();                                   \
+  elem->data.N = data;                                                       \
+  GSetAddElem(that, elem);                                                   \
 }
+GSetAdd__(Char, char)
+GSetAdd__(UChar, unsigned char)
+GSetAdd__(Int, int)
+GSetAdd__(UInt, unsigned int)
+GSetAdd__(Long, long)
+GSetAdd__(ULong, unsigned long)
+GSetAdd__(Float, float)
+GSetAdd__(Double, double)
+GSetAdd__(Ptr, void*)
 
-void GSetPush_Ptr(struct GSet* that, void* data) {
-
-  that->first->data.Ptr = data;
-
+// Pop data from the head of the set
+// Input:
+//   that: the set
+// Output:
+//   Remove the data at the head of the set and return it
+#define GSetPop__(N, T)                                                      \
+T GSetPop_ ## N(                                                             \
+  struct GSet* const that) {                                                 \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
+  struct GSetElem* elem = GSetPopElem(that);                                 \
+  T data = elem->data.N;                                                     \
+  GSetElemFree(&elem);                                                       \
+  return data;                                                               \
 }
+GSetPop__(Char, char)
+GSetPop__(UChar, unsigned char)
+GSetPop__(Int, int)
+GSetPop__(UInt, unsigned int)
+GSetPop__(Long, long)
+GSetPop__(ULong, unsigned long)
+GSetPop__(Float, float)
+GSetPop__(Double, double)
+GSetPop__(Ptr, void*)
 
-int GSetPop_Int(struct GSet* that) {
-
-  return that->first->data.Int;
-
+// Drop data from the tail of the set
+// Input:
+//   that: the set
+// Output:
+//   Remove the data at the tail of the set and return it
+#define GSetDrop__(N, T)                                                     \
+T GSetDrop_ ## N(                                                            \
+  struct GSet* const that) {                                                 \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
+  struct GSetElem* elem = GSetDropElem(that);                                \
+  T data = elem->data.N;                                                     \
+  GSetElemFree(&elem);                                                       \
+  return data;                                                               \
 }
-
-unsigned int GSetPop_UInt(struct GSet* that) {
-
-  return that->first->data.UInt;
-
-}
-
-void* GSetPop_Ptr(struct GSet* that) {
-
-  return that->first->data.Ptr;
-
-}
+GSetDrop__(Char, char)
+GSetDrop__(UChar, unsigned char)
+GSetDrop__(Int, int)
+GSetDrop__(UInt, unsigned int)
+GSetDrop__(Long, long)
+GSetDrop__(ULong, unsigned long)
+GSetDrop__(Float, float)
+GSetDrop__(Double, double)
+GSetDrop__(Ptr, void*)
 
 // ================== Private functions definition =========================
 
@@ -253,15 +320,91 @@ static struct GSet GSetCreate(
     .size = 0,
     .first = NULL,
     .last = NULL,
-    .elem = NULL,
-    .idx = 0,
-    .iterEnd = false,
-    .iteration = GSetIteration_forward,
 
   };
 
   // Return the GSet
   return that;
+
+}
+
+// Push an element at the head of the set
+// Inputs:
+//   that: the set
+//   elem: the element
+static void GSetPushElem(
+      struct GSet* const that,
+  struct GSetElem* const elem) {
+
+  // Add the element to the head of the set
+  elem->next = that->first;
+  if (that->first != NULL) that->first->prev = elem;
+  that->first = elem;
+  if (that->size == 0) that->last = elem;
+
+  // Update the size of the set
+  ++(that->size);
+
+}
+
+// Add an element at the tail of the set
+// Inputs:
+//   that: the set
+//   elem: the element
+static void GSetAddElem(
+      struct GSet* const that,
+  struct GSetElem* const elem) {
+
+  // Add the element to the tail of the set
+  elem->prev = that->last;
+  if (that->last != NULL) that->last->next = elem;
+  that->last = elem;
+  if (that->size == 0) that->first = elem;
+
+  // Update the size of the set
+  ++(that->size);
+
+}
+
+// Pop an element from the head of the set
+// Input:
+//   that: the set
+// Output:
+//   Return the element
+static struct GSetElem* GSetPopElem(
+  struct GSet* const that) {
+
+  // Remove the first element
+  struct GSetElem* elem = that->first;
+  that->first = elem->next;
+  if (that->first != NULL) that->first->prev = NULL;
+
+  // Update the size of the set
+  --(that->size);
+
+  // Return the element
+  return elem;
+
+}
+
+// Drop an element from the tail of the set
+// Input:
+//   that: the set
+// Output:
+//   Return the element
+static struct GSetElem* GSetDropElem(
+  struct GSet* const that) {
+
+  // Remove the last element
+  struct GSetElem* elem = that->last;
+  that->last = elem->prev;
+  if (that->last != NULL) that->last->next = NULL;
+
+  // Update the size of the set
+  --(that->size);
+
+  // Return the element
+  return elem;
 
 }
 

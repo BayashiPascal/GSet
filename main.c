@@ -15,7 +15,7 @@ DefineGSet(Dummy, struct Dummy*)
 int main() {
 
   // Init the random generator
-  srandom(0);
+  srand(0);
 
   // Example of GSet with element of type int
 
@@ -45,6 +45,11 @@ int main() {
   // ok GSetPush(setStr, aDummy);
   // ok aStr = GSetPop(setDummy);
 
+  // Free memory
+  GSetFree(&setInt);
+  GSetFree(&setUInt);
+  GSetFree(&setStr);
+  GSetFree(&setDummy);
 
   // Return the sucess code
   return EXIT_SUCCESS;
