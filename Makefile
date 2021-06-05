@@ -2,7 +2,7 @@
 COMPILER=gcc
 
 # Build mode 0:dev, 1:prod
-BUILD_MODE=1
+BUILD_MODE=0
 
 # Compiler arguments depending on BUILD_MODE
 ifeq ($(BUILD_MODE), 0)

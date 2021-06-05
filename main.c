@@ -2,28 +2,14 @@
 #include <assert.h>
 #include "gset.h"
 
-// Dummy structure to test typed GSet
-struct UserData {
+// Dummy struct
+struct Dummy {
 
-  int val;
+  int a;
 
 };
 
-// Function to free the dummy structure, required to create a GSet of type
-// UserData
-void UserDataFree(struct UserData** const that) {
-
-  // If the memory is already freed, nothing to do
-  if (that == NULL || *that == NULL) return;
-
-  // Free the memory
-  free(*that);
-  *that = NULL;
-
-}
-
-// Create a typed GSet for UserData
-DefineGSet(UserData, struct UserData)
+DefineGSet(Dummy, struct Dummy*)
 
 // Main function
 int main() {
@@ -35,191 +21,30 @@ int main() {
 
   // Create the GSet
   struct GSetInt* setInt = GSetIntAlloc();
+  struct GSetUInt* setUInt = GSetUIntAlloc();
+  struct GSetStr* setStr = GSetStrAlloc();
+  struct GSetDummy* setDummy = GSetDummyAlloc();
 
-  // Try to pop an empty GSet
-  bool raised = false;
-  Try {
+  // Push data
+  int aInt = 0;
+  GSetPush(setInt, aInt);
+  int aUInt = 0;
+  GSetPush(setUInt, aUInt);
+  char* aStr = NULL;
+  GSetPush(setStr, aStr);
+  struct Dummy* aDummy = NULL;
+  GSetPush(setDummy, aDummy);
 
-    int* p = GSetIntPop(setInt);
-    (void)p;
+  // Pop data
+  aInt = GSetPop(setInt);
+  aUInt = GSetPop(setUInt);
+  aStr = GSetPop(setStr);
+  aDummy = GSetPop(setDummy);
 
-  } Catch (TryCatchExc_OutOfRange) {
+  // Should not compile without warning
+  // ok GSetPush(setStr, aDummy);
+  // ok aStr = GSetPop(setDummy);
 
-    raised = true;
-
-  } EndTry;
-  assert(raised == true);
-
-  // Load an array into the GSet
-  int arr[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  GSetIntFromArrayOfData(
-    setInt,
-    arr,
-    10);
-  assert(GSetIntGetSize(setInt) == 10);
-  assert(*(GSetIntCurData(setInt)) == 0);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-
-  // Convert the GSet to an array of pointer
-  int** arrPtr = GSetIntToArrayOfPtr(setInt);
-  for (int i = 0; i < 10; ++i) assert(arrPtr[i] == arr + i);
-
-  // Create a GSet from an array of pointer
-  struct GSetInt setIntB = GSetIntCreate();
-  GSetIntFromArrayOfPtr(
-    &setIntB,
-    arrPtr,
-    10);
-  GSetForEach(data, &setIntB)
-    assert(*data == arr[GSetIntIterIdx(&setIntB)]);
-
-  // Convert the GSet to an array of pointer
-  int* arrB = GSetIntToArrayOfData(&setIntB);
-  for (int i = 0; i < 10; ++i) assert(arrB[i] == arr[i]);
-
-  // Append two sets
-  GSetIntAppend(
-    setInt,
-    &setIntB);
-  assert(GSetIntGetSize(setInt) == 20);
-  assert(GSetIntGetSize(&setIntB) == 0);
-  GSetForEach(data, setInt)
-    assert(*data == (int)(GSetIntIterIdx(setInt) % 10));
-  for (int i = 0; i < 10; ++i) (void)GSetIntDrop(setInt);
-
-  // Free memory
-  free(arrB);
-  free(arrPtr);
-
-  // Copy a GSet
-  GSetIntCopy(
-    &setIntB,
-    setInt);
-  assert(GSetIntGetSize(&setIntB) == 10);
-  GSetForEach(data, setInt)
-    assert(*data == (int)GSetIntIterIdx(setInt));
-  GSetIntEmpty(&setIntB);
-
-  // Pop the data
-  int* ptrInt = GSetIntPop(setInt);
-  assert(*ptrInt == 0);
-  assert(GSetIntGetSize(setInt) == 9);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-
-  // Push back the data
-  GSetIntPush(
-    setInt,
-    ptrInt);
-  assert(GSetIntGetSize(setInt) == 10);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-
-  // Drop the data
-  ptrInt = GSetIntDrop(setInt);
-  assert(*ptrInt == 9);
-  assert(GSetIntGetSize(setInt) == 9);
-  assert(*(GSetIntCurData(setInt)) == 8);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-
-  // Add back the data
-  GSetIntAdd(
-    setInt,
-    ptrInt);
-  assert(GSetIntGetSize(setInt) == 10);
-  assert(*(GSetIntCurData(setInt)) == 8);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-
-  // Shuffle the data
-  GSetIntShuffle(setInt);
-  int check[10] = {9, 0, 2, 4, 1, 6, 7, 5, 3, 8};
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-  GSetForEach(data, setInt)
-    assert(*data == check[GSetIntIterIdx(setInt)]);
-  assert(GSetIntGetSize(setInt) == 10);
-  assert(*(GSetIntCurData(setInt)) == 8);
-
-  // Sort back the data
-  GSetIntSort(
-    setInt,
-    GSetIntCmp);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-  GSetForEach(data, setInt)
-    assert(*data == (int)GSetIntIterIdx(setInt));
-  assert(GSetIntGetSize(setInt) == 10);
-  assert(*(GSetIntCurData(setInt)) == 9);
-
-  // Iteration
-  assert(GSetIntIterNext(setInt) == false);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  assert(GSetIntIterPrev(setInt) == true);
-  assert(*(GSetIntCurData(setInt)) == 8);
-  GSetIntIterReset(setInt);
-  assert(*(GSetIntCurData(setInt)) == 0);
-  assert(GSetIntIterPrev(setInt) == false);
-  assert(*(GSetIntCurData(setInt)) == 0);
-  assert(GSetIntIterNext(setInt) == true);
-  assert(*(GSetIntCurData(setInt)) == 1);
-  GSetIntIterReset(setInt);
-  GSetIntIterSet(
-    setInt,
-    GSetIteration_backward);
-  assert(GSetIntIterNext(setInt) == false);
-  assert(*(GSetIntCurData(setInt)) == 0);
-  assert(GSetIntIterPrev(setInt) == true);
-  assert(*(GSetIntCurData(setInt)) == 1);
-  GSetIntIterReset(setInt);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  assert(GSetIntIterPrev(setInt) == false);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  assert(GSetIntIterNext(setInt) == true);
-  assert(*(GSetIntCurData(setInt)) == 8);
-  GSetIntIterSet(
-    setInt,
-    GSetIteration_forward);
-
-  // Pick
-  ptrInt = GSetIntPick(setInt);
-  assert(*ptrInt == 8);
-  assert(GSetIntGetSize(setInt) == 9);
-  assert(*(GSetIntCurData(setInt)) == 9);
-  GSetForEach(data, setInt) printf("%d ", *data);
-  printf("\n");
-  GSetForEach(data, setInt)
-    assert(*data == (int)(GSetIntIterIdx(setInt) == 8 ?
-      9 : GSetIntIterIdx(setInt)));
-
-  // Free the GSet
-  GSetIntFree(&setInt);
-  GSetIntRelease(&setIntB);
-
-  // Example of typed GSet
-
-  // Create the GSet
-  struct GSetUserData* setUserData = GSetUserDataAlloc();
-
-  // Push a data
-  struct UserData* userData = malloc(sizeof(struct UserData));
-  *userData = (struct UserData){ .val = 2 };
-  GSetUserDataPush(
-    setUserData,
-    userData);
-
-  // Pop the data
-  struct UserData* ptrUserData = GSetUserDataPop(setUserData);
-  assert(ptrUserData->val == userData->val);
-
-  // Free memory
-  GSetUserDataFlush(setUserData);
-  GSetUserDataFree(&setUserData);
-  UserDataFree(&userData);
 
   // Return the sucess code
   return EXIT_SUCCESS;
