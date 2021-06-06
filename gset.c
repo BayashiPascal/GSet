@@ -275,6 +275,27 @@ GSetIterGet__(Float, float)
 GSetIterGet__(Double, double)
 GSetIterGet__(Ptr, void*)
 
+// Reset the iterator
+// Input:
+//   that: the iterator
+#define GSetIterReset_(N, T)                                                 \
+void GSetIterReset_ ## N(                                                    \
+  struct GSetIter ## N* const that) {                                        \
+  switch (that->type) {                                                      \
+    case GSetIterForward: that->elem = that->set->first;                     \
+    case GSetIterBackward: that->elem = that->set->last;                     \
+  }
+}
+GSetIterReset__(Char, char)
+GSetIterReset__(UChar, unsigned char)
+GSetIterReset__(Int, int)
+GSetIterReset__(UInt, unsigned int)
+GSetIterReset__(Long, long)
+GSetIterReset__(ULong, unsigned long)
+GSetIterReset__(Float, float)
+GSetIterReset__(Double, double)
+GSetIterReset__(Ptr, void*)
+
 // ================== Private functions definition =========================
 
 // Create a new GSetElem

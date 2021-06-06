@@ -46,9 +46,17 @@ int main() {
   // ok aStr = GSetPop(setDummy);
 
   // Iterator
-  struct GSetIterInt* iterInt = GSetIterIntAlloc(setInt);
+  struct GSetIterInt* iterInt =
+    GSetIterIntAlloc(
+      setInt,
+      GSetIterForward);
+  GSetIterReset(iterInt);
   //aInt = GSetIterGet(iterInt);
-  struct GSetIterDummy* iterDummy = GSetIterDummyAlloc(setDummy);
+  struct GSetIterDummy* iterDummy =
+    GSetIterDummyAlloc(
+      setDummy,
+      GSetIterBackward);
+  GSetIterReset(iterDummy);
   //aDummy = GSetIterGet(iterDummy);
 
   // Free memory

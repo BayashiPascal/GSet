@@ -9,13 +9,22 @@
 #include <stdbool.h>
 #include <TryCatchC/trycatchc.h>
 
+// ================== Public type declarations =========================
+
+enum GSetIterType {
+
+  GSetIterForward,
+  GSetIterBackward,
+
+};
+
 // ================== Private type declarations =========================
 
 // Structure of a GSet
 struct GSet;
 struct GSetElem;
 
-// ================== Public functions declarations =========================
+// ================= Public functions declarations (GSet) ===============
 
 // Allocate memory for a new GSet
 // Output:
@@ -138,12 +147,14 @@ GSetIterGet_(Ptr, void*);
   struct GSetIter ## Name {                                                  \
     struct GSet ## Name* set;                                                \
     struct GSetElem* elem;                                                   \
+    enum GSetIterType type;                                                  \
   };                                                                         \
   static inline struct GSetIter ## Name* GSetIter ## Name ## Alloc(          \
-    struct GSet ## Name* set) {                                              \
+    struct GSet ## Name* const set,                                          \
+       enum GSetIterType const type) {                                       \
     struct GSetIter ## Name* that = malloc(sizeof(struct GSetIter ## Name)); \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
-    *that = (struct GSetIter ## Name ){.set = set, .elem = NULL};            \
+    *that = (struct GSetIter ## Name ){set, NULL, type};                     \
     return that;                                                             \
   }                                                                          \
 
@@ -166,6 +177,24 @@ DefineGSet(LongPtr, long*)
 DefineGSet(ULongPtr, unsigned long*)
 DefineGSet(FloatPtr, float*)
 DefineGSet(DoublePtr, double*)
+
+// ============= Public functions declarations (GSetIter) ===============
+
+// Reset the iterator
+// Input:
+//   that: the iterator
+#define GSetIterReset_(N, T)             \
+T GSetIterReset ## N(                    \
+  struct GSetIter ## N* const that)
+GSetIterReset_(Char, char);
+GSetIterReset_(UChar, unsigned char);
+GSetIterReset_(Int, int);
+GSetIterReset_(UInt, unsigned int);
+GSetIterReset_(Long, long);
+GSetIterReset_(ULong, unsigned long);
+GSetIterReset_(Float, float);
+GSetIterReset_(Double, double);
+GSetIterReset_(Ptr, void*);
 
 // ================== Polymorphism  ======================
 
@@ -247,6 +276,18 @@ DefineGSet(DoublePtr, double*)
        struct GSetIterDouble*: GSetIterGet_Double,                           \
        default: GSetIterGet_Ptr)(PtrToSetIter->elem)) == 0 ?                 \
          0 : PtrToSetIter->set->t)
+
+#define GSetIterReset(PtrToSetIter)                                          \
+   _Generic((PtrToSetIter),                                                  \
+     struct GSetIterChar*: GSetIterReset_Char,                               \
+     struct GSetIterUChar*: GSetIterReset_UChar,                             \
+     struct GSetIterInt*: GSetIterReset_Int,                                 \
+     struct GSetIterUInt*: GSetIterReset_UInt,                               \
+     struct GSetIterLong*: GSetIterReset_Long,                               \
+     struct GSetIterULong*: GSetIterReset_ULong,                             \
+     struct GSetIterFloat*: GSetIterReset_Float,                             \
+     struct GSetIterDouble*: GSetIterReset_Double,                           \
+     default: GSetIterReset_Ptr)(PtrToSetIter)
 
 // End of the guard against multiple inclusion
 #endif
