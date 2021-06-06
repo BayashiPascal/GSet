@@ -252,6 +252,29 @@ GSetDrop__(Float, float)
 GSetDrop__(Double, double)
 GSetDrop__(Ptr, void*)
 
+// Get the current data from a set
+// Input:
+//   that: the set
+//   elem: the current element
+// Output:
+//   Remove the data at the head of the set and return it
+#define GSetIterGet__(N, T)                                                  \
+T GSetIterGet_ ## N(                                                         \
+  struct GSetElem const* const elem) {                                       \
+  if (elem == NULL) Raise(TryCatchExc_OutOfRange);                           \
+  T data = elem->data.N;                                                     \
+  return data;                                                               \
+}
+GSetIterGet__(Char, char)
+GSetIterGet__(UChar, unsigned char)
+GSetIterGet__(Int, int)
+GSetIterGet__(UInt, unsigned int)
+GSetIterGet__(Long, long)
+GSetIterGet__(ULong, unsigned long)
+GSetIterGet__(Float, float)
+GSetIterGet__(Double, double)
+GSetIterGet__(Ptr, void*)
+
 // ================== Private functions definition =========================
 
 // Create a new GSetElem

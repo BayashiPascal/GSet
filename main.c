@@ -45,11 +45,20 @@ int main() {
   // ok GSetPush(setStr, aDummy);
   // ok aStr = GSetPop(setDummy);
 
+  // Iterator
+  struct GSetIterInt* iterInt = GSetIterIntAlloc(setInt);
+  //aInt = GSetIterGet(iterInt);
+  struct GSetIterDummy* iterDummy = GSetIterDummyAlloc(setDummy);
+  //aDummy = GSetIterGet(iterDummy);
+
   // Free memory
   GSetFree(&setInt);
   GSetFree(&setUInt);
   GSetFree(&setStr);
   GSetFree(&setDummy);
+
+  GSetIterFree(&iterInt);
+  GSetIterFree(&iterDummy);
 
   // Return the sucess code
   return EXIT_SUCCESS;

@@ -13,6 +13,7 @@
 
 // Structure of a GSet
 struct GSet;
+struct GSetElem;
 
 // ================== Public functions declarations =========================
 
@@ -100,6 +101,25 @@ GSetDrop_(Float, float);
 GSetDrop_(Double, double);
 GSetDrop_(Ptr, void*);
 
+// Get the current data from a set
+// Input:
+//   that: the set
+//   elem: the current element
+// Output:
+//   Remove the data at the head of the set and return it
+#define GSetIterGet_(N, T)            \
+T GSetIterGet_ ## N(                  \
+  struct GSetElem const* const elem)
+GSetIterGet_(Char, char);
+GSetIterGet_(UChar, unsigned char);
+GSetIterGet_(Int, int);
+GSetIterGet_(UInt, unsigned int);
+GSetIterGet_(Long, long);
+GSetIterGet_(ULong, unsigned long);
+GSetIterGet_(Float, float);
+GSetIterGet_(Double, double);
+GSetIterGet_(Ptr, void*);
+
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -108,13 +128,24 @@ GSetDrop_(Ptr, void*);
     struct GSet* s;                                                          \
     Type t;                                                                  \
   };                                                                         \
-  static inline struct GSet ## Name * GSet ## Name ## Alloc(                 \
+  static inline struct GSet ## Name* GSet ## Name ## Alloc(                  \
     void) {                                                                  \
-    struct GSet ## Name * that = malloc(sizeof(struct GSet ## Name));        \
+    struct GSet ## Name* that = malloc(sizeof(struct GSet ## Name));         \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
     *that = (struct GSet ## Name ){.s = GSetAlloc()};                        \
     return that;                                                             \
-  }
+  }                                                                          \
+  struct GSetIter ## Name {                                                  \
+    struct GSet ## Name* set;                                                \
+    struct GSetElem* elem;                                                   \
+  };                                                                         \
+  static inline struct GSetIter ## Name* GSetIter ## Name ## Alloc(          \
+    struct GSet ## Name* set) {                                              \
+    struct GSetIter ## Name* that = malloc(sizeof(struct GSetIter ## Name)); \
+    if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
+    *that = (struct GSetIter ## Name ){.set = set, .elem = NULL};            \
+    return that;                                                             \
+  }                                                                          \
 
 DefineGSet(Char, char)
 DefineGSet(UChar, unsigned char)
@@ -196,6 +227,26 @@ DefineGSet(DoublePtr, double*)
        struct GSetFloat*: GSetDrop_Float,                                    \
        struct GSetDouble*: GSetDrop_Double,                                  \
        default: GSetDrop_Ptr)(PtrToSet->s)) == 0 ? 0 : PtrToSet->t)
+
+#define GSetIterFree(PtrToPtrToSetIter)                                      \
+  if (PtrToPtrToSetIter != NULL && *PtrToPtrToSetIter != NULL) {             \
+    free(*PtrToPtrToSetIter);                                                \
+    *PtrToPtrToSetIter = NULL;                                               \
+  }                                                                          \
+
+#define GSetIterGet(PtrToSetIter)                                            \
+  ((PtrToSetIter->set->t =                                                   \
+     _Generic((PtrToSetIter),                                                \
+       struct GSetIterChar*: GSetIterGet_Char,                               \
+       struct GSetIterUChar*: GSetIterGet_UChar,                             \
+       struct GSetIterInt*: GSetIterGet_Int,                                 \
+       struct GSetIterUInt*: GSetIterGet_UInt,                               \
+       struct GSetIterLong*: GSetIterGet_Long,                               \
+       struct GSetIterULong*: GSetIterGet_ULong,                             \
+       struct GSetIterFloat*: GSetIterGet_Float,                             \
+       struct GSetIterDouble*: GSetIterGet_Double,                           \
+       default: GSetIterGet_Ptr)(PtrToSetIter->elem)) == 0 ?                 \
+         0 : PtrToSetIter->set->t)
 
 // End of the guard against multiple inclusion
 #endif
