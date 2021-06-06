@@ -124,17 +124,17 @@ DefineGSet(Long, long)
 DefineGSet(ULong, unsigned long)
 DefineGSet(Float, float)
 DefineGSet(Double, double)
-DefineGSet(CharArr, char*)
-#define GSetStr GSetCharArr
-#define GSetStrAlloc GSetCharArrAlloc
-#define GSetStrFree GSetCharArrFree
-DefineGSet(UCharArr, unsigned char*)
-DefineGSet(IntArr, int*)
-DefineGSet(UIntArr, unsigned int*)
-DefineGSet(LongArr, long*)
-DefineGSet(ULongArr, unsigned long*)
-DefineGSet(FloatArr, float*)
-DefineGSet(DoubleArr, double*)
+DefineGSet(CharPtr, char*)
+#define GSetStr GSetCharPtr
+#define GSetStrAlloc GSetCharPtrAlloc
+#define GSetStrFree GSetCharPtrFree
+DefineGSet(UCharPtr, unsigned char*)
+DefineGSet(IntPtr, int*)
+DefineGSet(UIntPtr, unsigned int*)
+DefineGSet(LongPtr, long*)
+DefineGSet(ULongPtr, unsigned long*)
+DefineGSet(FloatPtr, float*)
+DefineGSet(DoublePtr, double*)
 
 // ================== Polymorphism  ======================
 
