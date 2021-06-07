@@ -171,8 +171,7 @@ void GSetFree_(
   if (that == NULL || *that == NULL) return;
 
   // Empty the GSet
-  // TODO
-  //GSetEmpty_(*that);
+  GSetEmpty_(*that);
 
   // Free the memory
   free(*that);
@@ -272,6 +271,33 @@ GSetDrop__(Float, float)
 GSetDrop__(Double, double)
 GSetDrop__(Ptr, void*)
 
+// Append data from a set to the end of another
+// Input:
+//   that: the set where data are added
+//   tho: the set containing data to add
+void GSetAppend_(
+        struct GSet* const that,
+  struct GSet const* const tho) {
+
+  // If the set source is empty, nothing to do
+  if (tho->size == 0) return;
+  // TODO: try catch
+  // Loop on the element of the set source
+  struct GSetIter* iter = GSetIterAlloc(GSetIterForward);
+  do {
+
+    // Add the data from the source to the destination
+    struct GSetElem* elem = GSetElemAlloc();
+    elem->data = iter->elem->data;
+    GSetAddElem(that, elem);
+
+  } while (GSetIterNext_(iter));
+
+  // Free memory
+  GSetIterFree_(&iter);
+
+}
+
 // Return the number of element in the set
 // Input:
 //   that: the set
@@ -281,6 +307,26 @@ size_t GSetGetSize_(
   struct GSet const* const that) {
 
   return that->size;
+
+}
+
+// Empty the set. Memory used by data in it is not freed.
+// To empty the set and free data, use GSet<N>Flush() instead.
+// Input:
+//   that: the set
+void GSetEmpty_(
+  struct GSet* const that) {
+
+  // Loop until the set is empty
+  while (GSetGetSize_(that) > 0) {
+
+    // Pop the element
+    struct GSetElem* elem = GSetPopElem(that);
+
+    // Free the element, in memory of L3-37
+    GSetElemFree(&elem);
+
+  }
 
 }
 
@@ -323,15 +369,14 @@ void GSetIterFree_(
 
 // Get the current data from a set
 // Input:
-//   that: the set
-//   elem: the current element
+//   that: the iterator
 // Output:
-//   Remove the data at the head of the set and return it
+//   Return the current data
 #define GSetIterGet__(N, T)                                                  \
 T GSetIterGet_ ## N(                                                         \
-  struct GSetElem const* const elem) {                                       \
-  if (elem == NULL) Raise(TryCatchExc_OutOfRange);                           \
-  T data = elem->data.N;                                                     \
+  struct GSetIter const* const that) {                                       \
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
+  T data = that->elem->data.N;                                               \
   return data;                                                               \
 }
 GSetIterGet__(Char, char)
@@ -343,6 +388,40 @@ GSetIterGet__(ULong, unsigned long)
 GSetIterGet__(Float, float)
 GSetIterGet__(Double, double)
 GSetIterGet__(Ptr, void*)
+
+// Pick the current data from a set
+// Input:
+//   that: the iterator
+//   set: the associated set
+// Output:
+//   Remove the current data from the set and return it
+#define GSetIterPick__(N, T)                                                 \
+T GSetIterPick_ ## N(                                                        \
+  struct GSetIter* const that,                                               \
+  struct GSet* const set) {                                                  \
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
+  T data = that->elem->data.N;                                               \
+  if (set->first == that->elem) set->first = set->first->next;               \
+  if (set->last == that->elem) set->last = set->last->prev;                  \
+  if (that->elem->next != NULL) that->elem->next->prev = that->elem->prev;   \
+  if (that->elem->prev != NULL) that->elem->prev->next = that->elem->next;   \
+  struct GSetElem* elem = that->elem;                                        \
+  if (GSetIterNext_(that) == false)                                          \
+    if (GSetIterPrev_(that) == false)                                        \
+      that->elem = NULL;                                                     \
+  GSetElemFree(&elem);                                                       \
+  --(set->size);                                                             \
+  return data;                                                               \
+}
+GSetIterPick__(Char, char)
+GSetIterPick__(UChar, unsigned char)
+GSetIterPick__(Int, int)
+GSetIterPick__(UInt, unsigned int)
+GSetIterPick__(Long, long)
+GSetIterPick__(ULong, unsigned long)
+GSetIterPick__(Float, float)
+GSetIterPick__(Double, double)
+GSetIterPick__(Ptr, void*)
 
 // Reset the iterator to its first element
 // Input:
@@ -725,5 +804,21 @@ struct GSetIter GSetIterCreate(
   return that;
 
 }
+
+// ============= Deallocation functions for default typed GSet =============
+#define Free(N, T)                                                           \
+void N ## Free(T* const that) {                                             \
+  if (that == NULL || *that == NULL) return;                                 \
+  free(*that); *that = NULL;                                                 \
+}
+Free(CharPtr, char*)
+Free(UCharPtr, unsigned char*)
+Free(IntPtr, int*)
+Free(UIntPtr, unsigned int*)
+Free(LongPtr, long*)
+Free(ULongPtr, unsigned long*)
+Free(FloatPtr, float*)
+Free(DoublePtr, double*)
+Free(Str, char*)
 
 // ------------------ gset.c ------------------
