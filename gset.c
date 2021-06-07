@@ -61,6 +61,17 @@ struct GSet {
 
 };
 
+// Structure of an iterator on a GSet
+struct GSetIter {
+
+  // Current element
+  struct GSetElem* elem;
+
+  // Type of iteration
+  enum GSetIterType type;
+
+};
+
 // ================== Private functions declaration =========================
 
 // Create a new GSetElem
@@ -120,6 +131,14 @@ static struct GSetElem* GSetPopElem(
 static struct GSetElem* GSetDropElem(
   struct GSet* const that);
 
+// Create a new GSetIter
+// Input:
+//   type: the type of iteration
+// Output:
+//   Return the new GSetIter.
+struct GSetIter GSetIterCreate(
+  enum GSetIterType const type);
+
 // ================== Public functions definition =========================
 
 // Allocate memory for a new GSet
@@ -152,7 +171,8 @@ void GSetFree_(
   if (that == NULL || *that == NULL) return;
 
   // Empty the GSet
-  //GSetEmpty(*that);
+  // TODO
+  //GSetEmpty_(*that);
 
   // Free the memory
   free(*that);
@@ -252,6 +272,55 @@ GSetDrop__(Float, float)
 GSetDrop__(Double, double)
 GSetDrop__(Ptr, void*)
 
+// Return the number of element in the set
+// Input:
+//   that: the set
+// Output:
+//   Return the number of element.
+size_t GSetGetSize_(
+  struct GSet const* const that) {
+
+  return that->size;
+
+}
+
+// Allocate memory for a new GSetIter
+// Input:
+//   type: the type of iteration
+// Output:
+//   Return the new GSetIter.
+struct GSetIter* GSetIterAlloc(
+  enum GSetIterType const type) {
+
+  // Allocate memory for the GSet
+  struct GSetIter* that = NULL;
+  SafeMalloc(
+    that,
+    sizeof(struct GSetIter));
+
+  // Create the GSet
+  *that = GSetIterCreate(type);
+
+  // Return the GSet
+  return that;
+
+}
+
+// Free the memory used by a GSetIter.
+// Input:
+//   that: the GSetIter to be freed
+void GSetIterFree_(
+  struct GSetIter** const that) {
+
+  // If the memory is already freed, nothing to do
+  if (that == NULL || *that == NULL) return;
+
+  // Free the memory
+  free(*that);
+  *that = NULL;
+
+}
+
 // Get the current data from a set
 // Input:
 //   that: the set
@@ -275,26 +344,210 @@ GSetIterGet__(Float, float)
 GSetIterGet__(Double, double)
 GSetIterGet__(Ptr, void*)
 
-// Reset the iterator
+// Reset the iterator to its first element
 // Input:
 //   that: the iterator
-#define GSetIterReset_(N, T)                                                 \
-void GSetIterReset_ ## N(                                                    \
-  struct GSetIter ## N* const that) {                                        \
-  switch (that->type) {                                                      \
-    case GSetIterForward: that->elem = that->set->first;                     \
-    case GSetIterBackward: that->elem = that->set->last;                     \
+//    set: the associated set
+void GSetIterReset_(
+    struct GSetIter* const that,
+  struct GSet const* const set) {
+
+  // Switch according to the type of iterator
+  switch (that->type) {
+
+    case GSetIterForward:
+      that->elem = set->first;
+      break;
+
+    case GSetIterBackward:
+      that->elem = set->last;
+      break;
+
+    default:
+      Raise(TryCatchExc_NotYetImplemented);
+
   }
+
 }
-GSetIterReset__(Char, char)
-GSetIterReset__(UChar, unsigned char)
-GSetIterReset__(Int, int)
-GSetIterReset__(UInt, unsigned int)
-GSetIterReset__(Long, long)
-GSetIterReset__(ULong, unsigned long)
-GSetIterReset__(Float, float)
-GSetIterReset__(Double, double)
-GSetIterReset__(Ptr, void*)
+
+// Move the iterator to the next element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator could move to the next element, else false
+bool GSetIterNext_(
+  struct GSetIter* const that) {
+
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+
+  // Variable to memorise the returned flag
+  bool flag = false;
+
+  // Switch according to the type of iterator
+  switch (that->type) {
+
+    case GSetIterForward:
+      if (that->elem->next != NULL) {
+
+        that->elem = that->elem->next;
+        flag = true;
+
+      }
+
+      break;
+
+    case GSetIterBackward:
+      if (that->elem->prev != NULL) {
+
+        that->elem = that->elem->prev;
+        flag = true;
+
+      }
+
+      break;
+
+    default:
+      Raise(TryCatchExc_NotYetImplemented);
+
+  }
+
+  // Return the flag
+  return flag;
+
+}
+
+// Move the iterator to the previous element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator could move to the previous element, else false
+bool GSetIterPrev_(
+  struct GSetIter* const that) {
+
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+
+  // Variable to memorise the returned flag
+  bool flag = false;
+
+  // Switch according to the type of iterator
+  switch (that->type) {
+
+    case GSetIterForward:
+      if (that->elem->prev != NULL) {
+
+        that->elem = that->elem->prev;
+        flag = true;
+
+      }
+
+      break;
+
+    case GSetIterBackward:
+      if (that->elem->next != NULL) {
+
+        that->elem = that->elem->next;
+        flag = true;
+
+      }
+
+      break;
+
+    default:
+      Raise(TryCatchExc_NotYetImplemented);
+
+  }
+
+  // Return the flag
+  return flag;
+
+}
+
+// Check if an iterator is on its first element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator is on its first element, else false
+bool GSetIterIsFirst_(
+  struct GSetIter* const that) {
+
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+
+  // Variable to memorise the returned flag
+  bool flag = true;
+
+  // Switch according to the type of iterator
+  switch (that->type) {
+
+    case GSetIterForward:
+      if (that->elem->prev != NULL) flag = false;
+      break;
+
+    case GSetIterBackward:
+      if (that->elem->next != NULL) flag = false;
+      break;
+
+    default:
+      Raise(TryCatchExc_NotYetImplemented);
+
+  }
+
+  // Return the flag
+  return flag;
+
+}
+
+// Check if an iterator is on its last element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator is on its last element, else false
+bool GSetIterIsLast_(
+  struct GSetIter* const that) {
+
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+
+  // Variable to memorise the returned flag
+  bool flag = true;
+
+  // Switch according to the type of iterator
+  switch (that->type) {
+
+    case GSetIterForward:
+      if (that->elem->next != NULL) flag = false;
+      break;
+
+    case GSetIterBackward:
+      if (that->elem->prev != NULL) flag = false;
+      break;
+
+    default:
+      Raise(TryCatchExc_NotYetImplemented);
+
+  }
+
+  // Return the flag
+  return flag;
+
+}
+
+// Clone an iterator
+// Input:
+//   that: the iterator
+// Output:
+//   Return a clone of the iterator
+struct GSetIter* GSetIterClone_(
+  struct GSetIter* const that) {
+
+  // Allocate memory for the clone
+  struct GSetIter* clone = GSetIterAlloc(that->type);
+
+  // Copy the iterator
+  *clone = *that;
+
+  // Return the clone
+  return clone;
+
+}
 
 // ================== Private functions definition =========================
 
@@ -449,6 +702,27 @@ static struct GSetElem* GSetDropElem(
 
   // Return the element
   return elem;
+
+}
+
+// Create a new GSetIter
+// Input:
+//   type: the type of iteration
+// Output:
+//   Return the new GSetIter.
+struct GSetIter GSetIterCreate(
+  enum GSetIterType const type) {
+
+  // Create the GSet
+  struct GSetIter that = (struct GSetIter){
+
+    .elem = NULL,
+    .type = type,
+
+  };
+
+  // Return the GSet
+  return that;
 
 }
 

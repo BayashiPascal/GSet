@@ -20,11 +20,12 @@ enum GSetIterType {
 
 // ================== Private type declarations =========================
 
-// Structure of a GSet
+// Structure of a GSet and GSetIter
 struct GSet;
 struct GSetElem;
+struct GSetIter;
 
-// ================= Public functions declarations (GSet) ===============
+// ================= Public functions declarations ======================
 
 // Allocate memory for a new GSet
 // Output:
@@ -110,6 +111,28 @@ GSetDrop_(Float, float);
 GSetDrop_(Double, double);
 GSetDrop_(Ptr, void*);
 
+// Return the number of element in the set
+// Input:
+//   that: the set
+// Output:
+//   Return the number of element.
+size_t GSetGetSize_(
+  struct GSet const* const that);
+
+// Allocate memory for a new GSetIter
+// Input:
+//   type: the type of iteration
+// Output:
+//   Return the new GSetIter.
+struct GSetIter* GSetIterAlloc(
+  enum GSetIterType const type);
+
+// Free the memory used by a GSetIter.
+// Input:
+//   that: the GSetIter to be freed
+void GSetIterFree_(
+  struct GSetIter** const that);
+
 // Get the current data from a set
 // Input:
 //   that: the set
@@ -129,6 +152,54 @@ GSetIterGet_(Float, float);
 GSetIterGet_(Double, double);
 GSetIterGet_(Ptr, void*);
 
+// Reset the iterator to its first element
+// Input:
+//   that: the iterator
+//    set: the associated set
+void GSetIterReset_(
+    struct GSetIter* const that,
+  struct GSet const* const set);
+
+// Move the iterator to the next element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator could move to the next element, else false
+bool GSetIterNext_(
+  struct GSetIter* const that);
+
+// Move the iterator to the previous element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator could move to the previous element, else false
+bool GSetIterPrev_(
+  struct GSetIter* const that);
+
+// Check if an iterator is on its first element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator is on its first element, else false
+bool GSetIterIsFirst_(
+  struct GSetIter* const that);
+
+// Check if an iterator is on its last element
+// Input:
+//   that: the iterator
+// Output:
+// Return true if the iterator is on its last element, else false
+bool GSetIterIsLast_(
+  struct GSetIter* const that);
+
+// Clone an iterator
+// Input:
+//   that: the iterator
+// Output:
+//   Return a clone of the iterator
+struct GSetIter* GSetIterClone_(
+  struct GSetIter* const that);
+
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -146,16 +217,24 @@ GSetIterGet_(Ptr, void*);
   }                                                                          \
   struct GSetIter ## Name {                                                  \
     struct GSet ## Name* set;                                                \
-    struct GSetElem* elem;                                                   \
-    enum GSetIterType type;                                                  \
+    struct GSetIter* i;                                                      \
   };                                                                         \
   static inline struct GSetIter ## Name* GSetIter ## Name ## Alloc(          \
     struct GSet ## Name* const set,                                          \
        enum GSetIterType const type) {                                       \
     struct GSetIter ## Name* that = malloc(sizeof(struct GSetIter ## Name)); \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
-    *that = (struct GSetIter ## Name ){set, NULL, type};                     \
+    *that = (struct GSetIter ## Name ){.set = set, .i = GSetIterAlloc(type)};\
+    GSetIterReset_(that->i, set->s);                                         \
     return that;                                                             \
+  }                                                                          \
+  static inline struct GSetIter ## Name* GSetIter ## Name ## Clone(          \
+    struct GSetIter ## Name* that) {                                         \
+    struct GSetIter ## Name* clone = malloc(sizeof(struct GSetIter ## Name));\
+    if (clone == NULL) Raise(TryCatchExc_MallocFailed);                      \
+    *clone = (struct GSetIter ## Name)                                       \
+      {.set = that->set, .i = GSetIterClone_(that->i)};                       \
+    return clone;                                                            \
   }                                                                          \
 
 DefineGSet(Char, char)
@@ -177,24 +256,6 @@ DefineGSet(LongPtr, long*)
 DefineGSet(ULongPtr, unsigned long*)
 DefineGSet(FloatPtr, float*)
 DefineGSet(DoublePtr, double*)
-
-// ============= Public functions declarations (GSetIter) ===============
-
-// Reset the iterator
-// Input:
-//   that: the iterator
-#define GSetIterReset_(N, T)             \
-T GSetIterReset ## N(                    \
-  struct GSetIter ## N* const that)
-GSetIterReset_(Char, char);
-GSetIterReset_(UChar, unsigned char);
-GSetIterReset_(Int, int);
-GSetIterReset_(UInt, unsigned int);
-GSetIterReset_(Long, long);
-GSetIterReset_(ULong, unsigned long);
-GSetIterReset_(Float, float);
-GSetIterReset_(Double, double);
-GSetIterReset_(Ptr, void*);
 
 // ================== Polymorphism  ======================
 
@@ -257,8 +318,11 @@ GSetIterReset_(Ptr, void*);
        struct GSetDouble*: GSetDrop_Double,                                  \
        default: GSetDrop_Ptr)(PtrToSet->s)) == 0 ? 0 : PtrToSet->t)
 
+#define GSetGetSize(PtrToSet) GSetGetSize_((PtrToSet)->s)
+
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (PtrToPtrToSetIter != NULL && *PtrToPtrToSetIter != NULL) {             \
+    GSetIterFree_(&((*PtrToPtrToSetIter)->i));                               \
     free(*PtrToPtrToSetIter);                                                \
     *PtrToPtrToSetIter = NULL;                                               \
   }                                                                          \
@@ -278,16 +342,17 @@ GSetIterReset_(Ptr, void*);
          0 : PtrToSetIter->set->t)
 
 #define GSetIterReset(PtrToSetIter)                                          \
-   _Generic((PtrToSetIter),                                                  \
-     struct GSetIterChar*: GSetIterReset_Char,                               \
-     struct GSetIterUChar*: GSetIterReset_UChar,                             \
-     struct GSetIterInt*: GSetIterReset_Int,                                 \
-     struct GSetIterUInt*: GSetIterReset_UInt,                               \
-     struct GSetIterLong*: GSetIterReset_Long,                               \
-     struct GSetIterULong*: GSetIterReset_ULong,                             \
-     struct GSetIterFloat*: GSetIterReset_Float,                             \
-     struct GSetIterDouble*: GSetIterReset_Double,                           \
-     default: GSetIterReset_Ptr)(PtrToSetIter)
+  GSetIterReset_((PtrToSetIter)->i, (PtrToSetIter)->set->s)
+#define GSetIterNext(PtrToSetIter) GSetIterNext_((PtrToSet)->i)
+#define GSetIterPrev(PtrToSetIter) GSetIterPrev_((PtrToSet)->i)
+#define GSetIterIsFirst(PtrToSetIter) GSetIterIsFirst_((PtrToSet)->i)
+#define GSetIterIsLast(PtrToSetIter) GSetIterIsLast_((PtrToSet)->i)
+
+#define GSetForEach(PtrToSetIter)                                            \
+  if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
+    GSetIterReset(PtrToSetIter);                                             \
+    GSetIterIsLast(PtrToSetIter) == false;                                   \
+    GSetIterNext(PtrToSetIter))
 
 // End of the guard against multiple inclusion
 #endif
