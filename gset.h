@@ -237,7 +237,7 @@ struct GSetIter* GSetIterClone_(
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
-#define DefineGSetBase(Name, Type)                                         \
+#define DefineGSetBase(Name, Type)                                           \
   struct GSet ## Name {                                                      \
     struct GSet* s;                                                          \
     Type t;                                                                  \
@@ -246,7 +246,11 @@ struct GSetIter* GSetIterClone_(
     void) {                                                                  \
     struct GSet ## Name* that = malloc(sizeof(struct GSet ## Name));         \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
-    *that = (struct GSet ## Name ){.s = GSetAlloc()};                        \
+    Try {                                                                    \
+      *that = (struct GSet ## Name ){.s = GSetAlloc()};                      \
+    } CatchDefault {                                                         \
+      free(that); that = NULL; Raise(TryCatchExc_MallocFailed);              \
+    } EndTryWithDefault;                                                     \
     return that;                                                             \
   }                                                                          \
   struct GSetIter ## Name {                                                  \
@@ -266,8 +270,12 @@ struct GSetIter* GSetIterClone_(
     struct GSetIter ## Name* that) {                                         \
     struct GSetIter ## Name* clone = malloc(sizeof(struct GSetIter ## Name));\
     if (clone == NULL) Raise(TryCatchExc_MallocFailed);                      \
-    *clone = (struct GSetIter ## Name)                                       \
-      {.set = that->set, .i = GSetIterClone_(that->i)};                      \
+    Try {                                                                    \
+      *clone = (struct GSetIter ## Name)                                     \
+        {.set = that->set, .i = GSetIterClone_(that->i)};                    \
+    } CatchDefault {                                                         \
+      free(that); that = NULL; Raise(TryCatchExc_MallocFailed);              \
+    } EndTryWithDefault;                                                     \
     return clone;                                                            \
   }                                                                          \
 

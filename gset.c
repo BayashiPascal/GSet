@@ -281,20 +281,38 @@ void GSetAppend_(
 
   // If the set source is empty, nothing to do
   if (tho->size == 0) return;
-  // TODO: try catch
-  // Loop on the element of the set source
-  struct GSetIter* iter = GSetIterAlloc(GSetIterForward);
-  do {
 
-    // Add the data from the source to the destination
-    struct GSetElem* elem = GSetElemAlloc();
-    elem->data = iter->elem->data;
-    GSetAddElem(that, elem);
+  // Iterator on the data to copy
+  struct GSetIter* iter = NULL;
 
-  } while (GSetIterNext_(iter));
+  // Variable to memorise the raised exception, if any
+  int raisedExc = 0;
+
+  Try {
+
+    // Loop on the element of the set source
+    iter = GSetIterAlloc(GSetIterForward);
+    do {
+
+      // Add the data from the source to the destination
+      struct GSetElem* elem = GSetElemAlloc();
+      elem->data = iter->elem->data;
+      GSetAddElem(that, elem);
+
+    } while (GSetIterNext_(iter));
+
+  } CatchDefault {
+
+    // Memorise the raised exception
+    raisedExc = TryCatchGetLastExc();
+
+  } EndTryWithDefault;
 
   // Free memory
   GSetIterFree_(&iter);
+
+  // If there has been a raised exception, it
+  if (raisedExc != 0) Raise(raisedExc);
 
 }
 
