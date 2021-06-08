@@ -4,6 +4,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <stdint.h>
 #include "gset.h"
 
 // ================== Macros =========================
@@ -314,6 +315,43 @@ void GSetAppend_(
 
   // If there has been a raised exception, it
   if (raisedExc != 0) Raise(raisedExc);
+
+}
+
+// Merge a set into another. The merged set is empty after this operation
+// Input:
+//   that: the extended set
+//   tho: the merged set
+void GSetMerge_(
+  GSet* const that,
+  GSet* const tho) {
+
+  // If the merged set is empty, nothing to do
+  if (tho->size == 0) return;
+
+  // If that is empty
+  if (that->size == 0) {
+
+    // Simply copy tho in that
+    *that = *tho;
+
+  // Else, that is not empty
+  } else {
+
+    // Check for overflow
+    if (that->size > SIZE_MAX - tho->size) Raise(TryCatchExc_IntOverflow);
+
+    // Connect the tail of that to the head of tho
+    that->last->next = tho->first;
+    tho->first->prev = that->last;
+
+    // Update the last element of that
+    that->last = tho->last;
+
+    // Update the size of that
+    that->size += tho->size;
+
+  }
 
 }
 
@@ -731,6 +769,9 @@ static void GSetPushElem(
       GSet* const that,
   GSetElem* const elem) {
 
+  // Check for overflow
+  if (that->size > SIZE_MAX - 1) Raise(TryCatchExc_IntOverflow);
+
   // Add the element to the head of the set
   elem->next = that->first;
   if (that->first != NULL) that->first->prev = elem;
@@ -749,6 +790,9 @@ static void GSetPushElem(
 static void GSetAddElem(
       GSet* const that,
   GSetElem* const elem) {
+
+  // Check for overflow
+  if (that->size > SIZE_MAX - 1) Raise(TryCatchExc_IntOverflow);
 
   // Add the element to the tail of the set
   elem->prev = that->last;
@@ -825,19 +869,19 @@ GSetIter GSetIterCreate(
 }
 
 // ===== Deallocation functions for GSet<N>Flush on default typed GSet =======
-#define Free(N, T)                                                           \
-void N ## Free(T* const that) {                                             \
+#define Free_(N, T)                                                           \
+void N ## Free_(T* const that) {                                             \
   if (that == NULL || *that == NULL) return;                                 \
   free(*that); *that = NULL;                                                 \
 }
-Free(CharPtr, char*)
-Free(UCharPtr, unsigned char*)
-Free(IntPtr, int*)
-Free(UIntPtr, unsigned int*)
-Free(LongPtr, long*)
-Free(ULongPtr, unsigned long*)
-Free(FloatPtr, float*)
-Free(DoublePtr, double*)
-Free(Str, char*)
+Free_(CharPtr, char*)
+Free_(UCharPtr, unsigned char*)
+Free_(IntPtr, int*)
+Free_(UIntPtr, unsigned int*)
+Free_(LongPtr, long*)
+Free_(ULongPtr, unsigned long*)
+Free_(FloatPtr, float*)
+Free_(DoublePtr, double*)
+Free_(Str, char*)
 
 // ------------------ gset.c ------------------

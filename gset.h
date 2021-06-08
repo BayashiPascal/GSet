@@ -118,6 +118,14 @@ void GSetAppend_(
         GSet* const that,
   GSet const* const tho);
 
+// Merge a set into another. The merged set is empty after this operation
+// Input:
+//   that: the extended set
+//   tho: the merged set
+void GSetMerge_(
+  GSet* const that,
+  GSet* const tho);
+
 // Return the number of element in the set
 // Input:
 //   that: the set
@@ -407,6 +415,36 @@ void GSetAppendInvalidType(void*, void*);
      GSetFloat*: GSetAppendInvalidType,                               \
      GSetDouble*: GSetAppendInvalidType,                              \
      default: GSetAppend_))((PtrToSetDst)->s, (PtrToSetSrc)->s)
+
+void GSetMergeInvalidType(void*, void*);
+#define GSetMerge(PtrToSetDst, PtrToSetSrc)                                 \
+ _Generic((PtrToSetDst),                                                     \
+   GSetChar*:                                                         \
+     _Generic((PtrToSetSrc), GSetChar*: GSetMerge_),                 \
+   GSetUChar*:                                                        \
+     _Generic((PtrToSetSrc), GSetUChar*: GSetMerge_),                \
+   GSetInt*:                                                          \
+     _Generic((PtrToSetSrc), GSetInt*: GSetMerge_),                  \
+   GSetUInt*:                                                         \
+     _Generic((PtrToSetSrc), GSetUInt*: GSetMerge_),                 \
+   GSetLong*:                                                         \
+     _Generic((PtrToSetSrc), GSetLong*: GSetMerge_),                 \
+   GSetULong*:                                                        \
+     _Generic((PtrToSetSrc), GSetULong*: GSetMerge_),                \
+   GSetFloat*:                                                        \
+     _Generic((PtrToSetSrc), GSetFloat*: GSetMerge_),                \
+   GSetDouble*:                                                       \
+     _Generic((PtrToSetSrc), GSetDouble*: GSetMerge_),               \
+   default: _Generic((PtrToSetSrc),                                          \
+     GSetChar*: GSetMergeInvalidType,                                \
+     GSetUChar*: GSetMergeInvalidType,                               \
+     GSetInt*: GSetMergeInvalidType,                                 \
+     GSetUInt*: GSetMergeInvalidType,                                \
+     GSetLong*: GSetMergeInvalidType,                                \
+     GSetULong*: GSetMergeInvalidType,                               \
+     GSetFloat*: GSetMergeInvalidType,                               \
+     GSetDouble*: GSetMergeInvalidType,                              \
+     default: GSetMerge_))((PtrToSetDst)->s, (PtrToSetSrc)->s)
 
 #define GSetGetSize(PtrToSet) GSetGetSize_((PtrToSet)->s)
 
