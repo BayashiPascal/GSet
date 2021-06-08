@@ -822,6 +822,95 @@ GSetIter* GSetIterClone_(
 
 }
 
+// Deallocation functions for GSet<N>Flush on default typed GSet
+
+#define Free_(N, T)                                                           \
+void N ## Free_(T* const that) {                                             \
+  if (that == NULL || *that == NULL) return;                                 \
+  free(*that); *that = NULL;                                                 \
+}
+Free_(CharPtr, char*)
+Free_(UCharPtr, unsigned char*)
+Free_(IntPtr, int*)
+Free_(UIntPtr, unsigned int*)
+Free_(LongPtr, long*)
+Free_(ULongPtr, unsigned long*)
+Free_(FloatPtr, float*)
+Free_(DoublePtr, double*)
+Free_(Str, char*)
+
+// Comparison functions for GSet<N>Sort on default typed GSet
+
+int GSetCharCmp(void const* a, void const* b) {
+
+  return (*(char const*)a < *(char const*)b ? -1 :
+          *(char const*)a > *(char const*)b ? 1 : 0);
+
+}
+
+int GSetUCharCmp(void const* a, void const* b) {
+
+  return (*(unsigned char const*)a < *(unsigned char const*)b ? -1 :
+          *(unsigned char const*)a > *(unsigned char const*)b ? 1 : 0);
+
+}
+
+int GSetIntCmp(void const* a, void const* b) {
+
+  return (*(int const*)a < *(int const*)b ? -1 :
+          *(int const*)a > *(int const*)b ? 1 : 0);
+
+}
+
+int GSetUIntCmp(void const* a, void const* b) {
+
+  return (*(unsigned int const*)a < *(unsigned int const*)b ? -1 :
+          *(unsigned int const*)a > *(unsigned int const*)b ? 1 : 0);
+
+}
+
+int GSetLongCmp(void const* a, void const* b) {
+
+  return (*(long const*)a < *(long const*)b ? -1 :
+          *(long const*)a > *(long const*)b ? 1 : 0);
+
+}
+
+int GSetULongCmp(void const* a, void const* b) {
+
+  return (*(unsigned long const*)a < *(unsigned long const*)b ? -1 :
+          *(unsigned long const*)a > *(unsigned long const*)b ? 1 : 0);
+
+}
+
+int GSetFloatCmp(void const* a, void const* b) {
+
+  float x = *(float*)a;
+  float y = *(float*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+
+}
+
+int GSetDoubleCmp(void const* a, void const* b) {
+
+  double x = *(double*)a;
+  double y = *(double*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+
+}
+
+int GSetCharPtrCmp(void const* a, void const* b) {
+
+  char* sa = *(char* const*)a;
+  char* sb = *(char* const*)b;
+  return strcmp(sa, sb);
+
+}
+
 // ================== Private functions definition =========================
 
 // Create a new GSetElem
@@ -1004,21 +1093,5 @@ GSetIter GSetIterCreate(
   return that;
 
 }
-
-// ===== Deallocation functions for GSet<N>Flush on default typed GSet =======
-#define Free_(N, T)                                                           \
-void N ## Free_(T* const that) {                                             \
-  if (that == NULL || *that == NULL) return;                                 \
-  free(*that); *that = NULL;                                                 \
-}
-Free_(CharPtr, char*)
-Free_(UCharPtr, unsigned char*)
-Free_(IntPtr, int*)
-Free_(UIntPtr, unsigned int*)
-Free_(LongPtr, long*)
-Free_(ULongPtr, unsigned long*)
-Free_(FloatPtr, float*)
-Free_(DoublePtr, double*)
-Free_(Str, char*)
 
 // ------------------ gset.c ------------------

@@ -582,6 +582,19 @@ void GSetMergeInvalidType(void*, void*);
     GSetIterNext(PtrToSetIter))
 #define GSetForEach GSetIterForEach
 
+// ===== Comparison functions for GSet<N>Sort on default typed GSet =======
+
+int GSetCharCmp(void const* a, void const* b);
+int GSetUCharCmp(void const* a, void const* b);
+int GSetIntCmp(void const* a, void const* b);
+int GSetUIntCmp(void const* a, void const* b);
+int GSetLongCmp(void const* a, void const* b);
+int GSetULongCmp(void const* a, void const* b);
+int GSetFloatCmp(void const* a, void const* b);
+int GSetDoubleCmp(void const* a, void const* b);
+int GSetCharPtrCmp(void const* a, void const* b);
+#define GSetStrCmp GSetCharPtrCmp
+
 // End of the guard against multiple inclusion
 #endif
 
