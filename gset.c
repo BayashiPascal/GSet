@@ -477,8 +477,52 @@ void GSetShuffle_(
   // Free memory used by the temporary array
   free(arr);
 
-
 }
+
+// Sort the elements of a GSet
+// Inputs:
+//   that: the set to sort
+//   cmp: the comparison function used to sort
+// It uses qsort, see man page for details. Elements are sorted in ascending
+// order, relative to the comparison function cmp(a,b) which much returns
+// a negative value if a<b, a positive value if a>b, and 0 if a=b
+#define GSetSort__(N, T) \
+void GSetSort_ ## N(    \
+  GSet* const that,   \
+          int (*cmp)(void const*, void const*)) { \
+  if (that->size < 2) return; \
+  T* arr = NULL;  \
+  SafeMalloc(arr, sizeof(T) * that->size); \
+  GSetElem* ptr = that->first; \
+  size_t i = 0; \
+  while (ptr != NULL) { \
+    arr[i] = ptr->data.N; \
+    ptr = ptr->next; \
+    ++i; \
+  } \
+  Try { \
+    qsort(arr, that->size, sizeof(T), cmp); \
+    ptr = that->first; \
+    i = 0; \
+    while (ptr != NULL) { \
+      ptr->data.N = arr[i]; \
+      ptr = ptr->next; \
+      ++i; \
+    } \
+    free(arr); \
+  } CatchDefault { \
+    free(arr); Raise(TryCatchGetLastExc()); \
+  } EndCatchDefault; \
+}
+GSetSort__(Char, char)
+GSetSort__(UChar, unsigned char)
+GSetSort__(Int, int)
+GSetSort__(UInt, unsigned int)
+GSetSort__(Long, long)
+GSetSort__(ULong, unsigned long)
+GSetSort__(Float, float)
+GSetSort__(Double, double)
+GSetSort__(Ptr, void*)
 
 // Allocate memory for a new GSetIter
 // Input:

@@ -163,6 +163,27 @@ void GSetEmpty_(
 void GSetShuffle_(
   GSet* const that);
 
+// Sort the elements of a GSet
+// Inputs:
+//   that: the set to sort
+//   cmp: the comparison function used to sort
+// It uses qsort, see man page for details. Elements are sorted in ascending
+// order, relative to the comparison function cmp(a,b) which much returns
+// a negative value if a<b, a positive value if a>b, and 0 if a=b
+#define GSetSort_(N, T) \
+void GSetSort_ ## N(    \
+  GSet* const that,   \
+          int (*cmp)(void const*, void const*))
+GSetSort_(Char, char);
+GSetSort_(UChar, unsigned char);
+GSetSort_(Int, int);
+GSetSort_(UInt, unsigned int);
+GSetSort_(Long, long);
+GSetSort_(ULong, unsigned long);
+GSetSort_(Float, float);
+GSetSort_(Double, double);
+GSetSort_(Ptr, void*);
+
 // Allocate memory for a new GSetIter
 // Input:
 //   type: the type of iteration
@@ -491,6 +512,18 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetGetSize(PtrToSet) GSetGetSize_((PtrToSet)->s)
 #define GSetEmpty(PtrToSet) GSetEmpty_((PtrToSet)->s)
 #define GSetShuffle(PtrToSet) GSetShuffle_((PtrToSet)->s)
+
+#define GSetSort(PtrToSet)                                              \
+  _Generic((PtrToSet),                                                       \
+    GSetChar*: GSetSort_Char,                                          \
+    GSetUChar*: GSetSort_UChar,                                        \
+    GSetInt*: GSetSort_Int,                                            \
+    GSetUInt*: GSetSort_UInt,                                          \
+    GSetLong*: GSetSort_Long,                                          \
+    GSetULong*: GSetSort_ULong,                                        \
+    GSetFloat*: GSetSort_Float,                                        \
+    GSetDouble*: GSetSort_Double,                                      \
+    default: GSetSort_Ptr)((PtrToSet)->s);
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (PtrToPtrToSetIter != NULL && *(PtrToPtrToSetIter) != NULL) {           \
