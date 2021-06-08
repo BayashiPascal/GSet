@@ -228,6 +228,42 @@ GSetAdd__(Float, float)
 GSetAdd__(Double, double)
 GSetAdd__(Ptr, void*)
 
+// Add an array of data at the tail of the set
+// Inputs:
+//   that: the set
+//   arr: the array of data
+#define GSetAddArr__(N, T)     \
+void GSetAddArr_ ## N(        \
+  GSet* const that,  \
+             T* const arr, \
+             size_t const size) {                                        \
+  ForZeroTo(i, size) { \
+    GSetElem* elem = GSetElemAlloc();                                   \
+    elem->data.N = arr[i];                                                   \
+    GSetAddElem(that, elem);                                              \
+  } \
+}
+#define GSetAddArrPtr__(N, T)     \
+void GSetAddArr_ ## N(        \
+  GSet* const that,  \
+             T* const arr, \
+             size_t const size) {                                        \
+  ForZeroTo(i, size) { \
+    GSetElem* elem = GSetElemAlloc();                                   \
+    elem->data.N = ((void**)arr)[i];                                                   \
+    GSetAddElem(that, elem);                                              \
+  } \
+}
+GSetAddArr__(Char, char)
+GSetAddArr__(UChar, unsigned char)
+GSetAddArr__(Int, int)
+GSetAddArr__(UInt, unsigned int)
+GSetAddArr__(Long, long)
+GSetAddArr__(ULong, unsigned long)
+GSetAddArr__(Float, float)
+GSetAddArr__(Double, double)
+GSetAddArrPtr__(Ptr, void)
+
 // Convert a set into an array
 // Inputs:
 //   that: the set

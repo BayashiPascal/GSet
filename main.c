@@ -12,8 +12,9 @@ struct Dummy {
 // GSet of pointer to Dummy struct
 DefineGSet(Dummy, struct Dummy*)
 
-#define sizeArr 10
-char arrChar[sizeArr] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+#define sizeArr 3
+char arrChar[sizeArr] = {'a', 'b', 'c'};
+char* arrStr[sizeArr] = {"a", "b", "c"};
 
 #define Test(Name, Type)                                                     \
   do {                                                                       \
@@ -27,6 +28,7 @@ char arrChar[sizeArr] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 int main() {
 
   Test(Char, char);
+  Test(Str, char*);
 
   // Return the sucess code
   return EXIT_SUCCESS;

@@ -74,6 +74,25 @@ GSetAdd_(Float, float);
 GSetAdd_(Double, double);
 GSetAdd_(Ptr, void*);
 
+// Add an array of data at the tail of the set
+// Inputs:
+//   that: the set
+//   arr: the array of data
+#define GSetAddArr_(N, T)     \
+void GSetAddArr_ ## N(        \
+  GSet* const that,  \
+             T* const arr, \
+             size_t const size)
+GSetAddArr_(Char, char);
+GSetAddArr_(UChar, unsigned char);
+GSetAddArr_(Int, int);
+GSetAddArr_(UInt, unsigned int);
+GSetAddArr_(Long, long);
+GSetAddArr_(ULong, unsigned long);
+GSetAddArr_(Float, float);
+GSetAddArr_(Double, double);
+GSetAddArr_(Ptr, void);
+
 // Convert a set into an array
 // Inputs:
 //   that: the set
@@ -307,12 +326,20 @@ GSetIter* GSetIterClone_(
     } EndCatchDefault;                                                       \
     return that;                                                             \
   }                                                                          \
-  void GSet ## Name ## Add(GSet ## Name*, Type);                             \
   static inline GSet ## Name* GSet ## Name ## FromArr(                       \
-    Type const* arr,                                                         \
-    size_t size) {                                                           \
+    Type* const arr,                                                   \
+    size_t const size) {                                                    \
     GSet ## Name* that = GSet ## Name ## Alloc();                            \
-    for (size_t i = 0; i < size; ++i) GSet ## Name ## Add(that, arr[i]);     \
+    _Generic((that->t), \
+      char: GSetAddArr_Char, \
+      unsigned char: GSetAddArr_UChar, \
+      int: GSetAddArr_Int, \
+      unsigned int: GSetAddArr_UInt, \
+      long: GSetAddArr_Long, \
+      unsigned long: GSetAddArr_ULong, \
+      float: GSetAddArr_Float, \
+      double: GSetAddArr_Double, \
+      default: GSetAddArr_Ptr)(that->s, arr, size);     \
     return that;                                                             \
   }                                                                          \
   struct GSetIter ## Name {                                                  \
@@ -371,6 +398,7 @@ DefineGSet(CharPtr, char*)
 #define GSetStr GSetCharPtr
 #define GSetStrAlloc GSetCharPtrAlloc
 #define GSetStrFree GSetCharPtrFree
+#define GSetStrFromArr GSetCharPtrFromArr
 DefineGSet(UCharPtr, unsigned char*)
 DefineGSet(IntPtr, int*)
 DefineGSet(UIntPtr, unsigned int*)
@@ -413,6 +441,19 @@ DefineGSet(DoublePtr, double*)
     GSetDouble*: GSetAdd_Double,                                      \
     default: GSetAdd_Ptr)((PtrToSet)->s, Data);                              \
   (PtrToSet)->t = Data
+
+#define GSetAddArr(PtrToSet, Data, Size)                                    \
+  _Generic((PtrToSet),                                                       \
+    GSetChar*: GSetAddArr_Char,                                          \
+    GSetUChar*: GSetAddArr_UChar,                                        \
+    GSetInt*: GSetAddArr_Int,                                            \
+    GSetUInt*: GSetAddArr_UInt,                                          \
+    GSetLong*: GSetAddArr_Long,                                          \
+    GSetULong*: GSetAddArr_ULong,                                        \
+    GSetFloat*: GSetAddArr_Float,                                        \
+    GSetDouble*: GSetAddArr_Double,                                      \
+    default: GSetAddArr_Ptr)((PtrToSet)->s, Data, Size);                 \
+  (PtrToSet)->t = *(Data)
 
 #define GSetToArr(PtrToSet)                                              \
   _Generic((PtrToSet),                                                       \
