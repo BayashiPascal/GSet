@@ -20,10 +20,10 @@ int main() {
   // Example of GSet with element of type int
 
   // Create the GSet
-  struct GSetInt* setInt = GSetIntAlloc();
-  struct GSetUInt* setUInt = GSetUIntAlloc();
-  struct GSetStr* setStr = GSetStrAlloc();
-  struct GSetDummy* setDummy = GSetDummyAlloc();
+  GSetInt* setInt = GSetIntAlloc();
+  GSetUInt* setUInt = GSetUIntAlloc();
+  GSetStr* setStr = GSetStrAlloc();
+  GSetDummy* setDummy = GSetDummyAlloc();
 
   // Push data
   int aInt = 0;
@@ -46,13 +46,13 @@ int main() {
   // ok aStr = GSetPop(setDummy);
 
   // Iterator
-  struct GSetIterInt* iterInt =
+  GSetIterInt* iterInt =
     GSetIterIntAlloc(
       setInt,
       GSetIterForward);
   GSetIterReset(iterInt);
   //aInt = GSetIterGet(iterInt);
-  struct GSetIterDummy* iterDummy =
+  GSetIterDummy* iterDummy =
     GSetIterDummyAlloc(
       setDummy,
       GSetIterBackward);

@@ -46,6 +46,7 @@ struct GSetElem {
   struct GSetElem* next;
 
 };
+typedef struct GSetElem GSetElem;
 
 // Structure of a GSet
 struct GSet {
@@ -54,10 +55,10 @@ struct GSet {
   size_t size;
 
   // First element of the set
-  struct GSetElem* first;
+  GSetElem* first;
 
   // Last element of the set
-  struct GSetElem* last;
+  GSetElem* last;
 
 };
 
@@ -65,7 +66,7 @@ struct GSet {
 struct GSetIter {
 
   // Current element
-  struct GSetElem* elem;
+  GSetElem* elem;
 
   // Type of iteration
   enum GSetIterType type;
@@ -77,13 +78,13 @@ struct GSetIter {
 // Create a new GSetElem
 // Output:
 //   Return the new GSetElem.
-static struct GSetElem GSetElemCreate(
+static GSetElem GSetElemCreate(
   void);
 
 // Allocate memory for a new GSetElem
 // Output:
 //   Return the new GSetElem.
-static struct GSetElem* GSetElemAlloc(
+static GSetElem* GSetElemAlloc(
   void);
 
 // Free the memory used by a GSetElem, do not free the memory used by the data
@@ -91,12 +92,12 @@ static struct GSetElem* GSetElemAlloc(
 // Input:
 //   that: the GSetElem to be freed
 static void GSetElemFree(
-  struct GSetElem** const that);
+  GSetElem** const that);
 
 // Create a new GSet
 // Output:
 //   Return the new GSet.
-static struct GSet GSetCreate(
+static GSet GSetCreate(
   void);
 
 // Push an element at the head of the set
@@ -104,39 +105,39 @@ static struct GSet GSetCreate(
 //   that: the set
 //   elem: the element
 static void GSetPushElem(
-      struct GSet* const that,
-  struct GSetElem* const elem);
+      GSet* const that,
+  GSetElem* const elem);
 
 // Add an element at the tail of the set
 // Inputs:
 //   that: the set
 //   elem: the element
 static void GSetAddElem(
-      struct GSet* const that,
-  struct GSetElem* const elem);
+      GSet* const that,
+  GSetElem* const elem);
 
 // Pop an element from the head of the set
 // Input:
 //   that: the set
 // Output:
 //   Return the element
-static struct GSetElem* GSetPopElem(
-  struct GSet* const that);
+static GSetElem* GSetPopElem(
+  GSet* const that);
 
 // Drop an element from the tail of the set
 // Input:
 //   that: the set
 // Output:
 //   Return the element
-static struct GSetElem* GSetDropElem(
-  struct GSet* const that);
+static GSetElem* GSetDropElem(
+  GSet* const that);
 
 // Create a new GSetIter
 // Input:
 //   type: the type of iteration
 // Output:
 //   Return the new GSetIter.
-struct GSetIter GSetIterCreate(
+GSetIter GSetIterCreate(
   enum GSetIterType const type);
 
 // ================== Public functions definition =========================
@@ -144,14 +145,14 @@ struct GSetIter GSetIterCreate(
 // Allocate memory for a new GSet
 // Output:
 //   Return the new GSet.
-struct GSet* GSetAlloc(
+GSet* GSetAlloc(
   void) {
 
   // Allocate memory for the GSet
-  struct GSet* that = NULL;
+  GSet* that = NULL;
   SafeMalloc(
     that,
-    sizeof(struct GSet));
+    sizeof(GSet));
 
   // Create the GSet
   *that = GSetCreate();
@@ -165,7 +166,7 @@ struct GSet* GSetAlloc(
 // Input:
 //   that: the GSet to be freed
 void GSetFree_(
-  struct GSet** const that) {
+  GSet** const that) {
 
   // If the memory is already freed, nothing to do
   if (that == NULL || *that == NULL) return;
@@ -185,9 +186,9 @@ void GSetFree_(
 //   data: the data
 #define GSetPush__(N, T)                                                     \
 void GSetPush_ ## N(                                                         \
-  struct GSet* const that,                                                   \
+  GSet* const that,                                                   \
              T const data) {                                                 \
-  struct GSetElem* elem = GSetElemAlloc();                                   \
+  GSetElem* elem = GSetElemAlloc();                                   \
   elem->data.N = data;                                                       \
   GSetPushElem(that, elem);                                                  \
 }
@@ -207,9 +208,9 @@ GSetPush__(Ptr, void*)
 //   data: the data
 #define GSetAdd__(N, T)                                                      \
 void GSetAdd_ ## N(                                                          \
-  struct GSet* const that,                                                   \
+  GSet* const that,                                                   \
              T const data) {                                                 \
-  struct GSetElem* elem = GSetElemAlloc();                                   \
+  GSetElem* elem = GSetElemAlloc();                                   \
   elem->data.N = data;                                                       \
   GSetAddElem(that, elem);                                                   \
 }
@@ -230,9 +231,9 @@ GSetAdd__(Ptr, void*)
 //   Remove the data at the head of the set and return it
 #define GSetPop__(N, T)                                                      \
 T GSetPop_ ## N(                                                             \
-  struct GSet* const that) {                                                 \
+  GSet* const that) {                                                 \
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
-  struct GSetElem* elem = GSetPopElem(that);                                 \
+  GSetElem* elem = GSetPopElem(that);                                 \
   T data = elem->data.N;                                                     \
   GSetElemFree(&elem);                                                       \
   return data;                                                               \
@@ -254,9 +255,9 @@ GSetPop__(Ptr, void*)
 //   Remove the data at the tail of the set and return it
 #define GSetDrop__(N, T)                                                     \
 T GSetDrop_ ## N(                                                            \
-  struct GSet* const that) {                                                 \
+  GSet* const that) {                                                 \
   if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
-  struct GSetElem* elem = GSetDropElem(that);                                \
+  GSetElem* elem = GSetDropElem(that);                                \
   T data = elem->data.N;                                                     \
   GSetElemFree(&elem);                                                       \
   return data;                                                               \
@@ -276,14 +277,14 @@ GSetDrop__(Ptr, void*)
 //   that: the set where data are added
 //   tho: the set containing data to add
 void GSetAppend_(
-        struct GSet* const that,
-  struct GSet const* const tho) {
+        GSet* const that,
+  GSet const* const tho) {
 
   // If the set source is empty, nothing to do
   if (tho->size == 0) return;
 
   // Iterator on the data to copy
-  struct GSetIter* iter = NULL;
+  GSetIter* iter = NULL;
 
   // Variable to memorise the raised exception, if any
   int raisedExc = 0;
@@ -295,7 +296,7 @@ void GSetAppend_(
     do {
 
       // Add the data from the source to the destination
-      struct GSetElem* elem = GSetElemAlloc();
+      GSetElem* elem = GSetElemAlloc();
       elem->data = iter->elem->data;
       GSetAddElem(that, elem);
 
@@ -306,7 +307,7 @@ void GSetAppend_(
     // Memorise the raised exception
     raisedExc = TryCatchGetLastExc();
 
-  } EndTryWithDefault;
+  } EndCatchDefault;
 
   // Free memory
   GSetIterFree_(&iter);
@@ -322,7 +323,7 @@ void GSetAppend_(
 // Output:
 //   Return the number of element.
 size_t GSetGetSize_(
-  struct GSet const* const that) {
+  GSet const* const that) {
 
   return that->size;
 
@@ -333,13 +334,13 @@ size_t GSetGetSize_(
 // Input:
 //   that: the set
 void GSetEmpty_(
-  struct GSet* const that) {
+  GSet* const that) {
 
   // Loop until the set is empty
   while (GSetGetSize_(that) > 0) {
 
     // Pop the element
-    struct GSetElem* elem = GSetPopElem(that);
+    GSetElem* elem = GSetPopElem(that);
 
     // Free the element, in memory of L3-37
     GSetElemFree(&elem);
@@ -353,14 +354,14 @@ void GSetEmpty_(
 //   type: the type of iteration
 // Output:
 //   Return the new GSetIter.
-struct GSetIter* GSetIterAlloc(
+GSetIter* GSetIterAlloc(
   enum GSetIterType const type) {
 
   // Allocate memory for the GSet
-  struct GSetIter* that = NULL;
+  GSetIter* that = NULL;
   SafeMalloc(
     that,
-    sizeof(struct GSetIter));
+    sizeof(GSetIter));
 
   // Create the GSet
   *that = GSetIterCreate(type);
@@ -374,7 +375,7 @@ struct GSetIter* GSetIterAlloc(
 // Input:
 //   that: the GSetIter to be freed
 void GSetIterFree_(
-  struct GSetIter** const that) {
+  GSetIter** const that) {
 
   // If the memory is already freed, nothing to do
   if (that == NULL || *that == NULL) return;
@@ -392,7 +393,7 @@ void GSetIterFree_(
 //   Return the current data
 #define GSetIterGet__(N, T)                                                  \
 T GSetIterGet_ ## N(                                                         \
-  struct GSetIter const* const that) {                                       \
+  GSetIter const* const that) {                                       \
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
   T data = that->elem->data.N;                                               \
   return data;                                                               \
@@ -415,15 +416,15 @@ GSetIterGet__(Ptr, void*)
 //   Remove the current data from the set and return it
 #define GSetIterPick__(N, T)                                                 \
 T GSetIterPick_ ## N(                                                        \
-  struct GSetIter* const that,                                               \
-  struct GSet* const set) {                                                  \
+  GSetIter* const that,                                               \
+  GSet* const set) {                                                  \
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
   T data = that->elem->data.N;                                               \
   if (set->first == that->elem) set->first = set->first->next;               \
   if (set->last == that->elem) set->last = set->last->prev;                  \
   if (that->elem->next != NULL) that->elem->next->prev = that->elem->prev;   \
   if (that->elem->prev != NULL) that->elem->prev->next = that->elem->next;   \
-  struct GSetElem* elem = that->elem;                                        \
+  GSetElem* elem = that->elem;                                        \
   if (GSetIterNext_(that) == false)                                          \
     if (GSetIterPrev_(that) == false)                                        \
       that->elem = NULL;                                                     \
@@ -446,8 +447,8 @@ GSetIterPick__(Ptr, void*)
 //   that: the iterator
 //    set: the associated set
 void GSetIterReset_(
-    struct GSetIter* const that,
-  struct GSet const* const set) {
+    GSetIter* const that,
+  GSet const* const set) {
 
   // Switch according to the type of iterator
   switch (that->type) {
@@ -473,9 +474,9 @@ void GSetIterReset_(
 // Output:
 // Return true if the iterator could move to the next element, else false
 bool GSetIterNext_(
-  struct GSetIter* const that) {
+  GSetIter* const that) {
 
-  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+  if (that->elem == NULL) return false;
 
   // Variable to memorise the returned flag
   bool flag = false;
@@ -519,9 +520,9 @@ bool GSetIterNext_(
 // Output:
 // Return true if the iterator could move to the previous element, else false
 bool GSetIterPrev_(
-  struct GSetIter* const that) {
+  GSetIter* const that) {
 
-  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
+  if (that->elem == NULL) return false;
 
   // Variable to memorise the returned flag
   bool flag = false;
@@ -565,7 +566,7 @@ bool GSetIterPrev_(
 // Output:
 // Return true if the iterator is on its first element, else false
 bool GSetIterIsFirst_(
-  struct GSetIter* const that) {
+  GSetIter* const that) {
 
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
@@ -599,7 +600,7 @@ bool GSetIterIsFirst_(
 // Output:
 // Return true if the iterator is on its last element, else false
 bool GSetIterIsLast_(
-  struct GSetIter* const that) {
+  GSetIter* const that) {
 
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
@@ -632,11 +633,11 @@ bool GSetIterIsLast_(
 //   that: the iterator
 // Output:
 //   Return a clone of the iterator
-struct GSetIter* GSetIterClone_(
-  struct GSetIter* const that) {
+GSetIter* GSetIterClone_(
+  GSetIter* const that) {
 
   // Allocate memory for the clone
-  struct GSetIter* clone = GSetIterAlloc(that->type);
+  GSetIter* clone = GSetIterAlloc(that->type);
 
   // Copy the iterator
   *clone = *that;
@@ -651,11 +652,11 @@ struct GSetIter* GSetIterClone_(
 // Create a new GSetElem
 // Output:
 //   Return the new GSetElem.
-static struct GSetElem GSetElemCreate(
+static GSetElem GSetElemCreate(
   void) {
 
   // Create the GSetElem
-  struct GSetElem that = (struct GSetElem){
+  GSetElem that = (GSetElem){
 
     .prev = NULL,
     .next = NULL,
@@ -669,14 +670,14 @@ static struct GSetElem GSetElemCreate(
 // Allocate memory for a new GSetElem
 // Output:
 //   Return the new GSetElem.
-static struct GSetElem* GSetElemAlloc(
+static GSetElem* GSetElemAlloc(
   void) {
 
   // Allocate memory for the element
-  struct GSetElem* that = NULL;
+  GSetElem* that = NULL;
   SafeMalloc(
     that,
-    sizeof(struct GSetElem));
+    sizeof(GSetElem));
 
   // Create the element
   *that = GSetElemCreate();
@@ -691,7 +692,7 @@ static struct GSetElem* GSetElemAlloc(
 // Input:
 //   that: the GSetElem to be freed
 static void GSetElemFree(
-  struct GSetElem** const that) {
+  GSetElem** const that) {
 
   // If the memory is already freed, nothing to do
   if (that == NULL || *that == NULL) return;
@@ -705,11 +706,11 @@ static void GSetElemFree(
 // Create a new GSet
 // Output:
 //   Return the new GSet.
-static struct GSet GSetCreate(
+static GSet GSetCreate(
   void) {
 
   // Create the GSet
-  struct GSet that = (struct GSet){
+  GSet that = (GSet){
 
     .size = 0,
     .first = NULL,
@@ -727,8 +728,8 @@ static struct GSet GSetCreate(
 //   that: the set
 //   elem: the element
 static void GSetPushElem(
-      struct GSet* const that,
-  struct GSetElem* const elem) {
+      GSet* const that,
+  GSetElem* const elem) {
 
   // Add the element to the head of the set
   elem->next = that->first;
@@ -746,8 +747,8 @@ static void GSetPushElem(
 //   that: the set
 //   elem: the element
 static void GSetAddElem(
-      struct GSet* const that,
-  struct GSetElem* const elem) {
+      GSet* const that,
+  GSetElem* const elem) {
 
   // Add the element to the tail of the set
   elem->prev = that->last;
@@ -765,11 +766,11 @@ static void GSetAddElem(
 //   that: the set
 // Output:
 //   Return the element
-static struct GSetElem* GSetPopElem(
-  struct GSet* const that) {
+static GSetElem* GSetPopElem(
+  GSet* const that) {
 
   // Remove the first element
-  struct GSetElem* elem = that->first;
+  GSetElem* elem = that->first;
   that->first = elem->next;
   if (that->first != NULL) that->first->prev = NULL;
 
@@ -786,11 +787,11 @@ static struct GSetElem* GSetPopElem(
 //   that: the set
 // Output:
 //   Return the element
-static struct GSetElem* GSetDropElem(
-  struct GSet* const that) {
+static GSetElem* GSetDropElem(
+  GSet* const that) {
 
   // Remove the last element
-  struct GSetElem* elem = that->last;
+  GSetElem* elem = that->last;
   that->last = elem->prev;
   if (that->last != NULL) that->last->next = NULL;
 
@@ -807,11 +808,11 @@ static struct GSetElem* GSetDropElem(
 //   type: the type of iteration
 // Output:
 //   Return the new GSetIter.
-struct GSetIter GSetIterCreate(
+GSetIter GSetIterCreate(
   enum GSetIterType const type) {
 
   // Create the GSet
-  struct GSetIter that = (struct GSetIter){
+  GSetIter that = (GSetIter){
 
     .elem = NULL,
     .type = type,
@@ -823,7 +824,7 @@ struct GSetIter GSetIterCreate(
 
 }
 
-// ============= Deallocation functions for default typed GSet =============
+// ===== Deallocation functions for GSet<N>Flush on default typed GSet =======
 #define Free(N, T)                                                           \
 void N ## Free(T* const that) {                                             \
   if (that == NULL || *that == NULL) return;                                 \

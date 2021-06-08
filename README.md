@@ -59,7 +59,7 @@ Below is a minimal example of how to use a GSet.
 int main() {
 
   // Create the GSet
-  struct GSetInt* setInt = GSetIntAlloc();
+  GSetInt* setInt = GSetIntAlloc();
 
   // Push a data
   int val = 1;
@@ -111,7 +111,7 @@ int main() {
   // Example of typed GSet
 
   // Create the GSet
-  struct GSetUserData* setUserData = GSetUserDataAlloc();
+  GSetUserData* setUserData = GSetUserDataAlloc();
 
   // Push a data
   struct UserData userData = { .val = 2 };
@@ -148,13 +148,13 @@ Function available on non-typed GSet and typed GSet (by replacing `GSet...` by `
 // Create a new GSet
 // Output:
 //   Return the new GSet.
-struct GSet GSetCreate(
+GSet GSetCreate(
   void);
 
 // Allocate memory for a new GSet
 // Output:
 //   Return the new GSet.
-struct GSet* GSetAlloc(
+GSet* GSetAlloc(
   void);
 
 // Copy a GSet into another GSet
@@ -165,28 +165,28 @@ struct GSet* GSetAlloc(
 //   tho is first emptied and then filled with elements whose data is the
 //   the data of the elements of that, in same order
 void GSetCopy( 
-        struct GSet* const that,
-  struct GSet const* const tho);
+        GSet* const that,
+  GSet const* const tho);
 
 // Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
 void GSetFree(
-  struct GSet** const that);
+  GSet** const that);
 
 // Empty the GSet. Memory used by data in it is not freed.
 // To empty the GSet and free data the data in it, use GSet<N>Flush() instead.
 // Input:
 //   that: the GSet
 void GSetEmpty(
-  struct GSet* const that);
+  GSet* const that);
 
 // Add data at the head of the GSet
 // Inputs:
 //   that: the GSet
 //   data: the data to add
 void GSetPush(
-  struct GSet* const that,
+  GSet* const that,
          void* const data);
 
 // Add data at the tail of the GSet
@@ -194,7 +194,7 @@ void GSetPush(
 //   that: the GSet
 //   data: the data to add
 void GSetAdd(
-  struct GSet* const that,
+  GSet* const that,
          void* const data);
 
 // Remove and return the data at the head of the GSet
@@ -206,7 +206,7 @@ void GSetAdd(
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
 void* GSetPop(
-  struct GSet* const that);
+  GSet* const that);
 
 // Remove and return the data at the tail of the GSet
 // Input:
@@ -217,7 +217,7 @@ void* GSetPop(
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
 void* GSetDrop(
-  struct GSet* const that);
+  GSet* const that);
 
 // Remove and return the data of the current element of the GSet
 // Input:
@@ -228,7 +228,7 @@ void* GSetDrop(
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
 void* GSetPick(
-  struct GSet* const that);
+  GSet* const that);
 
 // Sort the elements of a GSet
 // Inputs:
@@ -238,14 +238,14 @@ void* GSetPick(
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
 void GSetSort(
-  struct GSet* const that,
+  GSet* const that,
                  int (*cmp)(void const*, void const*));
 
 // Shuffle the elements of a GSet
 // Input:
 //   that: the GSet to shuffle
 void GSetShuffle(
-  struct GSet* const that);
+  GSet* const that);
 
 // Convert the GSet to an array of pointers to its data
 // Input:
@@ -254,7 +254,7 @@ void GSetShuffle(
 //   Return an array of pointers to data in the same order as the current
 //   element order
 void** GSetToArrayOfPtr(
-  struct GSet* const that);
+  GSet* const that);
 
 // Convert an array of pointers to a GSet
 // Inputs:
@@ -265,7 +265,7 @@ void** GSetToArrayOfPtr(
 //   The GSet is first emptied and then filled with elements whose data is the
 //   pointers in the array in the order of the array
 void GSetFromArrayOfPtr(
-  struct GSet* const that,
+  GSet* const that,
         void** const arr,
            int const size);
 
@@ -276,8 +276,8 @@ void GSetFromArrayOfPtr(
 // Output:
 //   tho is appended at the end of that and becomes empty after this operation
 void GSetAppend(
-  struct GSet* const that,
-  struct GSet* const tho);
+  GSet* const that,
+  GSet* const tho);
 
 // Get the data of the current element in the GSet
 // Input:
@@ -285,7 +285,7 @@ void GSetAppend(
 // Output:
 //   Return the pointer to the data of the current element
 void* GSetCurData(
-  struct GSet const* const that);
+  GSet const* const that);
 
 // Get the size of the GSet
 // Input:
@@ -293,14 +293,14 @@ void* GSetCurData(
 // Output:
 //   Return the size of the data set
 int GSetGetSize(
-  struct GSet const* const that);
+  GSet const* const that);
 
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
 //   that: the GSet
 void GSetIterReset(
-  struct GSet* const that);
+  GSet* const that);
 
 // Move the current element in the GSet one step in the direction of the
 // iteration.
@@ -313,7 +313,7 @@ void GSetIterReset(
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
 bool GSetIterNext(
-  struct GSet* const that);
+  GSet* const that);
 
 // Move the current element in the GSet one step in the opposite
 // direction of the iteration.
@@ -326,14 +326,14 @@ bool GSetIterNext(
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
 bool GSetIterPrev(
-  struct GSet* const that);
+  GSet* const that);
 
 // Set the iteration type of a GSet
 // Inputs:
 //        that: the GSet
 //   iteration: the type of iteration
 void GSetIterSet(
-        struct GSet* const that,
+        GSet* const that,
   enum GSetIteration const iteration);
 
 // Loop on each data Data (of type Type) of the GSet Set.
@@ -347,7 +347,7 @@ Available only on typed GSet:
 // Empty a GSet and free the data it contains
 // Input:
 //   that: the GSet
-static inline void GSet<N>Flush(struct GSet<N>* const that);
+static inline void GSet<N>Flush(GSet<N>* const that);
 
 // Convert a GSet to an array
 // Input:
@@ -356,7 +356,7 @@ static inline void GSet<N>Flush(struct GSet<N>* const that);
 //   Return an array of data in the same order as the current
 //   element order. The data of the array are shallow copies of the
 //   data of the elements.
-static inline <T>* GSet<N>ToArrayOfData(struct GSet<N>* const that);
+static inline <T>* GSet<N>ToArrayOfData(GSet<N>* const that);
 
 // Convert an array to a GSet
 // Inputs:
@@ -366,12 +366,12 @@ static inline <T>* GSet<N>ToArrayOfData(struct GSet<N>* const that);
 // Output:
 //   The GSet is first emptied and then filled with elements whose data is a
 //   a pointer to the data in the array in the order of the array
-static inline void GSet<N>FromArrayOfData(struct GSet<N>* const that, <T>* const arr, int size);
+static inline void GSet<N>FromArrayOfData(GSet<N>* const that, <T>* const arr, int size);
 
 // Release memory used by an automatically allocated GSet
 // Input:
 //   that: the GSet
-static inline void GSet<N>Release(struct GSet<N>* const that);
+static inline void GSet<N>Release(GSet<N>* const that);
 
 ```
 
