@@ -353,6 +353,11 @@ void GSetMerge_(
 
   }
 
+  // Empty tho
+  tho->first = NULL;
+  tho->last = NULL;
+  tho->size = 0;
+
 }
 
 // Return the number of element in the set

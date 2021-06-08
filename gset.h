@@ -261,6 +261,14 @@ GSetIter* GSetIterClone_(
     } EndCatchDefault;                                                       \
     return that;                                                             \
   }                                                                          \
+  void GSet ## Name ## Add(GSet ## Name*, Type);                             \
+  static inline GSet ## Name* GSet ## Name ## FromArr(                       \
+    Type const* arr,                                                         \
+    size_t size) {                                                           \
+    GSet ## Name* that = GSet ## Name ## Alloc();                            \
+    for (size_t i = 0; i < size; ++i) GSet ## Name ## Add(that, arr[i]);     \
+    return that;                                                             \
+  }                                                                          \
   struct GSetIter ## Name {                                                  \
     GSet ## Name* set;                                                \
     GSetIter* i;                                                      \
