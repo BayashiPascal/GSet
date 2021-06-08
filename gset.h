@@ -74,6 +74,22 @@ GSetAdd_(Float, float);
 GSetAdd_(Double, double);
 GSetAdd_(Ptr, void*);
 
+// Convert a set into an array
+// Inputs:
+//   that: the set
+#define GSetToArr_(N, T)     \
+T* GSetToArr_ ## N(        \
+  GSet* const that)
+GSetToArr_(Char, char);
+GSetToArr_(UChar, unsigned char);
+GSetToArr_(Int, int);
+GSetToArr_(UInt, unsigned int);
+GSetToArr_(Long, long);
+GSetToArr_(ULong, unsigned long);
+GSetToArr_(Float, float);
+GSetToArr_(Double, double);
+GSetToArr_(Ptr, void*);
+
 // Pop data from the head of the set
 // Input:
 //   that: the set
@@ -139,6 +155,12 @@ size_t GSetGetSize_(
 // Input:
 //   that: the set
 void GSetEmpty_(
+  GSet* const that);
+
+// Shuffle the set
+// Input:
+//   that: the set
+void GSetShuffle_(
   GSet* const that);
 
 // Allocate memory for a new GSetIter
@@ -257,7 +279,7 @@ GSetIter* GSetIterClone_(
     Try {                                                                    \
       *that = (GSet ## Name ){.s = GSetAlloc()};                      \
     } CatchDefault {                                                         \
-      free(that); that = NULL; Raise(TryCatchExc_MallocFailed);              \
+      free(that); Raise(TryCatchExc_MallocFailed);              \
     } EndCatchDefault;                                                       \
     return that;                                                             \
   }                                                                          \
@@ -283,7 +305,7 @@ GSetIter* GSetIterClone_(
       *that =                                                                \
         (GSetIter ## Name ){.set = set, .i = GSetIterAlloc(type)};    \
     } CatchDefault {                                                         \
-      free(that); that = NULL; Raise(TryCatchExc_MallocFailed);              \
+      free(that); Raise(TryCatchExc_MallocFailed);              \
     } EndCatchDefault;                                                       \
     GSetIterReset_(that->i, set->s);                                         \
     return that;                                                             \
@@ -296,7 +318,7 @@ GSetIter* GSetIterClone_(
       *clone = (GSetIter ## Name)                                     \
         {.set = that->set, .i = GSetIterClone_(that->i)};                    \
     } CatchDefault {                                                         \
-      free(that); that = NULL; Raise(TryCatchExc_MallocFailed);              \
+      free(that); Raise(TryCatchExc_MallocFailed);              \
     } EndCatchDefault;                                                       \
     return clone;                                                            \
   }                                                                          \
@@ -367,6 +389,18 @@ DefineGSet(DoublePtr, double*)
     GSetDouble*: GSetAdd_Double,                                      \
     default: GSetAdd_Ptr)((PtrToSet)->s, Data);                              \
   (PtrToSet)->t = Data
+
+#define GSetToArr(PtrToSet)                                              \
+  _Generic((PtrToSet),                                                       \
+    GSetChar*: GSetToArr_Char,                                          \
+    GSetUChar*: GSetToArr_UChar,                                        \
+    GSetInt*: GSetToArr_Int,                                            \
+    GSetUInt*: GSetToArr_UInt,                                          \
+    GSetLong*: GSetToArr_Long,                                          \
+    GSetULong*: GSetToArr_ULong,                                        \
+    GSetFloat*: GSetToArr_Float,                                        \
+    GSetDouble*: GSetToArr_Double,                                      \
+    default: GSetToArr_Ptr)((PtrToSet)-s);
 
 #define GSetPop(PtrToSet)                                                    \
   (((PtrToSet)->t =                                                          \
@@ -455,6 +489,8 @@ void GSetMergeInvalidType(void*, void*);
      default: GSetMerge_))((PtrToSetDst)->s, (PtrToSetSrc)->s)
 
 #define GSetGetSize(PtrToSet) GSetGetSize_((PtrToSet)->s)
+#define GSetEmpty(PtrToSet) GSetEmpty_((PtrToSet)->s)
+#define GSetShuffle(PtrToSet) GSetShuffle_((PtrToSet)->s)
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (PtrToPtrToSetIter != NULL && *(PtrToPtrToSetIter) != NULL) {           \

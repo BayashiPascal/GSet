@@ -24,21 +24,24 @@
 
 // ================== Private type definitions =========================
 
+// Union to memorise the data in a GSet element independently of its type
+union GSetElemData {
+  char Char;
+  unsigned char UChar;
+  int Int;
+  unsigned int UInt;
+  long Long;
+  unsigned long ULong;
+  float Float;
+  double Double;
+  void* Ptr;
+};
+
 // Structure of a GSet element
 struct GSetElem {
 
   // Data in the element
-  union {
-    char Char;
-    unsigned char UChar;
-    int Int;
-    unsigned int UInt;
-    long Long;
-    unsigned long ULong;
-    float Float;
-    double Double;
-    void* Ptr;
-  } data;
+ union GSetElemData data;
 
   // Previous element in the set
   struct GSetElem* prev;
@@ -225,6 +228,38 @@ GSetAdd__(Float, float)
 GSetAdd__(Double, double)
 GSetAdd__(Ptr, void*)
 
+// Convert a set into an array
+// Inputs:
+//   that: the set
+#define GSetToArr__(N, T)                                                    \
+T* GSetToArr_ ## N(                                                          \
+  GSet* const that) {                                                        \
+  if (GSetGetSize_(that) == 0) return NULL;                                  \
+  T* arr = malloc(sizeof(T) * GSetGetSize_(that));                           \
+  if (arr == NULL) Raise(TryCatchExc_MallocFailed);                          \
+  Try {                                                                      \
+    GSetIter* iter = GSetIterAlloc(GSetIterForward);                         \
+    GSetIterReset_(iter, that);                                              \
+    size_t i = 0;                                                            \
+    do {                                                                     \
+      arr[i] = iter->elem->data.N;                                           \
+      ++i;                                                                   \
+    } while(GSetIterNext_(iter));                                            \
+  } CatchDefault {                                                           \
+    free(arr); Raise(TryCatchGetLastExc());                                  \
+  } EndCatchDefault;                                                         \
+  return arr;                                                                \
+}
+GSetToArr__(Char, char)
+GSetToArr__(UChar, unsigned char)
+GSetToArr__(Int, int)
+GSetToArr__(UInt, unsigned int)
+GSetToArr__(Long, long)
+GSetToArr__(ULong, unsigned long)
+GSetToArr__(Float, float)
+GSetToArr__(Double, double)
+GSetToArr__(Ptr, void*)
+
 // Pop data from the head of the set
 // Input:
 //   that: the set
@@ -389,6 +424,59 @@ void GSetEmpty_(
     GSetElemFree(&elem);
 
   }
+
+}
+
+// Shuffle the set
+// Input:
+//   that: the set
+void GSetShuffle_(
+  GSet* const that) {
+
+  // Convert the GSet into an array of pointers to data
+  union GSetElemData* arr = NULL;
+  SafeMalloc(
+    arr,
+    sizeof(union GSetElemData) * that->size);
+  GSetElem* ptr = that->first;
+  size_t i = 0;
+  while (ptr != NULL) {
+
+    arr[i] = ptr->data;
+    ptr = ptr->next;
+    ++i;
+
+  }
+
+  // Shuffle the array
+  // (Fischer-Yates-Durstenfeld-Knuth algorithm)
+  for (size_t i = that->size - 1; i > 0; --i) {
+
+     size_t j = (size_t)round(rnd() * (double)i);
+     if (i != j) {
+
+       union GSetElemData ptr = arr[j];
+       arr[j] = arr[i];
+       arr[i] = ptr;
+
+     }
+
+  }
+
+  // Copy the shuffled data back in the elements
+  ptr = that->first;
+  i = 0;
+  while (ptr != NULL) {
+
+    ptr->data = arr[i];
+    ptr = ptr->next;
+    ++i;
+
+  }
+
+  // Free memory used by the temporary array
+  free(arr);
+
 
 }
 
