@@ -489,7 +489,8 @@ void GSetShuffle_(
 #define GSetSort__(N, T) \
 void GSetSort_ ## N(    \
   GSet* const that,   \
-          int (*cmp)(void const*, void const*)) { \
+          int (*cmp)(void const*, void const*), \
+         bool inc) { \
   if (that->size < 2) return; \
   T* arr = NULL;  \
   SafeMalloc(arr, sizeof(T) * that->size); \
@@ -505,7 +506,10 @@ void GSetSort_ ## N(    \
     ptr = that->first; \
     i = 0; \
     while (ptr != NULL) { \
-      ptr->data.N = arr[i]; \
+      if (inc == true) \
+        ptr->data.N = arr[i]; \
+      else \
+        ptr->data.N = arr[that->size - 1 - i]; \
       ptr = ptr->next; \
       ++i; \
     } \

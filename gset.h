@@ -166,14 +166,17 @@ void GSetShuffle_(
 // Sort the elements of a GSet
 // Inputs:
 //   that: the set to sort
-//   cmp: the comparison function used to sort
+//    cmp: the comparison function used to sort
+//    inc: if true the set is sort in increasing order, else in decreasing
+//         order
 // It uses qsort, see man page for details. Elements are sorted in ascending
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
 #define GSetSort_(N, T) \
 void GSetSort_ ## N(    \
   GSet* const that,   \
-          int (*cmp)(void const*, void const*))
+          int (*cmp)(void const*, void const*), \
+         bool inc)
 GSetSort_(Char, char);
 GSetSort_(UChar, unsigned char);
 GSetSort_(Int, int);
@@ -513,7 +516,7 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetEmpty(PtrToSet) GSetEmpty_((PtrToSet)->s)
 #define GSetShuffle(PtrToSet) GSetShuffle_((PtrToSet)->s)
 
-#define GSetSort(PtrToSet)                                              \
+#define GSetSort(PtrToSet, CmpFun, FlagIncreasing)                           \
   _Generic((PtrToSet),                                                       \
     GSetChar*: GSetSort_Char,                                          \
     GSetUChar*: GSetSort_UChar,                                        \
@@ -523,7 +526,7 @@ void GSetMergeInvalidType(void*, void*);
     GSetULong*: GSetSort_ULong,                                        \
     GSetFloat*: GSetSort_Float,                                        \
     GSetDouble*: GSetSort_Double,                                      \
-    default: GSetSort_Ptr)((PtrToSet)->s);
+    default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, , FlagIncreasing);
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (PtrToPtrToSetIter != NULL && *(PtrToPtrToSetIter) != NULL) {           \
