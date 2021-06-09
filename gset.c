@@ -438,6 +438,9 @@ void GSetEmpty_(
 void GSetShuffle_(
   GSet* const that) {
 
+  // If the array has less than 2 elements, nothing to do
+  if (that->size < 2) return;
+
   // Convert the GSet into an array of pointers to data
   union GSetElemData* arr = NULL;
   SafeMalloc(

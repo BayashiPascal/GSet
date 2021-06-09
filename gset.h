@@ -551,21 +551,37 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetMerge(PtrToSetDst, PtrToSetSrc)                                 \
  _Generic((PtrToSetDst),                                                     \
    GSetChar*:                                                         \
-     _Generic((PtrToSetSrc), GSetChar*: GSetMerge_),                 \
+     _Generic((PtrToSetSrc),                                      \
+       GSetChar*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                 \
    GSetUChar*:                                                        \
-     _Generic((PtrToSetSrc), GSetUChar*: GSetMerge_),                \
+     _Generic((PtrToSetSrc),                                      \
+       GSetUChar*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                \
    GSetInt*:                                                          \
-     _Generic((PtrToSetSrc), GSetInt*: GSetMerge_),                  \
+     _Generic((PtrToSetSrc),                                      \
+       GSetInt*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                  \
    GSetUInt*:                                                         \
-     _Generic((PtrToSetSrc), GSetUInt*: GSetMerge_),                 \
+     _Generic((PtrToSetSrc),                                      \
+       GSetUInt*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                 \
    GSetLong*:                                                         \
-     _Generic((PtrToSetSrc), GSetLong*: GSetMerge_),                 \
+     _Generic((PtrToSetSrc),                                      \
+       GSetLong*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                 \
    GSetULong*:                                                        \
-     _Generic((PtrToSetSrc), GSetULong*: GSetMerge_),                \
+     _Generic((PtrToSetSrc),                                      \
+       GSetULong*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                \
    GSetFloat*:                                                        \
-     _Generic((PtrToSetSrc), GSetFloat*: GSetMerge_),                \
+     _Generic((PtrToSetSrc),                                      \
+       GSetFloat*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),                \
    GSetDouble*:                                                       \
-     _Generic((PtrToSetSrc), GSetDouble*: GSetMerge_),               \
+     _Generic((PtrToSetSrc),                                      \
+       GSetDouble*: GSetMerge_,                                      \
+       default: GSetMergeInvalidType),               \
    default: _Generic((PtrToSetSrc),                                          \
      GSetChar*: GSetMergeInvalidType,                                \
      GSetUChar*: GSetMergeInvalidType,                               \
@@ -591,7 +607,7 @@ void GSetMergeInvalidType(void*, void*);
     GSetULong*: GSetSort_ULong,                                        \
     GSetFloat*: GSetSort_Float,                                        \
     GSetDouble*: GSetSort_Double,                                      \
-    default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, , FlagIncreasing);
+    default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, FlagIncreasing);
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (((PtrToPtrToSetIter) != NULL) && (*(PtrToPtrToSetIter) != NULL)) {     \
@@ -627,7 +643,7 @@ void GSetMergeInvalidType(void*, void*);
        GSetIterFloat*: GSetIterPick_Float,                            \
        GSetIterDouble*: GSetIterPick_Double,                          \
        default: GSetIterPick_Ptr)(                                           \
-         (PtrToSetIter)->i, (PtrToSetIter)->s)) == 0 ?                       \
+         (PtrToSetIter)->i, (PtrToSetIter)->set->s)) == 0 ?                  \
            0 : (PtrToSetIter)->set->t)
 #define GSetPick GSetIterPick
 
@@ -640,8 +656,8 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetReset GSetIterReset
 #define GSetNext GSetIterNext
 #define GSetPrev GSetIterPrev
-#define GSetIsFirst GSetIsFirst
-#define GSetIsLast GSetIsLast
+#define GSetIsFirst GSetIterIsFirst
+#define GSetIsLast GSetIterIsLast
 
 #define GSetIterForEach(PtrToSetIter)                                        \
   if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \

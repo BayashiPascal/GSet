@@ -9,6 +9,14 @@ struct Dummy {
 
 };
 
+int GSetDummyCmp(void const* a, void const* b) {
+
+  struct Dummy* sa = *(struct Dummy* const*)a;
+  struct Dummy* sb = *(struct Dummy* const*)b;
+  return (sa->a < sb->a ? -1 : sa->a > sb->a ? 1 : 0);
+
+}
+
 // GSet of pointer to Dummy struct
 DefineGSet(Dummy, struct Dummy*)
 
@@ -48,6 +56,23 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
     Type dropA = GSetDrop(setA);                                             \
     assert (dropA == data ## Name[1]);                                       \
     GSetAppend(setA, setB);                                                  \
+    GSetMerge(setA, setB);                                                   \
+    assert (GSetGetSize(setA) == 10);                                        \
+    GSetEmpty(setA);                                                         \
+    GSetShuffle(setA);                                                       \
+    GSetSort(setA, GSet ## Name ## Cmp, true);                               \
+    Type getA;                                                               \
+    Try {getA = GSetGet(iterA);} CatchDefault {} EndCatchDefault;            \
+    Try {getA = GSetPick(iterA);} CatchDefault {} EndCatchDefault;           \
+    GSetReset(iterA);                                                        \
+    GSetNext(iterA);                                                         \
+    GSetPrev(iterA);                                                         \
+    Try {GSetIsFirst(iterA);} CatchDefault {} EndCatchDefault;               \
+    Try {GSetIsLast(iterA);} CatchDefault {} EndCatchDefault;                \
+    GSetForEach(iterA) {                                                     \
+      getA = GSetGet(iterA);                                                 \
+    }                                                                        \
+    (void)getA;                                                              \
     GSetIterFree(&iterA);                                                    \
     GSetIterFree(&iterB);                                                    \
     GSetIterFree(&iterC);                                                    \
