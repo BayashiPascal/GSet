@@ -235,8 +235,8 @@ GSetAdd__(Ptr, void*)
 #define GSetAddArr__(N, T)     \
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
-             T* const arr, \
-             size_t const size) {                                        \
+             size_t const size, \
+             T* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = arr[i];                                                   \
@@ -246,8 +246,8 @@ void GSetAddArr_ ## N(        \
 #define GSetAddArrPtr__(N, T)     \
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
-             T* const arr, \
-             size_t const size) {                                        \
+             size_t const size, \
+             T* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = ((void**)arr)[i];                                                   \
@@ -263,38 +263,6 @@ GSetAddArr__(ULong, unsigned long)
 GSetAddArr__(Float, float)
 GSetAddArr__(Double, double)
 GSetAddArrPtr__(Ptr, void)
-
-// Convert a set into an array
-// Inputs:
-//   that: the set
-#define GSetToArr__(N, T)                                                    \
-T* GSetToArr_ ## N(                                                          \
-  GSet* const that) {                                                        \
-  if (GSetGetSize_(that) == 0) return NULL;                                  \
-  T* arr = malloc(sizeof(T) * GSetGetSize_(that));                           \
-  if (arr == NULL) Raise(TryCatchExc_MallocFailed);                          \
-  Try {                                                                      \
-    GSetIter* iter = GSetIterAlloc(GSetIterForward);                         \
-    GSetIterReset_(iter, that);                                              \
-    size_t i = 0;                                                            \
-    do {                                                                     \
-      arr[i] = iter->elem->data.N;                                           \
-      ++i;                                                                   \
-    } while(GSetIterNext_(iter));                                            \
-  } CatchDefault {                                                           \
-    free(arr); Raise(TryCatchGetLastExc());                                  \
-  } EndCatchDefault;                                                         \
-  return arr;                                                                \
-}
-GSetToArr__(Char, char)
-GSetToArr__(UChar, unsigned char)
-GSetToArr__(Int, int)
-GSetToArr__(UInt, unsigned int)
-GSetToArr__(Long, long)
-GSetToArr__(ULong, unsigned long)
-GSetToArr__(Float, float)
-GSetToArr__(Double, double)
-GSetToArr__(Ptr, void*)
 
 // Pop data from the head of the set
 // Input:
@@ -365,6 +333,7 @@ void GSetAppend_(
 
     // Loop on the element of the set source
     iter = GSetIterAlloc(GSetIterForward);
+    GSetIterReset_(iter, tho);
     do {
 
       // Add the data from the source to the destination
