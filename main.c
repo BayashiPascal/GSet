@@ -36,10 +36,8 @@ struct Dummy dummyE = {.a = 4};
 struct Dummy* arrDummy[sizeArr] = {&dummyA, &dummyB, &dummyC};
 struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
 
-#define STRINGIFY(x) #x
-#define STRINGIFY_VALUE_OF(x) STRINGIFY(x)
-
 #define Test(Name, Type)                                                     \
+  printf("Test GSet" #Name "\n");                                            \
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
     assert(GSetGetSize(setA) == 0);                                          \
@@ -74,19 +72,53 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
     GSetReset(iterA);                                                        \
     assert(GSetGet(iterA) == data ## Name[0]);                               \
     assert(GSetIsFirst(iterA) == true);                                      \
-    assert(GSetIsLast(iterA) == true);                                      \
+    assert(GSetIsLast(iterA) == true);                                       \
     GSetAdd(setA, data ## Name[1]);                                          \
     assert(GSetGetSize(setA) == 2);                                          \
     assert(GSetIsFirst(iterA) == true);                                      \
     assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                        \
+    GSetNext(iterA);                                                         \
     assert(GSetGet(iterA) == data ## Name[1]);                               \
-    assert(GSetIsFirst(iterA) == false);                                      \
-    assert(GSetIsLast(iterA) == true);                                      \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == true);                                       \
     GSetAddArr(setA, 2, ((Type[]){0,0}));                                    \
+    assert(GSetGetSize(setA) == 4);                                          \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == false);                                      \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == 0);                                             \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == false);                                      \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == 0);                                             \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == true);                                       \
     GSetAddArr(setA, 2, data ## Name);                                       \
+    assert(GSetGetSize(setA) == 6);                                          \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == false);                                      \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == data ## Name[0]);                               \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == false);                                      \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == data ## Name[1]);                               \
+    assert(GSetIsFirst(iterA) == false);                                     \
+    assert(GSetIsLast(iterA) == true);                                       \
     Type* toArr = GSet ## Name ## ToArr(setA);                               \
+    size_t idx = 0;                                                          \
+    GSetReset(iterA);                                                        \
+    GSetForEach(iterA) assert(toArr[idx++] == GSetGet(iterA));               \
+    printf("%ld elements converted to size_t: ", GSetGetSize(setA));         \
+    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("\n");                                                            \
     free(toArr);                                                             \
+GSetIterFree(&iterA);                                                    \
+GSetIterFree(&iterB);                                                    \
+GSetIterFree(&iterC);                                                    \
+GSetFree(&setA);                                                         \
+GSetFree(&setB);                                                         \
+break;\
     Type popA = GSetPop(setA);                                               \
     assert (popA == data ## Name[0]);                                        \
     Type dropA = GSetDrop(setA);                                             \
@@ -114,23 +146,16 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
     GSetIterFree(&iterC);                                                    \
     GSetFree(&setA);                                                         \
     GSetFree(&setB);                                                         \
-    printf("GSet%s OK\n", STRINGIFY_VALUE_OF(Name));                         \
+    printf("Test GSet" #Name " OK\n");                                       \
   } while(false)
 
 // Main function
 int main() {
 
-GSetChar* set = GSetCharAlloc();
-GSetAdd(set, 'a');
-GSetAddArr(set, 2, ((char[]){0,0}));
-GSetAppend(set, set);
-GSetEmpty(set);
-GSetFree(&set);
-
   printf("Commit id: %s\n", GSetGetCommitId());
-  //Test(Char, char);
-  //Test(Str, char*);
-  //Test(Dummy, struct Dummy*);
+  Test(Char, char);
+  Test(Str, char*);
+  Test(Dummy, struct Dummy*);
 
   // Return the sucess code
   return EXIT_SUCCESS;

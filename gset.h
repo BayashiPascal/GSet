@@ -685,10 +685,12 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetIsLast GSetIterIsLast
 
 #define GSetIterForEach(PtrToSetIter)                                        \
+  GSetIterReset(PtrToSetIter);                                               \
   if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
-    GSetIterReset(PtrToSetIter);                                             \
-    GSetIterIsLast(PtrToSetIter) == false;                                   \
-    GSetIterNext(PtrToSetIter))
+    bool hasEnded = false;                                                   \
+    hasEnded == false;                                                       \
+    hasEnded = !GSetIterNext(PtrToSetIter))
+
 #define GSetForEach GSetIterForEach
 
 // ===== Comparison functions for GSet<N>Sort on default typed GSet =======
