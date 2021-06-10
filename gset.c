@@ -146,6 +146,20 @@ GSetIter GSetIterCreate(
 
 // ================== Public functions definition =========================
 
+// Function to get the commit id of the library
+// Output:
+//   Return a string containing the result of `git rev-parse HEAD` at
+//   compilation time
+char const* GSetGetCommitId(
+  void) {
+
+  // Return the commit id
+  #define STRINGIFY(x) #x
+  #define STRINGIFY_VALUE_OF(x) STRINGIFY(x)
+  return STRINGIFY_VALUE_OF(COMMIT);
+
+}
+
 // Allocate memory for a new GSet
 // Output:
 //   Return the new GSet.
@@ -320,6 +334,9 @@ void GSetAppend_(
         GSet* const that,
   GSet const* const tho) {
 
+  // Appending a set to itself will create infinite loop
+  if (that == tho) Raise(TryCatchExc_InfiniteLoop);
+
   // If the set source is empty, nothing to do
   if (tho->size == 0) return;
 
@@ -365,6 +382,9 @@ void GSetAppend_(
 void GSetMerge_(
   GSet* const that,
   GSet* const tho) {
+
+  // Merging a set to itself will create infinite loop
+  if (that == tho) Raise(TryCatchExc_InfiniteLoop);
 
   // If the merged set is empty, nothing to do
   if (tho->size == 0) return;
@@ -831,6 +851,31 @@ GSetIter* GSetIterClone_(
 
   // Return the clone
   return clone;
+
+}
+
+// Set the type of an iterator
+// Input:
+//   that: the iterator
+//   type: the type
+void GSetIterSetType_(
+  GSetIter* const that,
+  GSetIterType const type) {
+
+  // Set the type
+  that->type = type;
+
+}
+
+// Get the type of an iterator
+// Input:
+//   that: the iterator
+// Return the type of the iterator
+GSetIterType GSetIterGetType_(
+  GSetIter const* const that) {
+
+  // Return the type
+  return that->type;
 
 }
 

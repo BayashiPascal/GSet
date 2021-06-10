@@ -17,6 +17,7 @@ enum GSetIterType {
   GSetIterBackward,
 
 };
+typedef enum GSetIterType GSetIterType;
 
 // Structure of a set and its iterators
 struct GSet;
@@ -25,6 +26,13 @@ typedef struct GSet GSet;
 typedef struct GSetIter GSetIter;
 
 // ================= Public functions declarations ======================
+
+// Function to get the commit id of the library
+// Output:
+//   Return a string containing the result of `git rev-parse HEAD` at
+//   compilation time
+char const* GSetGetCommitId(
+  void);
 
 // Allocate memory for a new GSet
 // Output:
@@ -290,6 +298,21 @@ bool GSetIterIsLast_(
 GSetIter* GSetIterClone_(
   GSetIter* const that);
 
+// Set the type of an iterator
+// Input:
+//   that: the iterator
+//   type: the type
+void GSetIterSetType_(
+  GSetIter* const that,
+  GSetIterType const type);
+
+// Get the type of an iterator
+// Input:
+//   that: the iterator
+// Return the type of the iterator
+GSetIterType GSetIterGetType_(
+  GSetIter const* const that);
+
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -363,13 +386,12 @@ GSetIter* GSetIterClone_(
   };                                                                         \
   typedef struct GSetIter ## Name GSetIter ## Name;                          \
   static inline GSetIter ## Name* GSetIter ## Name ## Alloc(          \
-    GSet ## Name* const set,                                          \
-       enum GSetIterType const type) {                                       \
+    GSet ## Name* const set) {                                       \
     GSetIter ## Name* that = malloc(sizeof(GSetIter ## Name)); \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
     Try {                                                                    \
       *that =                                                                \
-        (GSetIter ## Name ){.set = set, .i = GSetIterAlloc(type)};    \
+        (GSetIter ## Name ){.set = set, .i = GSetIterAlloc(GSetIterForward)};\
     } CatchDefault {                                                         \
       free(that); Raise(TryCatchExc_MallocFailed);              \
     } EndCatchDefault;                                                       \
@@ -653,6 +675,9 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetIterPrev(PtrToSetIter) GSetIterPrev_((PtrToSetIter)->i)
 #define GSetIterIsFirst(PtrToSetIter) GSetIterIsFirst_((PtrToSetIter)->i)
 #define GSetIterIsLast(PtrToSetIter) GSetIterIsLast_((PtrToSetIter)->i)
+#define GSetIterSetType(PtrToSetIter, Type)                                  \
+  GSetIterSetType_(PtrToSetIter->i, Type)
+#define GSetIterGetType(PtrToSetIter) GSetIterGetType_(PtrToSetIter->i)
 #define GSetReset GSetIterReset
 #define GSetNext GSetIterNext
 #define GSetPrev GSetIterPrev

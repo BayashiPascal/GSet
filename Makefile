@@ -24,7 +24,7 @@ main.o: main.c gset.h Makefile
 	$(COMPILER) $(BUILD_ARG) -c main.c 
 
 gset.o: gset.c gset.h Makefile
-	$(COMPILER) $(BUILD_ARG) -c gset.c
+	$(COMPILER) $(BUILD_ARG) -DCOMMIT=`git rev-parse HEAD` -c gset.c
 
 /usr/local/lib/libtrycatchc.a:
 	wget https://github.com/BayashiPascal/TryCatchC/archive/main.zip
