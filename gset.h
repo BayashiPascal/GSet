@@ -90,7 +90,7 @@ GSetAdd_(Ptr, void*);
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
-             T* const arr)
+             T const* const arr)
 GSetAddArr_(Char, char);
 GSetAddArr_(UChar, unsigned char);
 GSetAddArr_(Int, int);
@@ -346,6 +346,14 @@ GSetIterType GSetIterGetType_(
       unsigned long: GSetAddArr_ULong, \
       float: GSetAddArr_Float, \
       double: GSetAddArr_Double, \
+      const char: GSetAddArr_Char, \
+      const unsigned char: GSetAddArr_UChar, \
+      const int: GSetAddArr_Int, \
+      const unsigned int: GSetAddArr_UInt, \
+      const long: GSetAddArr_Long, \
+      const unsigned long: GSetAddArr_ULong, \
+      const float: GSetAddArr_Float, \
+      const double: GSetAddArr_Double, \
       default: GSetAddArr_Ptr)(that->s, size, arr);     \
     return that;                                                             \
   }                                                                          \

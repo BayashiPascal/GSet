@@ -250,7 +250,7 @@ GSetAdd__(Ptr, void*)
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
-             T* const arr) {                                        \
+             T const* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = arr[i];                                                   \
@@ -261,7 +261,7 @@ void GSetAddArr_ ## N(        \
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
-             T* const arr) {                                        \
+             T const* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = ((void**)arr)[i];                                                   \
