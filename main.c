@@ -36,6 +36,24 @@ DefineGSet(Dummy, struct Dummy*)
 char arrChar[sizeArr] = {'a', 'b', 'c'};
 char dataChar[2] = {'d', 'e'};
 
+int arrInt[sizeArr] = {-1, -2, -3};
+int dataInt[2] = {-4, -5};
+
+unsigned int arrUInt[sizeArr] = {1, 2, 3};
+unsigned int dataUInt[2] = {4, 5};
+
+long arrLong[sizeArr] = {-1, -2, -3};
+long dataLong[2] = {-4, -5};
+
+unsigned long arrULong[sizeArr] = {1, 2, 3};
+unsigned long dataULong[2] = {4, 5};
+
+float arrFloat[sizeArr] = {1., 2., 3.};
+float dataFloat[2] = {4., 5.};
+
+double arrDouble[sizeArr] = {1., 2., 3.};
+double dataDouble[2] = {4., 5.};
+
 char* arrStr[sizeArr] = {"a", "b", "c"};
 char* dataStr[2] = {"d", "e"};
 
@@ -218,8 +236,15 @@ int main() {
 
   printf("Commit id: %s\n", GSetGetCommitId());
   Test(Char, char);
+  Test(Int, int);
+  Test(UInt, unsigned int);
+  Test(Long, long);
+  Test(ULong, unsigned long);
+  Test(Float, float);
+  Test(Double, double);
   TestPtr(Str, char);
-  //TestPtr(Dummy, struct Dummy);
+  TestPtr(Dummy, struct Dummy);
+  printf("All unit tests OK\n");
 
   // Return the sucess code
   return EXIT_SUCCESS;
