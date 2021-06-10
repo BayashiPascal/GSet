@@ -881,8 +881,8 @@ GSetIterType GSetIterGetType_(
 
 // Deallocation functions for GSet<N>Flush on default typed GSet
 
-#define Free_(N, T)                                                           \
-void N ## Free_(T* const that) {                                             \
+#define Free_(N, T)                                                          \
+void N ## Free(T* const that) {                                              \
   if (that == NULL || *that == NULL) return;                                 \
   free(*that); *that = NULL;                                                 \
 }
@@ -964,6 +964,9 @@ int GSetCharPtrCmp(void const* a, void const* b) {
 
   char* sa = *(char* const*)a;
   char* sb = *(char* const*)b;
+  if (sa == NULL && sb == NULL) return 0;
+  if (sa == NULL && sb != NULL) return -1;
+  if (sa != NULL && sb == NULL) return 1;
   return strcmp(sa, sb);
 
 }
@@ -1098,6 +1101,7 @@ static GSetElem* GSetPopElem(
 
   // Remove the first element
   GSetElem* elem = that->first;
+  if (that->last == that->first) that->last = NULL;
   that->first = elem->next;
   if (that->first != NULL) that->first->prev = NULL;
 
@@ -1119,6 +1123,7 @@ static GSetElem* GSetDropElem(
 
   // Remove the last element
   GSetElem* elem = that->last;
+  if (that->last == that->first) that->first = NULL;
   that->last = elem->prev;
   if (that->last != NULL) that->last->next = NULL;
 

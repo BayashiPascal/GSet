@@ -437,6 +437,7 @@ DefineGSet(CharPtr, char*)
 #define GSetStrFree GSetCharPtrFree
 #define GSetStrFromArr GSetCharPtrFromArr
 #define GSetStrToArr GSetCharPtrToArr
+#define GSetStrFlush GSetCharPtrFlush
 #define GSetIterStr GSetIterCharPtr
 #define GSetIterStrAlloc GSetIterCharPtrAlloc
 #define GSetIterStrClone GSetIterCharPtrClone

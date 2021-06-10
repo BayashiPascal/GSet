@@ -2,6 +2,9 @@
 #include <assert.h>
 #include "gset.h"
 
+// Loop from 0 to (N - 1)
+#define ForZeroTo(I, N) for (size_t I = 0; I < N; ++I)
+
 // Dummy struct
 struct Dummy {
 
@@ -13,8 +16,16 @@ int GSetDummyCmp(void const* a, void const* b) {
 
   struct Dummy* sa = *(struct Dummy* const*)a;
   struct Dummy* sb = *(struct Dummy* const*)b;
+  if (sa == NULL && sb == NULL) return 0;
+  if (sa == NULL && sb != NULL) return -1;
+  if (sa != NULL && sb == NULL) return 1;
   return (sa->a < sb->a ? -1 : sa->a > sb->a ? 1 : 0);
 
+}
+
+void DummyFree(struct Dummy** const that) {
+  if (that == NULL || *that == NULL) return;
+  free(*that); *that = NULL;
 }
 
 // GSet of pointer to Dummy struct
@@ -36,6 +47,8 @@ struct Dummy dummyE = {.a = 4};
 struct Dummy* arrDummy[sizeArr] = {&dummyA, &dummyB, &dummyC};
 struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
 
+void CharFree(char* that) {(void)that;}
+
 #define Test(Name, Type)                                                     \
   printf("Test GSet" #Name "\n");                                            \
   do {                                                                       \
@@ -47,11 +60,11 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
       GSetIter ## Name ## Alloc(setA);                                       \
     bool flagCatch = false;                                                  \
     Try {GSetIsFirst(iterA);}                                                \
-    Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;              \
+      Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
     assert(flagCatch == true);                                               \
     flagCatch = false;                                                       \
     Try {GSetIsLast(iterA);}                                                 \
-    Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;              \
+      Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
     assert(flagCatch == true);                                               \
     assert(GSetIterGetType(iterA) == GSetIterForward);                       \
     GSetIter ## Name* iterB =                                                \
@@ -109,53 +122,104 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
     size_t idx = 0;                                                          \
     GSetReset(iterA);                                                        \
     GSetForEach(iterA) assert(toArr[idx++] == GSetGet(iterA));               \
-    printf("%ld elements converted to size_t: ", GSetGetSize(setA));         \
+    printf("%ld elements: ", GSetGetSize(setA));                             \
     GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     free(toArr);                                                             \
-GSetIterFree(&iterA);                                                    \
-GSetIterFree(&iterB);                                                    \
-GSetIterFree(&iterC);                                                    \
-GSetFree(&setA);                                                         \
-GSetFree(&setB);                                                         \
-break;\
     Type popA = GSetPop(setA);                                               \
-    assert (popA == data ## Name[0]);                                        \
+    assert(popA == data ## Name[0]);                                         \
+    assert(GSetGetSize(setA) == 5);                                          \
     Type dropA = GSetDrop(setA);                                             \
-    assert (dropA == data ## Name[1]);                                       \
+    assert(dropA == data ## Name[1]);                                        \
+    assert(GSetGetSize(setA) == 4);                                          \
+    flagCatch = false;                                                       \
+    Try {GSetAppend(setA, setA);}                                            \
+      Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
+    assert(flagCatch == true);                                               \
+    flagCatch = false;                                                       \
+    Try {GSetMerge(setA, setA);}                                             \
+      Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
+    assert(flagCatch == true);                                               \
+    GSetReset(iterA);                                                        \
+    ForZeroTo(i, 4) GSetNext(iterA);                                         \
     GSetAppend(setA, setB);                                                  \
+    assert(GSetGetSize(setA) == 4 + sizeArr);                                \
+    assert(GSetGetSize(setB) == sizeArr);                                    \
+    GSetIterSetType(iterB, GSetIterForward);                                 \
+    GSetNext(iterA);                                                         \
+    GSetForEach(iterB) {                                                     \
+      assert(GSetGet(iterB) == GSetGet(iterA));GSetNext(iterA);              \
+    }                                                                        \
+    printf("%ld elements: ", GSetGetSize(setA));                             \
+    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("\n");                                                            \
     GSetMerge(setA, setB);                                                   \
-    assert (GSetGetSize(setA) == 10);                                        \
+    assert(GSetGetSize(setA) == 4 + 2 * sizeArr);                            \
+    assert(GSetGetSize(setB) == 0);                                          \
+    GSetShuffle(setA);                                                       \
+    printf("shuffled %ld elements: ", GSetGetSize(setA));                    \
+    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("\n");                                                            \
+    GSetSort(setA, GSet ## Name ## Cmp, true);                               \
+    printf("sorted %ld elements: ", GSetGetSize(setA));                      \
+    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("\n");                                                            \
+    GSetIterReset(iterA);                                                    \
+    Type prev = GSetGet(iterA);                                              \
+    GSetNext(iterA);                                                         \
+    GSetForEach(iterA) {                                                     \
+      Type cur = GSetGet(iterA);                                             \
+      assert(GSet ## Name ## Cmp(&prev, &cur) < 1);                          \
+      prev = cur;                                                            \
+    }                                                                        \
+    GSetReset(iterA);                                                        \
+    Type picked = GSetPick(iterA);                                           \
+    assert(GSetGetSize(setA) == 9);                                          \
+    GSetNext(iterA);                                                         \
+    picked = GSetPick(iterA);                                                \
+    assert(GSetGetSize(setA) == 8);                                          \
+    while (GSetNext(iterA));                                                 \
+    picked = GSetPick(iterA);                                                \
+    (void)picked;                                                            \
+    assert(GSetGetSize(setA) == 7);                                          \
+    printf("remaining %ld elements: ", GSetGetSize(setA));                   \
+    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("\n");                                                            \
     GSetEmpty(setA);                                                         \
+    assert(GSetGetSize(setA) == 0);                                          \
     GSetShuffle(setA);                                                       \
     GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    Type getA;                                                               \
-    Try {getA = GSetGet(iterA);} CatchDefault {} EndCatchDefault;            \
-    Try {getA = GSetPick(iterA);} CatchDefault {} EndCatchDefault;           \
-    GSetReset(iterA);                                                        \
-    GSetNext(iterA);                                                         \
-    GSetPrev(iterA);                                                         \
-    Try {GSetIsFirst(iterA);} CatchDefault {} EndCatchDefault;               \
-    Try {GSetIsLast(iterA);} CatchDefault {} EndCatchDefault;                \
-    GSetForEach(iterA) {                                                     \
-      getA = GSetGet(iterA);                                                 \
-    }                                                                        \
-    (void)getA;                                                              \
+    GSetAddArr(setA, 2, ((Type[]){0,0}));                                    \
     GSetIterFree(&iterA);                                                    \
+    assert(iterA == NULL);                                                   \
     GSetIterFree(&iterB);                                                    \
+    assert(iterB == NULL);                                                   \
     GSetIterFree(&iterC);                                                    \
+    assert(iterC == NULL);                                                   \
     GSetFree(&setA);                                                         \
+    assert(setA == NULL);                                                    \
     GSetFree(&setB);                                                         \
+    assert(setB == NULL);                                                    \
     printf("Test GSet" #Name " OK\n");                                       \
   } while(false)
 
+#define TestPtr(Name, Type)                                                  \
+  Test(Name, Type*);                                                         \
+  do {                                                                       \
+    GSet ## Name* setA = GSet ## Name ## Alloc();                            \
+    Type* data = malloc(sizeof(Type));                                       \
+    GSetPush(setA, data);                                                    \
+    GSet ## Name ## Flush(setA);                                             \
+    GSetFree(&setA);                                                         \
+  } while(false)
+  
 // Main function
 int main() {
 
   printf("Commit id: %s\n", GSetGetCommitId());
   Test(Char, char);
-  Test(Str, char*);
-  Test(Dummy, struct Dummy*);
+  TestPtr(Str, char);
+  //TestPtr(Dummy, struct Dummy);
 
   // Return the sucess code
   return EXIT_SUCCESS;
