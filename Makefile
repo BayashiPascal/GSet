@@ -1,15 +1,18 @@
 # Compiler
-COMPILER=gcc
+COMPILER?=gcc
+
+# Standard
+STANDARD?=c17
 
 # Build mode 0:dev, 1:prod
 BUILD_MODE=0
 
 # Compiler arguments depending on BUILD_MODE
 ifeq ($(BUILD_MODE), 0)
-	BUILD_ARG=-std=c17 -I./ -pedantic -Wall -Wextra -Wno-clobbered -Og -ggdb -g3 -DBUILDMODE=$(BUILD_MODE)
+	BUILD_ARG=-std=$(STANDARD) -I./ -pedantic -Wall -Wextra -Wno-clobbered -Og -ggdb -g3 -DBUILDMODE=$(BUILD_MODE)
 	LINK_ARG=-lm -ltrycatchc
 else ifeq ($(BUILD_MODE), 1)
-	BUILD_ARG=-std=c17 -I./ -pedantic-errors -Wall -Wextra -Werror -Wfatal-errors -Wno-clobbered -O3 -DBUILDMODE=$(BUILD_MODE)
+	BUILD_ARG=-std=$(STANDARD) -I./ -pedantic-errors -Wall -Wextra -Werror -Wfatal-errors -Wno-clobbered -O3 -DBUILDMODE=$(BUILD_MODE)
 	LINK_ARG=-lm -ltrycatchc
 endif
 
@@ -47,3 +50,9 @@ install: gset.o
 	mkdir /usr/local/include/GSet
 	cp gset.h /usr/local/include/GSet/gset.h
 	ar -r /usr/local/lib/libgset.a gset.o
+
+checkCompilerAndStandard:
+	make clean all valgrind COMPILER=gcc-7 STANDARD=c11
+	make clean all valgrind COMPILER=gcc-10 STANDARD=c11
+	make clean all valgrind COMPILER=gcc-10 STANDARD=c17
+	make clean
