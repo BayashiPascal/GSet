@@ -717,14 +717,21 @@ void GSetMergeInvalidType(void*, void*);
 #define GSetIsFirst GSetIterIsFirst
 #define GSetIsLast GSetIterIsLast
 
-#define GSetIterForEach(PtrToSetIter)                                        \
+#define GSetIterForEach(PtrToSetIter)                                   \
   GSetIterReset(PtrToSetIter);                                               \
   if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
     bool hasEnded = false;                                                   \
     hasEnded == false;                                                       \
     hasEnded = !GSetIterNext(PtrToSetIter))
-
 #define GSetForEach GSetIterForEach
+
+#define GSetIterEnumerate(PtrToSetIter, Idx)                                   \
+  GSetIterReset(PtrToSetIter);                                               \
+  if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
+    size_t hasEnded = 0, Idx = 0;                                                   \
+    hasEnded == false;                                                       \
+    hasEnded = !GSetIterNext(PtrToSetIter), ++Idx)
+#define GSetEnumerate GSetIterEnumerate
 
 // ===== Comparison functions for GSet<N>Sort on default typed GSet =======
 

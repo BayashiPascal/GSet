@@ -137,9 +137,8 @@ void CharFree(char* that) {(void)that;}
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == true);                                       \
     Type* toArr = GSet ## Name ## ToArr(setA);                               \
-    size_t idx = 0;                                                          \
     GSetReset(iterA);                                                        \
-    GSetForEach(iterA) assert(toArr[idx++] == GSetGet(iterA));               \
+    GSetEnumerate(iterA, idx) assert(toArr[idx] == GSetGet(iterA));          \
     printf("%zu elements: ", GSetGetSize(setA));                             \
     GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
