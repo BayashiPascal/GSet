@@ -1,8 +1,8 @@
 // ------------------ gset.h ------------------
 
 // Guard against multiple inclusions
-#ifndef _GSET_
-#define _GSET_
+#ifndef GSET_H
+#define GSET_H
 
 // Include external modules header
 #include <stdlib.h>
