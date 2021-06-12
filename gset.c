@@ -180,7 +180,7 @@ GSet* GSetAlloc(
 
 }
 
-// Empty the GSet with GSetEmpty() and free the memory it used.
+// Empty the GSet with GSETEMPTY() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
 void GSetFree_(
@@ -350,7 +350,7 @@ void GSetAppend_(
 
     // Loop on the element of the set source
     iter = GSetIterAlloc(GSetIterForward);
-    GSetIterReset_(iter, tho);
+    GSETITERRESET_(iter, tho);
     do {
 
       // Add the data from the source to the destination
@@ -425,7 +425,7 @@ void GSetMerge_(
 //   that: the set
 // Output:
 //   Return the number of element.
-size_t GSetGetSize_(
+size_t GSETGETSize_(
   GSet const* const that) {
 
   return that->size;
@@ -440,7 +440,7 @@ void GSetEmpty_(
   GSet* const that) {
 
   // Loop until the set is empty
-  while (GSetGetSize_(that) > 0) {
+  while (GSETGETSize_(that) > 0) {
 
     // Pop the element
     GSetElem* elem = GSetPopElem(that);
@@ -653,7 +653,7 @@ GSetIterPick__(Ptr, void*)
 // Input:
 //   that: the iterator
 //    set: the associated set
-void GSetIterReset_(
+void GSETITERRESET_(
     GSetIter* const that,
   GSet const* const set) {
 
@@ -960,7 +960,7 @@ int GSetDoubleCmp(void const* a, void const* b) {
 
 }
 
-int GSetCharPtrCmp(void const* a, void const* b) {
+int GsetCharPtrCmp(void const* a, void const* b) {
 
   char* sa = *(char* const*)a;
   char* sb = *(char* const*)b;

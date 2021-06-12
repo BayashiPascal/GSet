@@ -89,7 +89,7 @@ gcc main.o -lgset -lm -ltrycatchc -o main
 
 # 2.2 Define a typed GSet
 
-To create a typed `GSet` containing data of type, for example, `struct UserData`, one can use the macro `DefineGSet(UserData, struct UserData)`. Then, all the functions defined for a `GSet` are redefined with an equivalen function named `GSetUserData...` for the type `struct UserData`. Below is an example of how it could be used:
+To create a typed `GSet` containing data of type, for example, `struct UserData`, one can use the macro `GSETDEF(UserData, struct UserData)`. Then, all the functions defined for a `GSet` are redefined with an equivalen function named `GSetUserData...` for the type `struct UserData`. Below is an example of how it could be used:
 
 ```
 #include <stdio.h>
@@ -103,7 +103,7 @@ struct UserData {
 };
 
 // Create a typed GSet for UserData
-DefineGSet(UserData, struct UserData)
+GSETDEF(UserData, struct UserData)
 
 // Main function
 int main() {
@@ -132,7 +132,7 @@ int main() {
 }
 ```
 
-Be aware that to be able to free elements in the GSetFlush, GSet requires a function `void <N>Free(T**)` to be defined before `DefineGSet(N, T)`. In the example above it could be:
+Be aware that to be able to free elements in the GSetFlush, GSet requires a function `void <N>Free(T**)` to be defined before `GSETDEF(N, T)`. In the example above it could be:
 
 ```
 void UserDataFree(struct UserData** const that) {
@@ -168,24 +168,24 @@ void GSetCopy(
         GSet* const that,
   GSet const* const tho);
 
-// Empty the GSet with GSetEmpty() and free the memory it used.
+// Empty the GSet with GSETEMPTY() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
-void GSetFree(
+void GSETFREE(
   GSet** const that);
 
 // Empty the GSet. Memory used by data in it is not freed.
 // To empty the GSet and free data the data in it, use GSet<N>Flush() instead.
 // Input:
 //   that: the GSet
-void GSetEmpty(
+void GSETEMPTY(
   GSet* const that);
 
 // Add data at the head of the GSet
 // Inputs:
 //   that: the GSet
 //   data: the data to add
-void GSetPush(
+void GSETPUSH(
   GSet* const that,
          void* const data);
 
@@ -193,7 +193,7 @@ void GSetPush(
 // Inputs:
 //   that: the GSet
 //   data: the data to add
-void GSetAdd(
+void GSETADD(
   GSet* const that,
          void* const data);
 
@@ -205,7 +205,7 @@ void GSetAdd(
 //   data. If the current element is the removed one, try to move the
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
-void* GSetPop(
+void* GSETPOP(
   GSet* const that);
 
 // Remove and return the data at the tail of the GSet
@@ -216,7 +216,7 @@ void* GSetPop(
 //   data. If the current element is the removed one, try to move the
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
-void* GSetDrop(
+void* GSETDROP(
   GSet* const that);
 
 // Remove and return the data of the current element of the GSet
@@ -237,14 +237,14 @@ void* GSetPick(
 // It uses qsort, see man page for details. Elements are sorted in ascending
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
-void GSetSort(
+void GSETSORT(
   GSet* const that,
                  int (*cmp)(void const*, void const*));
 
 // Shuffle the elements of a GSet
 // Input:
 //   that: the GSet to shuffle
-void GSetShuffle(
+void GSETSHUFFLE(
   GSet* const that);
 
 // Convert the GSet to an array of pointers to its data
@@ -275,7 +275,7 @@ void GSetFromArrayOfPtr(
 //    tho: the other GSet
 // Output:
 //   tho is appended at the end of that and becomes empty after this operation
-void GSetAppend(
+void GSETAPPEND(
   GSet* const that,
   GSet* const tho);
 
@@ -292,14 +292,14 @@ void* GSetCurData(
 //   that: the GSet
 // Output:
 //   Return the size of the data set
-int GSetGetSize(
+int GSETGETSIZE(
   GSet const* const that);
 
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
 //   that: the GSet
-void GSetIterReset(
+void GSETITERRESET(
   GSet* const that);
 
 // Move the current element in the GSet one step in the direction of the
@@ -312,7 +312,7 @@ void GSetIterReset(
 //   udpate the current element and return true. If there are elements
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
-bool GSetIterNext(
+bool GSETITERNEXT(
   GSet* const that);
 
 // Move the current element in the GSet one step in the opposite
@@ -325,7 +325,7 @@ bool GSetIterNext(
 //   udpate the current element and return true. If there are elements
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
-bool GSetIterPrev(
+bool GSETITERPREV(
   GSet* const that);
 
 // Set the iteration type of a GSet
@@ -340,7 +340,7 @@ void GSetIterSet(
 // The current data can be accessed through the variable <Data>,
 // and its index with GSetIterIdx(). Uses Set's iterator, which is first
 // reset, to iterate on the data.
-#define GSetForEach(Data, Set)
+#define GSETFOR(Data, Set)
 ```
 Available only on typed GSet:
 ```

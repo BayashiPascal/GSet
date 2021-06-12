@@ -33,7 +33,7 @@ void DummyFree(struct Dummy** const that) {
 }
 
 // GSet of pointer to Dummy struct
-DefineGSet(Dummy, struct Dummy*)
+GSETDEF(Dummy, struct Dummy*)
 
 #define SIZE_ARR 3
 
@@ -75,151 +75,151 @@ void CharFree(char* that) {(void)that;}
   printf("Test GSet" #Name "\n");                                            \
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
-    assert(GSetGetSize(setA) == 0);                                          \
+    assert(GSETGETSIZE(setA) == 0);                                          \
     GSet ## Name* setB = GSet ## Name ## FromArr(SIZE_ARR, arr ## Name);      \
-    assert(GSetGetSize(setB) == SIZE_ARR);                                    \
+    assert(GSETGETSIZE(setB) == SIZE_ARR);                                    \
     GSetIter ## Name* iterA =                                                \
       GSetIter ## Name ## Alloc(setA);                                       \
     bool flagCatch = false;                                                  \
-    Try {GSetIsFirst(iterA);}                                                \
+    Try {GSETISFIRST(iterA);}                                                \
       Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
     assert(flagCatch == true);                                               \
     flagCatch = false;                                                       \
-    Try {GSetIsLast(iterA);}                                                 \
+    Try {GSETISLAST(iterA);}                                                 \
       Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
     assert(flagCatch == true);                                               \
-    assert(GSetIterGetType(iterA) == GSetIterForward);                       \
+    assert(GSETITERGETTYPE(iterA) == GSetIterForward);                       \
     GSetIter ## Name* iterB =                                                \
       GSetIter ## Name ## Alloc(setB);                                       \
-    assert(GSetIsFirst(iterB) == true);                                      \
-    assert(GSetIsLast(iterB) == false);                                      \
-    assert(GSetIterGetType(iterB) == GSetIterForward);                       \
-    GSetIterSetType(iterB, GSetIterBackward);                                \
-    assert(GSetIterGetType(iterB) == GSetIterBackward);                      \
-    assert(GSetIsFirst(iterB) == false);                                     \
-    assert(GSetIsLast(iterB) == true);                                       \
+    assert(GSETISFIRST(iterB) == true);                                      \
+    assert(GSETISLAST(iterB) == false);                                      \
+    assert(GSETITERGETTYPE(iterB) == GSetIterForward);                       \
+    GSETITERSETTYPE(iterB, GSetIterBackward);                                \
+    assert(GSETITERGETTYPE(iterB) == GSetIterBackward);                      \
+    assert(GSETISFIRST(iterB) == false);                                     \
+    assert(GSETISLAST(iterB) == true);                                       \
     GSetIter ## Name* iterC = GSetIter ## Name ## Clone(iterB);              \
-    assert(GSetIterGetType(iterC) == GSetIterGetType(iterB));                \
-    assert(GSetIsFirst(iterC) == false);                                     \
-    assert(GSetIsLast(iterC) == true);                                       \
-    GSetPush(setA, data ## Name[0]);                                         \
-    assert(GSetGetSize(setA) == 1);                                          \
-    GSetReset(iterA);                                                        \
-    assert(GSetGet(iterA) == data ## Name[0]);                               \
-    assert(GSetIsFirst(iterA) == true);                                      \
-    assert(GSetIsLast(iterA) == true);                                       \
-    GSetAdd(setA, data ## Name[1]);                                          \
-    assert(GSetGetSize(setA) == 2);                                          \
-    assert(GSetIsFirst(iterA) == true);                                      \
-    assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                         \
-    assert(GSetGet(iterA) == data ## Name[1]);                               \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == true);                                       \
-    GSetAddArr(setA, 2, ((Type[]) {0, 0}));                                  \
-    assert(GSetGetSize(setA) == 4);                                          \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                         \
-    assert(GSetGet(iterA) == 0);                                             \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                         \
-    assert(GSetGet(iterA) == 0);                                             \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == true);                                       \
-    GSetAddArr(setA, 2, data ## Name);                                       \
-    assert(GSetGetSize(setA) == 6);                                          \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                         \
-    assert(GSetGet(iterA) == data ## Name[0]);                               \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == false);                                      \
-    GSetNext(iterA);                                                         \
-    assert(GSetGet(iterA) == data ## Name[1]);                               \
-    assert(GSetIsFirst(iterA) == false);                                     \
-    assert(GSetIsLast(iterA) == true);                                       \
+    assert(GSETITERGETTYPE(iterC) == GSETITERGETTYPE(iterB));                \
+    assert(GSETISFIRST(iterC) == false);                                     \
+    assert(GSETISLAST(iterC) == true);                                       \
+    GSETPUSH(setA, data ## Name[0]);                                         \
+    assert(GSETGETSIZE(setA) == 1);                                          \
+    GSETRESET(iterA);                                                        \
+    assert(GSETGET(iterA) == data ## Name[0]);                               \
+    assert(GSETISFIRST(iterA) == true);                                      \
+    assert(GSETISLAST(iterA) == true);                                       \
+    GSETADD(setA, data ## Name[1]);                                          \
+    assert(GSETGETSIZE(setA) == 2);                                          \
+    assert(GSETISFIRST(iterA) == true);                                      \
+    assert(GSETISLAST(iterA) == false);                                      \
+    GSETNEXT(iterA);                                                         \
+    assert(GSETGET(iterA) == data ## Name[1]);                               \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == true);                                       \
+    GSETADDARR(setA, 2, ((Type[]) {0, 0}));                                  \
+    assert(GSETGETSIZE(setA) == 4);                                          \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == false);                                      \
+    GSETNEXT(iterA);                                                         \
+    assert(GSETGET(iterA) == 0);                                             \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == false);                                      \
+    GSETNEXT(iterA);                                                         \
+    assert(GSETGET(iterA) == 0);                                             \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == true);                                       \
+    GSETADDARR(setA, 2, data ## Name);                                       \
+    assert(GSETGETSIZE(setA) == 6);                                          \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == false);                                      \
+    GSETNEXT(iterA);                                                         \
+    assert(GSETGET(iterA) == data ## Name[0]);                               \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == false);                                      \
+    GSETNEXT(iterA);                                                         \
+    assert(GSETGET(iterA) == data ## Name[1]);                               \
+    assert(GSETISFIRST(iterA) == false);                                     \
+    assert(GSETISLAST(iterA) == true);                                       \
     Type* toArr = GSet ## Name ## ToArr(setA);                               \
-    GSetReset(iterA);                                                        \
-    GSetEnumerate(iterA, idx) assert(toArr[idx] == GSetGet(iterA));          \
-    printf("%zu elements: ", GSetGetSize(setA));                             \
-    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
+    GSETRESET(iterA);                                                        \
+    GSETENUM(iterA, idx) assert(toArr[idx] == GSETGET(iterA));          \
+    printf("%zu elements: ", GSETGETSIZE(setA));                             \
+    GSETFOR(iterA) printf("%zu ", (size_t)GSETGET(iterA));               \
     printf("\n");                                                            \
     free(toArr);                                                             \
-    Type popA = GSetPop(setA);                                               \
+    Type popA = GSETPOP(setA);                                               \
     assert(popA == data ## Name[0]);                                         \
-    assert(GSetGetSize(setA) == 5);                                          \
-    Type dropA = GSetDrop(setA);                                             \
+    assert(GSETGETSIZE(setA) == 5);                                          \
+    Type dropA = GSETDROP(setA);                                             \
     assert(dropA == data ## Name[1]);                                        \
-    assert(GSetGetSize(setA) == 4);                                          \
+    assert(GSETGETSIZE(setA) == 4);                                          \
     flagCatch = false;                                                       \
-    Try {GSetAppend(setA, setA);}                                            \
+    Try {GSETAPPEND(setA, setA);}                                            \
       Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
     assert(flagCatch == true);                                               \
     flagCatch = false;                                                       \
-    Try {GSetMerge(setA, setA);}                                             \
+    Try {GSETMERGE(setA, setA);}                                             \
       Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
     assert(flagCatch == true);                                               \
-    GSetReset(iterA);                                                        \
-    FOR(i, 4) GSetNext(iterA);                                               \
-    GSetAppend(setA, setB);                                                  \
-    assert(GSetGetSize(setA) == 4 + SIZE_ARR);                                \
-    assert(GSetGetSize(setB) == SIZE_ARR);                                    \
-    GSetIterSetType(iterB, GSetIterForward);                                 \
-    GSetNext(iterA);                                                         \
-    GSetForEach(iterB) {                                                     \
-      assert(GSetGet(iterB) == GSetGet(iterA));GSetNext(iterA);              \
+    GSETRESET(iterA);                                                        \
+    FOR(i, 4) GSETNEXT(iterA);                                               \
+    GSETAPPEND(setA, setB);                                                  \
+    assert(GSETGETSIZE(setA) == 4 + SIZE_ARR);                                \
+    assert(GSETGETSIZE(setB) == SIZE_ARR);                                    \
+    GSETITERSETTYPE(iterB, GSetIterForward);                                 \
+    GSETNEXT(iterA);                                                         \
+    GSETFOR(iterB) {                                                     \
+      assert(GSETGET(iterB) == GSETGET(iterA));GSETNEXT(iterA);              \
     }                                                                        \
-    printf("%zu elements: ", GSetGetSize(setA));                             \
-    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
+    printf("%zu elements: ", GSETGETSIZE(setA));                             \
+    GSETFOR(iterA) printf("%zu ", (size_t)GSETGET(iterA));               \
     printf("\n");                                                            \
-    GSetMerge(setA, setB);                                                   \
-    assert(GSetGetSize(setA) == 4 + 2 * SIZE_ARR);                            \
-    assert(GSetGetSize(setB) == 0);                                          \
-    GSetShuffle(setA);                                                       \
-    printf("shuffled %zu elements: ", GSetGetSize(setA));                    \
-    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
+    GSETMERGE(setA, setB);                                                   \
+    assert(GSETGETSIZE(setA) == 4 + 2 * SIZE_ARR);                            \
+    assert(GSETGETSIZE(setB) == 0);                                          \
+    GSETSHUFFLE(setA);                                                       \
+    printf("shuffled %zu elements: ", GSETGETSIZE(setA));                    \
+    GSETFOR(iterA) printf("%zu ", (size_t)GSETGET(iterA));               \
     printf("\n");                                                            \
-    GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    printf("sorted %zu elements: ", GSetGetSize(setA));                      \
-    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
+    GSETSORT(setA, GSet ## Name ## Cmp, true);                               \
+    printf("sorted %zu elements: ", GSETGETSIZE(setA));                      \
+    GSETFOR(iterA) printf("%zu ", (size_t)GSETGET(iterA));               \
     printf("\n");                                                            \
-    GSetIterReset(iterA);                                                    \
-    Type prev = GSetGet(iterA);                                              \
-    GSetNext(iterA);                                                         \
-    GSetForEach(iterA) {                                                     \
-      Type cur = GSetGet(iterA);                                             \
+    GSETITERRESET(iterA);                                                    \
+    Type prev = GSETGET(iterA);                                              \
+    GSETNEXT(iterA);                                                         \
+    GSETFOR(iterA) {                                                     \
+      Type cur = GSETGET(iterA);                                             \
       assert(GSet ## Name ## Cmp(&prev, &cur) < 1);                          \
       prev = cur;                                                            \
     }                                                                        \
-    GSetReset(iterA);                                                        \
-    Type picked = GSetPick(iterA);                                           \
-    assert(GSetGetSize(setA) == 9);                                          \
-    GSetNext(iterA);                                                         \
-    picked = GSetPick(iterA);                                                \
-    assert(GSetGetSize(setA) == 8);                                          \
-    while (GSetNext(iterA));                                                 \
-    picked = GSetPick(iterA);                                                \
+    GSETRESET(iterA);                                                        \
+    Type picked = GSETPICK(iterA);                                           \
+    assert(GSETGETSIZE(setA) == 9);                                          \
+    GSETNEXT(iterA);                                                         \
+    picked = GSETPICK(iterA);                                                \
+    assert(GSETGETSIZE(setA) == 8);                                          \
+    while (GSETNEXT(iterA));                                                 \
+    picked = GSETPICK(iterA);                                                \
     (void)picked;                                                            \
-    assert(GSetGetSize(setA) == 7);                                          \
-    printf("remaining %zu elements: ", GSetGetSize(setA));                   \
-    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
+    assert(GSETGETSIZE(setA) == 7);                                          \
+    printf("remaining %zu elements: ", GSETGETSIZE(setA));                   \
+    GSETFOR(iterA) printf("%zu ", (size_t)GSETGET(iterA));               \
     printf("\n");                                                            \
-    GSetEmpty(setA);                                                         \
-    assert(GSetGetSize(setA) == 0);                                          \
-    GSetShuffle(setA);                                                       \
-    GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    GSetAddArr(setA, 2, ((Type[]) {0, 0}));                                  \
-    GSetIterFree(&iterA);                                                    \
+    GSETEMPTY(setA);                                                         \
+    assert(GSETGETSIZE(setA) == 0);                                          \
+    GSETSHUFFLE(setA);                                                       \
+    GSETSORT(setA, GSet ## Name ## Cmp, true);                               \
+    GSETADDARR(setA, 2, ((Type[]) {0, 0}));                                  \
+    GSETITERFREE(&iterA);                                                    \
     assert(iterA == NULL);                                                   \
-    GSetIterFree(&iterB);                                                    \
+    GSETITERFREE(&iterB);                                                    \
     assert(iterB == NULL);                                                   \
-    GSetIterFree(&iterC);                                                    \
+    GSETITERFREE(&iterC);                                                    \
     assert(iterC == NULL);                                                   \
-    GSetFree(&setA);                                                         \
+    GSETFREE(&setA);                                                         \
     assert(setA == NULL);                                                    \
-    GSetFree(&setB);                                                         \
+    GSETFREE(&setB);                                                         \
     assert(setB == NULL);                                                    \
     printf("Test GSet" #Name " OK\n");                                       \
   } while(false)
@@ -229,9 +229,9 @@ void CharFree(char* that) {(void)that;}
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
     Type* data = malloc(sizeof(Type));                                       \
-    GSetPush(setA, data);                                                    \
+    GSETPUSH(setA, data);                                                    \
     GSet ## Name ## Flush(setA);                                             \
-    GSetFree(&setA);                                                         \
+    GSETFREE(&setA);                                                         \
   } while(false)
 
 // Main function
