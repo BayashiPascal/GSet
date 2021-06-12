@@ -35,30 +35,30 @@ void DummyFree(struct Dummy** const that) {
 // GSet of pointer to Dummy struct
 DefineGSet(Dummy, struct Dummy*)
 
-#define sizeArr 3
+#define SIZE_ARR 3
 
-char arrChar[sizeArr] = {'a', 'b', 'c'};
+char arrChar[SIZE_ARR] = {'a', 'b', 'c'};
 char dataChar[2] = {'d', 'e'};
 
-int arrInt[sizeArr] = {-1, -2, -3};
+int arrInt[SIZE_ARR] = {-1, -2, -3};
 int dataInt[2] = {-4, -5};
 
-unsigned int arrUInt[sizeArr] = {1, 2, 3};
+unsigned int arrUInt[SIZE_ARR] = {1, 2, 3};
 unsigned int dataUInt[2] = {4, 5};
 
-long arrLong[sizeArr] = {-1, -2, -3};
+long arrLong[SIZE_ARR] = {-1, -2, -3};
 long dataLong[2] = {-4, -5};
 
-unsigned long arrULong[sizeArr] = {1, 2, 3};
+unsigned long arrULong[SIZE_ARR] = {1, 2, 3};
 unsigned long dataULong[2] = {4, 5};
 
-float arrFloat[sizeArr] = {1., 2., 3.};
+float arrFloat[SIZE_ARR] = {1., 2., 3.};
 float dataFloat[2] = {4., 5.};
 
-double arrDouble[sizeArr] = {1., 2., 3.};
+double arrDouble[SIZE_ARR] = {1., 2., 3.};
 double dataDouble[2] = {4., 5.};
 
-char* arrStr[sizeArr] = {"a", "b", "c"};
+char* arrStr[SIZE_ARR] = {"a", "b", "c"};
 char* dataStr[2] = {"d", "e"};
 
 struct Dummy dummyA = { .a = 0 };
@@ -66,7 +66,7 @@ struct Dummy dummyB = { .a = 1 };
 struct Dummy dummyC = { .a = 2 };
 struct Dummy dummyD = { .a = 3 };
 struct Dummy dummyE = { .a = 4 };
-struct Dummy* arrDummy[sizeArr] = {&dummyA, &dummyB, &dummyC};
+struct Dummy* arrDummy[SIZE_ARR] = {&dummyA, &dummyB, &dummyC};
 struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
 
 void CharFree(char* that) {(void)that;}
@@ -76,8 +76,8 @@ void CharFree(char* that) {(void)that;}
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
     assert(GSetGetSize(setA) == 0);                                          \
-    GSet ## Name* setB = GSet ## Name ## FromArr(sizeArr, arr ## Name);      \
-    assert(GSetGetSize(setB) == sizeArr);                                    \
+    GSet ## Name* setB = GSet ## Name ## FromArr(SIZE_ARR, arr ## Name);      \
+    assert(GSetGetSize(setB) == SIZE_ARR);                                    \
     GSetIter ## Name* iterA =                                                \
       GSetIter ## Name ## Alloc(setA);                                       \
     bool flagCatch = false;                                                  \
@@ -116,7 +116,7 @@ void CharFree(char* that) {(void)that;}
     assert(GSetGet(iterA) == data ## Name[1]);                               \
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == true);                                       \
-    GSetAddArr(setA, 2, ((Type[]){0, 0}));                                   \
+    GSetAddArr(setA, 2, ((Type[]) {0, 0}));                                  \
     assert(GSetGetSize(setA) == 4);                                          \
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == false);                                      \
@@ -164,8 +164,8 @@ void CharFree(char* that) {(void)that;}
     GSetReset(iterA);                                                        \
     FOR(i, 4) GSetNext(iterA);                                               \
     GSetAppend(setA, setB);                                                  \
-    assert(GSetGetSize(setA) == 4 + sizeArr);                                \
-    assert(GSetGetSize(setB) == sizeArr);                                    \
+    assert(GSetGetSize(setA) == 4 + SIZE_ARR);                                \
+    assert(GSetGetSize(setB) == SIZE_ARR);                                    \
     GSetIterSetType(iterB, GSetIterForward);                                 \
     GSetNext(iterA);                                                         \
     GSetForEach(iterB) {                                                     \
@@ -175,7 +175,7 @@ void CharFree(char* that) {(void)that;}
     GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     GSetMerge(setA, setB);                                                   \
-    assert(GSetGetSize(setA) == 4 + 2 * sizeArr);                            \
+    assert(GSetGetSize(setA) == 4 + 2 * SIZE_ARR);                            \
     assert(GSetGetSize(setB) == 0);                                          \
     GSetShuffle(setA);                                                       \
     printf("shuffled %zu elements: ", GSetGetSize(setA));                    \
@@ -210,7 +210,7 @@ void CharFree(char* that) {(void)that;}
     assert(GSetGetSize(setA) == 0);                                          \
     GSetShuffle(setA);                                                       \
     GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    GSetAddArr(setA, 2, ((Type[]){0, 0}));                                   \
+    GSetAddArr(setA, 2, ((Type[]) {0, 0}));                                  \
     GSetIterFree(&iterA);                                                    \
     assert(iterA == NULL);                                                   \
     GSetIterFree(&iterB);                                                    \
