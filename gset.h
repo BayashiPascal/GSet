@@ -325,12 +325,12 @@ GSetIterType GSetIterGetType_(
   static inline GSet ## Name* GSet ## Name ## Alloc(                  \
     void) {                                                                  \
     GSet ## Name* that = malloc(sizeof(GSet ## Name));         \
-    if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
-    Try {                                                                    \
+    if (that == NULL) RAISE(TryCatchExc_MallocFailed);                       \
+    TRY {                                                                    \
       *that = (GSet ## Name ){.s = GSetAlloc()};                      \
-    } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);              \
-    } EndCatchDefault;                                                       \
+    } CATCHDEFAULT {                                                         \
+      free(that); RAISE(TryCatchExc_MallocFailed);              \
+    } ENDCATCHDEFAULT;                                                       \
     return that;                                                             \
   }                                                                          \
   static inline GSet ## Name* GSet ## Name ## FromArr(                       \
@@ -361,9 +361,9 @@ GSetIterType GSetIterGetType_(
     GSet ## Name const* const that) {                                               \
     if (GSETGETSize_(that->s) == 0) return NULL;                              \
     Type* arr = malloc(sizeof(Type) * GSETGETSize_(that->s));                       \
-    if (arr == NULL) Raise(TryCatchExc_MallocFailed);                          \
+    if (arr == NULL) RAISE(TryCatchExc_MallocFailed);                          \
     GSetIter* iter = NULL;                                                     \
-    Try {                                                                      \
+    TRY {                                                                      \
       iter = GSetIterAlloc(GSetIterForward);                                   \
       GSETITERRESET_(iter, that->s);                                          \
       size_t i = 0;                                                            \
@@ -381,10 +381,10 @@ GSetIterType GSetIterGetType_(
             default: GSetIterGet_Ptr)(iter);     \
         ++i;                                                                   \
       } while(GSetIterNext_(iter));                                            \
-    } CatchDefault {                                                           \
+    } CATCHDEFAULT {                                                           \
       free(arr); GSetIterFree_(&iter);                                         \
-      Raise(TryCatchGetLastExc());                                             \
-    } EndCatchDefault;                                                         \
+      RAISE(TryCatchGetLastExc());                                             \
+    } ENDCATCHDEFAULT;                                                         \
     GSetIterFree_(&iter);                                                      \
     return arr;                                                                \
   } \
@@ -396,26 +396,26 @@ GSetIterType GSetIterGetType_(
   static inline GSetIter ## Name* GSetIter ## Name ## Alloc(          \
     GSet ## Name* const set) {                                       \
     GSetIter ## Name* that = malloc(sizeof(GSetIter ## Name)); \
-    if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
-    Try {                                                                    \
+    if (that == NULL) RAISE(TryCatchExc_MallocFailed);                       \
+    TRY {                                                                    \
       *that =                                                                \
         (GSetIter ## Name ){.set = set, .i = GSetIterAlloc(GSetIterForward)};\
-    } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);              \
-    } EndCatchDefault;                                                       \
+    } CATCHDEFAULT {                                                         \
+      free(that); RAISE(TryCatchExc_MallocFailed);              \
+    } ENDCATCHDEFAULT;                                                       \
     GSETITERRESET_(that->i, set->s);                                         \
     return that;                                                             \
   }                                                                          \
   static inline GSetIter ## Name* GSetIter ## Name ## Clone(          \
     GSetIter ## Name const* that) {                                         \
     GSetIter ## Name* clone = malloc(sizeof(GSetIter ## Name));\
-    if (clone == NULL) Raise(TryCatchExc_MallocFailed);                      \
-    Try {                                                                    \
+    if (clone == NULL) RAISE(TryCatchExc_MallocFailed);                      \
+    TRY {                                                                    \
       *clone = (GSetIter ## Name)                                     \
         {.set = that->set, .i = GSetIterClone_(that->i)};                    \
-    } CatchDefault {                                                         \
-      free(clone); Raise(TryCatchExc_MallocFailed);              \
-    } EndCatchDefault;                                                       \
+    } CATCHDEFAULT {                                                         \
+      free(clone); RAISE(TryCatchExc_MallocFailed);              \
+    } ENDCATCHDEFAULT;                                                       \
     return clone;                                                            \
   }                                                                          \
 

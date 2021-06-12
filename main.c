@@ -81,12 +81,12 @@ void CharFree(char* that) {(void)that;}
     GSetIter ## Name* iterA =                                                \
       GSetIter ## Name ## Alloc(setA);                                       \
     bool flagCatch = false;                                                  \
-    Try {GSETISFIRST(iterA);}                                                \
-      Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
+    TRY {GSETISFIRST(iterA);}                                                \
+      CATCH(TryCatchExc_OutOfRange) {flagCatch = true;} ENDCATCH;            \
     assert(flagCatch == true);                                               \
     flagCatch = false;                                                       \
-    Try {GSETISLAST(iterA);}                                                 \
-      Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
+    TRY {GSETISLAST(iterA);}                                                 \
+      CATCH(TryCatchExc_OutOfRange) {flagCatch = true;} ENDCATCH;            \
     assert(flagCatch == true);                                               \
     assert(GSETITERGETTYPE(iterA) == GSetIterForward);                       \
     GSetIter ## Name* iterB =                                                \
@@ -154,12 +154,12 @@ void CharFree(char* that) {(void)that;}
     assert(dropA == data ## Name[1]);                                        \
     assert(GSETGETSIZE(setA) == 4);                                          \
     flagCatch = false;                                                       \
-    Try {GSETAPPEND(setA, setA);}                                            \
-      Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
+    TRY {GSETAPPEND(setA, setA);}                                            \
+      CATCH(TryCatchExc_InfiniteLoop) {flagCatch = true;} ENDCATCH;          \
     assert(flagCatch == true);                                               \
     flagCatch = false;                                                       \
-    Try {GSETMERGE(setA, setA);}                                             \
-      Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
+    TRY {GSETMERGE(setA, setA);}                                             \
+      CATCH(TryCatchExc_InfiniteLoop) {flagCatch = true;} ENDCATCH;          \
     assert(flagCatch == true);                                               \
     GSETRESET(iterA);                                                        \
     FOR(i, 4) GSETNEXT(iterA);                                               \
