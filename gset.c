@@ -142,7 +142,7 @@ static GSetElem* GSetDropElem(
 // Output:
 //   Return the new GSetIter.
 GSetIter GSetIterCreate(
-  enum GSetIterType const type);
+  GSetIterType const type);
 
 // ================== Public functions definition =========================
 
@@ -250,7 +250,7 @@ GSetAdd__(Ptr, void*)
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
-             T* const arr) {                                        \
+             T const* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = arr[i];                                                   \
@@ -261,7 +261,7 @@ void GSetAddArr_ ## N(        \
 void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
-             T* const arr) {                                        \
+             T const* const arr) {                                        \
   ForZeroTo(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = ((void**)arr)[i];                                                   \
@@ -517,8 +517,8 @@ void GSetShuffle_(
 #define GSetSort__(N, T) \
 void GSetSort_ ## N(    \
   GSet* const that,   \
-          int (*cmp)(void const*, void const*), \
-         bool inc) { \
+          int (* const cmp)(void const*, void const*), \
+         bool const inc) { \
   if (that->size < 2) return; \
   T* arr = NULL;  \
   SafeMalloc(arr, sizeof(T) * that->size); \
@@ -562,7 +562,7 @@ GSetSort__(Ptr, void*)
 // Output:
 //   Return the new GSetIter.
 GSetIter* GSetIterAlloc(
-  enum GSetIterType const type) {
+  GSetIterType const type) {
 
   // Allocate memory for the GSet
   GSetIter* that = NULL;
@@ -841,7 +841,7 @@ bool GSetIterIsLast_(
 // Output:
 //   Return a clone of the iterator
 GSetIter* GSetIterClone_(
-  GSetIter* const that) {
+  GSetIter const* const that) {
 
   // Allocate memory for the clone
   GSetIter* clone = GSetIterAlloc(that->type);
@@ -1141,7 +1141,7 @@ static GSetElem* GSetDropElem(
 // Output:
 //   Return the new GSetIter.
 GSetIter GSetIterCreate(
-  enum GSetIterType const type) {
+  GSetIterType const type) {
 
   // Create the GSet
   GSetIter that = (GSetIter){

@@ -141,11 +141,10 @@ void CharFree(char* that) {(void)that;}
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == true);                                       \
     Type* toArr = GSet ## Name ## ToArr(setA);                               \
-    size_t idx = 0;                                                          \
     GSetReset(iterA);                                                        \
-    GSetForEach(iterA) assert(toArr[idx++] == GSetGet(iterA));               \
-    printf("%ld elements: ", GSetGetSize(setA));                             \
-    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    GSetEnumerate(iterA, idx) assert(toArr[idx] == GSetGet(iterA));          \
+    printf("%zu elements: ", GSetGetSize(setA));                             \
+    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     free(toArr);                                                             \
     Type popA = GSetPop(setA);                                               \
@@ -172,19 +171,19 @@ void CharFree(char* that) {(void)that;}
     GSetForEach(iterB) {                                                     \
       assert(GSetGet(iterB) == GSetGet(iterA));GSetNext(iterA);              \
     }                                                                        \
-    printf("%ld elements: ", GSetGetSize(setA));                             \
-    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("%zu elements: ", GSetGetSize(setA));                             \
+    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     GSetMerge(setA, setB);                                                   \
     assert(GSetGetSize(setA) == 4 + 2 * sizeArr);                            \
     assert(GSetGetSize(setB) == 0);                                          \
     GSetShuffle(setA);                                                       \
-    printf("shuffled %ld elements: ", GSetGetSize(setA));                    \
-    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("shuffled %zu elements: ", GSetGetSize(setA));                    \
+    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    printf("sorted %ld elements: ", GSetGetSize(setA));                      \
-    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("sorted %zu elements: ", GSetGetSize(setA));                      \
+    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     GSetIterReset(iterA);                                                    \
     Type prev = GSetGet(iterA);                                              \
@@ -204,8 +203,8 @@ void CharFree(char* that) {(void)that;}
     picked = GSetPick(iterA);                                                \
     (void)picked;                                                            \
     assert(GSetGetSize(setA) == 7);                                          \
-    printf("remaining %ld elements: ", GSetGetSize(setA));                   \
-    GSetForEach(iterA) printf("%ld ", (size_t)GSetGet(iterA));               \
+    printf("remaining %zu elements: ", GSetGetSize(setA));                   \
+    GSetForEach(iterA) printf("%zu ", (size_t)GSetGet(iterA));               \
     printf("\n");                                                            \
     GSetEmpty(setA);                                                         \
     assert(GSetGetSize(setA) == 0);                                          \
