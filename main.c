@@ -3,7 +3,7 @@
 #include "gset.h"
 
 // Loop from 0 to (N - 1)
-#define ForZeroTo(I, N) for (size_t I = 0; I < N; ++I)
+#define FOR(I, N) for (size_t I = 0; I < N; ++I)
 
 // Dummy struct
 struct Dummy {
@@ -71,7 +71,7 @@ struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
 
 void CharFree(char* that) {(void)that;}
 
-#define Test(Name, Type)                                                     \
+#define TEST(Name, Type)                                                     \
   printf("Test GSet" #Name "\n");                                            \
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
@@ -162,7 +162,7 @@ void CharFree(char* that) {(void)that;}
       Catch(TryCatchExc_InfiniteLoop) {flagCatch = true;} EndCatch;          \
     assert(flagCatch == true);                                               \
     GSetReset(iterA);                                                        \
-    ForZeroTo(i, 4) GSetNext(iterA);                                         \
+    FOR(i, 4) GSetNext(iterA);                                               \
     GSetAppend(setA, setB);                                                  \
     assert(GSetGetSize(setA) == 4 + sizeArr);                                \
     assert(GSetGetSize(setB) == sizeArr);                                    \
@@ -224,8 +224,8 @@ void CharFree(char* that) {(void)that;}
     printf("Test GSet" #Name " OK\n");                                       \
   } while(false)
 
-#define TestPtr(Name, Type)                                                  \
-  Test(Name, Type*);                                                         \
+#define TESTPTR(Name, Type)                                                  \
+  TEST(Name, Type*);                                                         \
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
     Type* data = malloc(sizeof(Type));                                       \
@@ -240,33 +240,15 @@ int main() {
   printf(
     "Commit id: %s\n",
     GSetGetCommitId());
-  Test(
-    Char,
-    char);
-  Test(
-    Int,
-    int);
-  Test(
-    UInt,
-    unsigned int);
-  Test(
-    Long,
-    long);
-  Test(
-    ULong,
-    unsigned long);
-  Test(
-    Float,
-    float);
-  Test(
-    Double,
-    double);
-  TestPtr(
-    Str,
-    char);
-  TestPtr(
-    Dummy,
-    struct Dummy);
+  TEST(Char, char);
+  TEST(Int, int);
+  TEST(UInt, unsigned int);
+  TEST(Long, long);
+  TEST(ULong, unsigned long);
+  TEST(Float, float);
+  TEST(Double, double);
+  TESTPTR(Str, char);
+  TESTPTR(Dummy, struct Dummy);
   printf("All unit tests OK\n");
 
   // Return the sucess code

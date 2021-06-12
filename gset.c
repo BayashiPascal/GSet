@@ -17,7 +17,7 @@
   } while(false)
 
 // Loop from 0 to (N - 1)
-#define ForZeroTo(I, N) for (size_t I = 0; I < N; ++I)
+#define FOR(I, N) for (size_t I = 0; I < N; ++I)
 
 // Get a random number in [0.0, 1.0]
 #define rnd() (float)(rand())/(float)(RAND_MAX)
@@ -251,7 +251,7 @@ void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
              T const* const arr) {                                        \
-  ForZeroTo(i, size) { \
+  FOR(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = arr[i];                                                   \
     GSetAddElem(that, elem);                                              \
@@ -262,7 +262,7 @@ void GSetAddArr_ ## N(        \
   GSet* const that,  \
              size_t const size, \
              T const* const arr) {                                        \
-  ForZeroTo(i, size) { \
+  FOR(i, size) { \
     GSetElem* elem = GSetElemAlloc();                                   \
     elem->data.N = ((void**)arr)[i];                                                   \
     GSetAddElem(that, elem);                                              \
