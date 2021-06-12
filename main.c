@@ -12,7 +12,9 @@ struct Dummy {
 
 };
 
-int GSetDummyCmp(void const* a, void const* b) {
+int GSetDummyCmp(
+  void const* a,
+  void const* b) {
 
   struct Dummy* sa = *(struct Dummy* const*)a;
   struct Dummy* sb = *(struct Dummy* const*)b;
@@ -24,8 +26,10 @@ int GSetDummyCmp(void const* a, void const* b) {
 }
 
 void DummyFree(struct Dummy** const that) {
+
   if (that == NULL || *that == NULL) return;
   free(*that); *that = NULL;
+
 }
 
 // GSet of pointer to Dummy struct
@@ -57,11 +61,11 @@ double dataDouble[2] = {4., 5.};
 char* arrStr[sizeArr] = {"a", "b", "c"};
 char* dataStr[2] = {"d", "e"};
 
-struct Dummy dummyA = {.a = 0};
-struct Dummy dummyB = {.a = 1};
-struct Dummy dummyC = {.a = 2};
-struct Dummy dummyD = {.a = 3};
-struct Dummy dummyE = {.a = 4};
+struct Dummy dummyA = { .a = 0 };
+struct Dummy dummyB = { .a = 1 };
+struct Dummy dummyC = { .a = 2 };
+struct Dummy dummyD = { .a = 3 };
+struct Dummy dummyE = { .a = 4 };
 struct Dummy* arrDummy[sizeArr] = {&dummyA, &dummyB, &dummyC};
 struct Dummy* dataDummy[2] = {&dummyD, &dummyE};
 
@@ -112,7 +116,7 @@ void CharFree(char* that) {(void)that;}
     assert(GSetGet(iterA) == data ## Name[1]);                               \
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == true);                                       \
-    GSetAddArr(setA, 2, ((Type[]){0,0}));                                    \
+    GSetAddArr(setA, 2, ((Type[]){0, 0}));                                   \
     assert(GSetGetSize(setA) == 4);                                          \
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == false);                                      \
@@ -207,7 +211,7 @@ void CharFree(char* that) {(void)that;}
     assert(GSetGetSize(setA) == 0);                                          \
     GSetShuffle(setA);                                                       \
     GSetSort(setA, GSet ## Name ## Cmp, true);                               \
-    GSetAddArr(setA, 2, ((Type[]){0,0}));                                    \
+    GSetAddArr(setA, 2, ((Type[]){0, 0}));                                   \
     GSetIterFree(&iterA);                                                    \
     assert(iterA == NULL);                                                   \
     GSetIterFree(&iterB);                                                    \
@@ -230,24 +234,43 @@ void CharFree(char* that) {(void)that;}
     GSet ## Name ## Flush(setA);                                             \
     GSetFree(&setA);                                                         \
   } while(false)
-  
+
 // Main function
 int main() {
 
-  printf("Commit id: %s\n", GSetGetCommitId());
-  Test(Char, char);
-  Test(Int, int);
-  Test(UInt, unsigned int);
-  Test(Long, long);
-  Test(ULong, unsigned long);
-  Test(Float, float);
-  Test(Double, double);
-  TestPtr(Str, char);
-  TestPtr(Dummy, struct Dummy);
+  printf(
+    "Commit id: %s\n",
+    GSetGetCommitId());
+  Test(
+    Char,
+    char);
+  Test(
+    Int,
+    int);
+  Test(
+    UInt,
+    unsigned int);
+  Test(
+    Long,
+    long);
+  Test(
+    ULong,
+    unsigned long);
+  Test(
+    Float,
+    float);
+  Test(
+    Double,
+    double);
+  TestPtr(
+    Str,
+    char);
+  TestPtr(
+    Dummy,
+    struct Dummy);
   printf("All unit tests OK\n");
 
   // Return the sucess code
   return EXIT_SUCCESS;
 
 }
-
