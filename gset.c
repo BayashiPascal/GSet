@@ -10,10 +10,10 @@
 // ================== Macros =========================
 
 // Malloc raising exception if it fails
-#define MALLOC(T, S)  \
-  do { \
-    T = malloc(S); \
-    if (T == NULL) Raise(TryCatchExc_MallocFailed); \
+#define MALLOC(T, S)                                 \
+  do {                                               \
+    T = malloc(S);                                   \
+    if (T == NULL) Raise(TryCatchExc_MallocFailed);  \
   } while(false)
 
 // Loop from 0 to (N - 1)
@@ -26,6 +26,7 @@
 
 // Union to memorise the data in a GSet element independently of its type
 union GSetElemData {
+
   char Char;
   unsigned char UChar;
   int Int;
@@ -35,13 +36,14 @@ union GSetElemData {
   float Float;
   double Double;
   void* Ptr;
+
 };
 
 // Structure of a GSet element
 struct GSetElem {
 
   // Data in the element
- union GSetElemData data;
+  union GSetElemData data;
 
   // Previous element in the set
   struct GSetElem* prev;
@@ -202,12 +204,13 @@ void GSetFree_(
 //   data: the data
 #define GSETPUSH__(N, T)                                                     \
 void GSetPush_ ## N(                                                         \
-  GSet* const that,                                                   \
+  GSet* const that,                                                          \
              T const data) {                                                 \
-  GSetElem* elem = GSetElemAlloc();                                   \
+  GSetElem* elem = GSetElemAlloc();                                          \
   elem->data.N = data;                                                       \
   GSetPushElem(that, elem);                                                  \
 }
+
 GSETPUSH__(Char, char)
 GSETPUSH__(UChar, unsigned char)
 GSETPUSH__(Int, int)
@@ -224,12 +227,13 @@ GSETPUSH__(Ptr, void*)
 //   data: the data
 #define GSETADD__(N, T)                                                      \
 void GSetAdd_ ## N(                                                          \
-  GSet* const that,                                                   \
+  GSet* const that,                                                          \
              T const data) {                                                 \
-  GSetElem* elem = GSetElemAlloc();                                   \
+  GSetElem* elem = GSetElemAlloc();                                          \
   elem->data.N = data;                                                       \
   GSetAddElem(that, elem);                                                   \
 }
+
 GSETADD__(Char, char)
 GSETADD__(UChar, unsigned char)
 GSETADD__(Int, int)
@@ -244,28 +248,30 @@ GSETADD__(Ptr, void*)
 // Inputs:
 //   that: the set
 //   arr: the array of data
-#define GSETADDARR__(N, T)     \
-void GSetAddArr_ ## N(        \
-  GSet* const that,  \
-             size_t const size, \
-             T const* const arr) {                                        \
-  FOR(i, size) { \
-    GSetElem* elem = GSetElemAlloc();                                   \
-    elem->data.N = arr[i];                                                   \
-    GSetAddElem(that, elem);                                              \
-  } \
+#define GSETADDARR__(N, T)             \
+void GSetAddArr_ ## N(                 \
+  GSet* const that,                    \
+             size_t const size,        \
+             T const* const arr) {     \
+  FOR(i, size) {                       \
+    GSetElem* elem = GSetElemAlloc();  \
+    elem->data.N = arr[i];             \
+    GSetAddElem(that, elem);           \
+  }                                    \
 }
-#define GSETADDARRPTR__(N, T)     \
-void GSetAddArr_ ## N(        \
-  GSet* const that,  \
-             size_t const size, \
-             T const* const arr) {                                        \
-  FOR(i, size) { \
-    GSetElem* elem = GSetElemAlloc();                                   \
-    elem->data.N = ((void**)arr)[i];                                                   \
-    GSetAddElem(that, elem);                                              \
-  } \
+
+#define GSETADDARRPTR__(N, T)          \
+void GSetAddArr_ ## N(                 \
+  GSet* const that,                    \
+             size_t const size,        \
+             T const* const arr) {     \
+  FOR(i, size) {                       \
+    GSetElem* elem = GSetElemAlloc();  \
+    elem->data.N = ((void**)arr)[i];   \
+    GSetAddElem(that, elem);           \
+  }                                    \
 }
+
 GSETADDARR__(Char, char)
 GSETADDARR__(UChar, unsigned char)
 GSETADDARR__(Int, int)
@@ -281,15 +287,16 @@ GSETADDARRPTR__(Ptr, void)
 //   that: the set
 // Output:
 //   Remove the data at the head of the set and return it
-#define GSETPOP__(N, T)                                                      \
-T GSetPop_ ## N(                                                             \
-  GSet* const that) {                                                 \
-  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
-  GSetElem* elem = GSetPopElem(that);                                 \
-  T data = elem->data.N;                                                     \
-  GSetElemFree(&elem);                                                       \
-  return data;                                                               \
+#define GSETPOP__(N, T)                                \
+T GSetPop_ ## N(                                       \
+  GSet* const that) {                                  \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);  \
+  GSetElem* elem = GSetPopElem(that);                  \
+  T data = elem->data.N;                               \
+  GSetElemFree(&elem);                                 \
+  return data;                                         \
 }
+
 GSETPOP__(Char, char)
 GSETPOP__(UChar, unsigned char)
 GSETPOP__(Int, int)
@@ -305,15 +312,16 @@ GSETPOP__(Ptr, void*)
 //   that: the set
 // Output:
 //   Remove the data at the tail of the set and return it
-#define GSETDROP__(N, T)                                                     \
-T GSetDrop_ ## N(                                                            \
-  GSet* const that) {                                                 \
-  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
-  GSetElem* elem = GSetDropElem(that);                                \
-  T data = elem->data.N;                                                     \
-  GSetElemFree(&elem);                                                       \
-  return data;                                                               \
+#define GSETDROP__(N, T)                               \
+T GSetDrop_ ## N(                                      \
+  GSet* const that) {                                  \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);  \
+  GSetElem* elem = GSetDropElem(that);                 \
+  T data = elem->data.N;                               \
+  GSetElemFree(&elem);                                 \
+  return data;                                         \
 }
+
 GSETDROP__(Char, char)
 GSETDROP__(UChar, unsigned char)
 GSETDROP__(Int, int)
@@ -348,13 +356,17 @@ void GSetAppend_(
 
     // Loop on the element of the set source
     iter = GSetIterAlloc(GSetIterForward);
-    GSetIterReset_(iter, tho);
+    GSetIterReset_(
+      iter,
+      tho);
     do {
 
       // Add the data from the source to the destination
       GSetElem* elem = GSetElemAlloc();
       elem->data = iter->elem->data;
-      GSetAddElem(that, elem);
+      GSetAddElem(
+        that,
+        elem);
 
     } while (GSetIterNext_(iter));
 
@@ -510,38 +522,39 @@ void GSetShuffle_(
 // It uses qsort, see man page for details. Elements are sorted in ascending
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
-#define GSETSORT__(N, T) \
-void GSetSort_ ## N(    \
-  GSet* const that,   \
-          int (* const cmp)(void const*, void const*), \
-         bool const inc) { \
-  if (that->size < 2) return; \
-  T* arr = NULL;  \
-  MALLOC(arr, sizeof(T) * that->size); \
-  GSetElem* ptr = that->first; \
-  size_t i = 0; \
-  while (ptr != NULL) { \
-    arr[i] = ptr->data.N; \
-    ptr = ptr->next; \
-    ++i; \
-  } \
-  Try { \
-    qsort(arr, that->size, sizeof(T), cmp); \
-    ptr = that->first; \
-    i = 0; \
-    while (ptr != NULL) { \
-      if (inc == true) \
-        ptr->data.N = arr[i]; \
-      else \
-        ptr->data.N = arr[that->size - 1 - i]; \
-      ptr = ptr->next; \
-      ++i; \
-    } \
-    free(arr); \
-  } CatchDefault { \
-    free(arr); Raise(TryCatchGetLastExc()); \
-  } EndCatchDefault; \
+#define GSETSORT__(N, T)                                 \
+void GSetSort_ ## N(                                     \
+  GSet* const that,                                      \
+          int (* const cmp)(void const*, void const*),   \
+         bool const inc) {                               \
+  if (that->size < 2) return;                            \
+  T* arr = NULL;                                         \
+  MALLOC(arr, sizeof(T) * that->size);                   \
+  GSetElem* ptr = that->first;                           \
+  size_t i = 0;                                          \
+  while (ptr != NULL) {                                  \
+    arr[i] = ptr->data.N;                                \
+    ptr = ptr->next;                                     \
+    ++i;                                                 \
+  }                                                      \
+  Try {                                                  \
+    qsort(arr, that->size, sizeof(T), cmp);              \
+    ptr = that->first;                                   \
+    i = 0;                                               \
+    while (ptr != NULL) {                                \
+      if (inc == true)                                   \
+        ptr->data.N = arr[i];                            \
+      else                                               \
+        ptr->data.N = arr[that->size - 1 - i];           \
+      ptr = ptr->next;                                   \
+      ++i;                                               \
+    }                                                    \
+    free(arr);                                           \
+  } CatchDefault {                                       \
+    free(arr); Raise(TryCatchGetLastExc());              \
+  } EndCatchDefault;                                     \
 }
+
 GSETSORT__(Char, char)
 GSETSORT__(UChar, unsigned char)
 GSETSORT__(Int, int)
@@ -592,13 +605,14 @@ void GSetIterFree_(
 //   that: the iterator
 // Output:
 //   Return the current data
-#define GSETITERGET__(N, T)                                                  \
-T GSetIterGet_ ## N(                                                         \
-  GSetIter const* const that) {                                       \
-  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
-  T data = that->elem->data.N;                                               \
-  return data;                                                               \
+#define GSETITERGET__(N, T)                               \
+T GSetIterGet_ ## N(                                      \
+  GSetIter const* const that) {                           \
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);  \
+  T data = that->elem->data.N;                            \
+  return data;                                            \
 }
+
 GSETITERGET__(Char, char)
 GSETITERGET__(UChar, unsigned char)
 GSETITERGET__(Int, int)
@@ -617,15 +631,15 @@ GSETITERGET__(Ptr, void*)
 //   Remove the current data from the set and return it
 #define GSETITERPICK__(N, T)                                                 \
 T GSetIterPick_ ## N(                                                        \
-  GSetIter* const that,                                               \
-  GSet* const set) {                                                  \
+  GSetIter* const that,                                                      \
+  GSet* const set) {                                                         \
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
   T data = that->elem->data.N;                                               \
   if (set->first == that->elem) set->first = set->first->next;               \
   if (set->last == that->elem) set->last = set->last->prev;                  \
   if (that->elem->next != NULL) that->elem->next->prev = that->elem->prev;   \
   if (that->elem->prev != NULL) that->elem->prev->next = that->elem->next;   \
-  GSetElem* elem = that->elem;                                        \
+  GSetElem* elem = that->elem;                                               \
   if (GSetIterNext_(that) == false)                                          \
     if (GSetIterPrev_(that) == false)                                        \
       that->elem = NULL;                                                     \
@@ -633,6 +647,7 @@ T GSetIterPick_ ## N(                                                        \
   --(set->size);                                                             \
   return data;                                                               \
 }
+
 GSETITERPICK__(Char, char)
 GSETITERPICK__(UChar, unsigned char)
 GSETITERPICK__(Int, int)
@@ -853,7 +868,7 @@ GSetIter* GSetIterClone_(
 //   that: the iterator
 //   type: the type
 void GSetIterSetType_(
-  GSetIter* const that,
+     GSetIter* const that,
   GSetIterType const type) {
 
   // Set the type
@@ -880,6 +895,7 @@ void N ## Free(T* const that) {                                              \
   if (that == NULL || *that == NULL) return;                                 \
   free(*that); *that = NULL;                                                 \
 }
+
 FREE_(CharPtr, char*)
 FREE_(UCharPtr, unsigned char*)
 FREE_(IntPtr, int*)
@@ -892,49 +908,63 @@ FREE_(Str, char*)
 
 // Comparison functions for GSet<N>Sort on default typed GSet
 
-int GSetCharCmp(void const* a, void const* b) {
+int GSetCharCmp(
+  void const* a,
+  void const* b) {
 
   return (*(char const*)a < *(char const*)b ? -1 :
           *(char const*)a > *(char const*)b ? 1 : 0);
 
 }
 
-int GSetUCharCmp(void const* a, void const* b) {
+int GSetUCharCmp(
+  void const* a,
+  void const* b) {
 
   return (*(unsigned char const*)a < *(unsigned char const*)b ? -1 :
           *(unsigned char const*)a > *(unsigned char const*)b ? 1 : 0);
 
 }
 
-int GSetIntCmp(void const* a, void const* b) {
+int GSetIntCmp(
+  void const* a,
+  void const* b) {
 
   return (*(int const*)a < *(int const*)b ? -1 :
           *(int const*)a > *(int const*)b ? 1 : 0);
 
 }
 
-int GSetUIntCmp(void const* a, void const* b) {
+int GSetUIntCmp(
+  void const* a,
+  void const* b) {
 
   return (*(unsigned int const*)a < *(unsigned int const*)b ? -1 :
           *(unsigned int const*)a > *(unsigned int const*)b ? 1 : 0);
 
 }
 
-int GSetLongCmp(void const* a, void const* b) {
+int GSetLongCmp(
+  void const* a,
+  void const* b) {
 
   return (*(long const*)a < *(long const*)b ? -1 :
           *(long const*)a > *(long const*)b ? 1 : 0);
 
 }
 
-int GSetULongCmp(void const* a, void const* b) {
+int GSetULongCmp(
+  void const* a,
+  void const* b) {
 
   return (*(unsigned long const*)a < *(unsigned long const*)b ? -1 :
           *(unsigned long const*)a > *(unsigned long const*)b ? 1 : 0);
 
 }
 
-int GSetFloatCmp(void const* a, void const* b) {
+int GSetFloatCmp(
+  void const* a,
+  void const* b) {
 
   float x = *(float*)a;
   float y = *(float*)b;
@@ -944,7 +974,9 @@ int GSetFloatCmp(void const* a, void const* b) {
 
 }
 
-int GSetDoubleCmp(void const* a, void const* b) {
+int GSetDoubleCmp(
+  void const* a,
+  void const* b) {
 
   double x = *(double*)a;
   double y = *(double*)b;
@@ -954,14 +986,18 @@ int GSetDoubleCmp(void const* a, void const* b) {
 
 }
 
-int GsetCharPtrCmp(void const* a, void const* b) {
+int GsetCharPtrCmp(
+  void const* a,
+  void const* b) {
 
   char* sa = *(char* const*)a;
   char* sb = *(char* const*)b;
   if (sa == NULL && sb == NULL) return 0;
   if (sa == NULL && sb != NULL) return -1;
   if (sa != NULL && sb == NULL) return 1;
-  return strcmp(sa, sb);
+  return strcmp(
+    sa,
+    sb);
 
 }
 
@@ -974,7 +1010,7 @@ static GSetElem GSetElemCreate(
   void) {
 
   // Create the GSetElem
-  GSetElem that = (GSetElem){
+  GSetElem that = (GSetElem) {
 
     .prev = NULL,
     .next = NULL,
@@ -983,6 +1019,7 @@ static GSetElem GSetElemCreate(
 
   // Return the GSetElem
   return that;
+
 }
 
 // Allocate memory for a new GSetElem
@@ -1026,7 +1063,7 @@ static GSet GSetCreate(
   void) {
 
   // Create the GSet
-  GSet that = (GSet){
+  GSet that = (GSet) {
 
     .size = 0,
     .first = NULL,
@@ -1136,7 +1173,7 @@ GSetIter GSetIterCreate(
   GSetIterType const type) {
 
   // Create the GSet
-  GSetIter that = (GSetIter){
+  GSetIter that = (GSetIter) {
 
     .elem = NULL,
     .type = type,
