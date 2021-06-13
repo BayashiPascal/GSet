@@ -13,7 +13,7 @@
 #define SafeMalloc(T, S)  \
   do { \
     T = malloc(S); \
-    if (T == NULL) RAISE(TryCatchExc_MallocFailed); \
+    if (T == NULL) Raise(TryCatchExc_MallocFailed); \
   } while(false)
 
 // Loop from 0 to (N - 1)
@@ -180,7 +180,7 @@ GSet* GSetAlloc(
 
 }
 
-// Empty the GSet with GSETEMPTY() and free the memory it used.
+// Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
 void GSetFree_(
@@ -286,7 +286,7 @@ GSetAddArrPtr__(Ptr, void)
 #define GSetPop__(N, T)                                                      \
 T GSetPop_ ## N(                                                             \
   GSet* const that) {                                                 \
-  if (that->size == 0) RAISE(TryCatchExc_OutOfRange);                        \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
   GSetElem* elem = GSetPopElem(that);                                 \
   T data = elem->data.N;                                                     \
   GSetElemFree(&elem);                                                       \
@@ -310,7 +310,7 @@ GSetPop__(Ptr, void*)
 #define GSetDrop__(N, T)                                                     \
 T GSetDrop_ ## N(                                                            \
   GSet* const that) {                                                 \
-  if (that->size == 0) RAISE(TryCatchExc_OutOfRange);                        \
+  if (that->size == 0) Raise(TryCatchExc_OutOfRange);                        \
   GSetElem* elem = GSetDropElem(that);                                \
   T data = elem->data.N;                                                     \
   GSetElemFree(&elem);                                                       \
@@ -335,7 +335,7 @@ void GSetAppend_(
   GSet const* const tho) {
 
   // Appending a set to itself will create infinite loop
-  if (that == tho) RAISE(TryCatchExc_InfiniteLoop);
+  if (that == tho) Raise(TryCatchExc_InfiniteLoop);
 
   // If the set source is empty, nothing to do
   if (tho->size == 0) return;
@@ -346,11 +346,11 @@ void GSetAppend_(
   // Variable to memorise the raised exception, if any
   int raisedExc = 0;
 
-  TRY {
+  Try {
 
     // Loop on the element of the set source
     iter = GSetIterAlloc(GSetIterForward);
-    GSETITERRESET_(iter, tho);
+    GSetIterReset_(iter, tho);
     do {
 
       // Add the data from the source to the destination
@@ -360,18 +360,18 @@ void GSetAppend_(
 
     } while (GSetIterNext_(iter));
 
-  } CATCHDEFAULT {
+  } CatchDefault {
 
     // Memorise the raised exception
     raisedExc = TryCatchGetLastExc();
 
-  } ENDCATCHDEFAULT;
+  } EndCatchDefault;
 
   // Free memory
   GSetIterFree_(&iter);
 
   // If there has been a raised exception, it
-  if (raisedExc != 0) RAISE(raisedExc);
+  if (raisedExc != 0) Raise(raisedExc);
 
 }
 
@@ -384,7 +384,7 @@ void GSetMerge_(
   GSet* const tho) {
 
   // Merging a set to itself will create infinite loop
-  if (that == tho) RAISE(TryCatchExc_InfiniteLoop);
+  if (that == tho) Raise(TryCatchExc_InfiniteLoop);
 
   // If the merged set is empty, nothing to do
   if (tho->size == 0) return;
@@ -399,7 +399,7 @@ void GSetMerge_(
   } else {
 
     // Check for overflow
-    if (that->size > SIZE_MAX - tho->size) RAISE(TryCatchExc_IntOverflow);
+    if (that->size > SIZE_MAX - tho->size) Raise(TryCatchExc_IntOverflow);
 
     // Connect the tail of that to the head of tho
     that->last->next = tho->first;
@@ -425,7 +425,7 @@ void GSetMerge_(
 //   that: the set
 // Output:
 //   Return the number of element.
-size_t GSETGETSize_(
+size_t GSetGetSize_(
   GSet const* const that) {
 
   return that->size;
@@ -440,7 +440,7 @@ void GSetEmpty_(
   GSet* const that) {
 
   // Loop until the set is empty
-  while (GSETGETSize_(that) > 0) {
+  while (GSetGetSize_(that) > 0) {
 
     // Pop the element
     GSetElem* elem = GSetPopElem(that);
@@ -529,7 +529,7 @@ void GSetSort_ ## N(    \
     ptr = ptr->next; \
     ++i; \
   } \
-  TRY { \
+  Try { \
     qsort(arr, that->size, sizeof(T), cmp); \
     ptr = that->first; \
     i = 0; \
@@ -542,9 +542,9 @@ void GSetSort_ ## N(    \
       ++i; \
     } \
     free(arr); \
-  } CATCHDEFAULT { \
-    free(arr); RAISE(TryCatchGetLastExc()); \
-  } ENDCATCHDEFAULT; \
+  } CatchDefault { \
+    free(arr); Raise(TryCatchGetLastExc()); \
+  } EndCatchDefault; \
 }
 GSetSort__(Char, char)
 GSetSort__(UChar, unsigned char)
@@ -601,7 +601,7 @@ void GSetIterFree_(
 #define GSetIterGet__(N, T)                                                  \
 T GSetIterGet_ ## N(                                                         \
   GSetIter const* const that) {                                       \
-  if (that->elem == NULL) RAISE(TryCatchExc_OutOfRange);                     \
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
   T data = that->elem->data.N;                                               \
   return data;                                                               \
 }
@@ -625,7 +625,7 @@ GSetIterGet__(Ptr, void*)
 T GSetIterPick_ ## N(                                                        \
   GSetIter* const that,                                               \
   GSet* const set) {                                                  \
-  if (that->elem == NULL) RAISE(TryCatchExc_OutOfRange);                     \
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);                     \
   T data = that->elem->data.N;                                               \
   if (set->first == that->elem) set->first = set->first->next;               \
   if (set->last == that->elem) set->last = set->last->prev;                  \
@@ -653,7 +653,7 @@ GSetIterPick__(Ptr, void*)
 // Input:
 //   that: the iterator
 //    set: the associated set
-void GSETITERRESET_(
+void GSetIterReset_(
     GSetIter* const that,
   GSet const* const set) {
 
@@ -669,7 +669,7 @@ void GSETITERRESET_(
       break;
 
     default:
-      RAISE(TryCatchExc_NotYetImplemented);
+      Raise(TryCatchExc_NotYetImplemented);
 
   }
 
@@ -712,7 +712,7 @@ bool GSetIterNext_(
       break;
 
     default:
-      RAISE(TryCatchExc_NotYetImplemented);
+      Raise(TryCatchExc_NotYetImplemented);
 
   }
 
@@ -758,7 +758,7 @@ bool GSetIterPrev_(
       break;
 
     default:
-      RAISE(TryCatchExc_NotYetImplemented);
+      Raise(TryCatchExc_NotYetImplemented);
 
   }
 
@@ -775,7 +775,7 @@ bool GSetIterPrev_(
 bool GSetIterIsFirst_(
   GSetIter* const that) {
 
-  if (that->elem == NULL) RAISE(TryCatchExc_OutOfRange);
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
   // Variable to memorise the returned flag
   bool flag = true;
@@ -792,7 +792,7 @@ bool GSetIterIsFirst_(
       break;
 
     default:
-      RAISE(TryCatchExc_NotYetImplemented);
+      Raise(TryCatchExc_NotYetImplemented);
 
   }
 
@@ -809,7 +809,7 @@ bool GSetIterIsFirst_(
 bool GSetIterIsLast_(
   GSetIter* const that) {
 
-  if (that->elem == NULL) RAISE(TryCatchExc_OutOfRange);
+  if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
   // Variable to memorise the returned flag
   bool flag = true;
@@ -826,7 +826,7 @@ bool GSetIterIsLast_(
       break;
 
     default:
-      RAISE(TryCatchExc_NotYetImplemented);
+      Raise(TryCatchExc_NotYetImplemented);
 
   }
 
@@ -1056,7 +1056,7 @@ static void GSetPushElem(
   GSetElem* const elem) {
 
   // Check for overflow
-  if (that->size > SIZE_MAX - 1) RAISE(TryCatchExc_IntOverflow);
+  if (that->size > SIZE_MAX - 1) Raise(TryCatchExc_IntOverflow);
 
   // Add the element to the head of the set
   elem->next = that->first;
@@ -1078,7 +1078,7 @@ static void GSetAddElem(
   GSetElem* const elem) {
 
   // Check for overflow
-  if (that->size > SIZE_MAX - 1) RAISE(TryCatchExc_IntOverflow);
+  if (that->size > SIZE_MAX - 1) Raise(TryCatchExc_IntOverflow);
 
   // Add the element to the tail of the set
   elem->prev = that->last;

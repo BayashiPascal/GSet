@@ -168,24 +168,24 @@ void GSetCopy(
         GSet* const that,
   GSet const* const tho);
 
-// Empty the GSet with GSETEMPTY() and free the memory it used.
+// Empty the GSet with GSetEmpty() and free the memory it used.
 // Input:
 //   that: the GSet to be freed
-void GSETFREE(
+void GSetFree(
   GSet** const that);
 
 // Empty the GSet. Memory used by data in it is not freed.
 // To empty the GSet and free data the data in it, use GSet<N>Flush() instead.
 // Input:
 //   that: the GSet
-void GSETEMPTY(
+void GSetEmpty(
   GSet* const that);
 
 // Add data at the head of the GSet
 // Inputs:
 //   that: the GSet
 //   data: the data to add
-void GSETPUSH(
+void GSetPush(
   GSet* const that,
          void* const data);
 
@@ -193,7 +193,7 @@ void GSETPUSH(
 // Inputs:
 //   that: the GSet
 //   data: the data to add
-void GSETADD(
+void GSetAdd(
   GSet* const that,
          void* const data);
 
@@ -205,7 +205,7 @@ void GSETADD(
 //   data. If the current element is the removed one, try to move the
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
-void* GSETPOP(
+void* GSetPop(
   GSet* const that);
 
 // Remove and return the data at the tail of the GSet
@@ -216,7 +216,7 @@ void* GSETPOP(
 //   data. If the current element is the removed one, try to move the
 //   iterator to the next element, if it fails, try to the previous,
 //   if it fails again, set the current element to null.
-void* GSETDROP(
+void* GSetDrop(
   GSet* const that);
 
 // Remove and return the data of the current element of the GSet
@@ -237,14 +237,14 @@ void* GSetPick(
 // It uses qsort, see man page for details. Elements are sorted in ascending
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
-void GSETSORT(
+void GSetSort(
   GSet* const that,
                  int (*cmp)(void const*, void const*));
 
 // Shuffle the elements of a GSet
 // Input:
 //   that: the GSet to shuffle
-void GSETSHUFFLE(
+void GSetShuffle(
   GSet* const that);
 
 // Convert the GSet to an array of pointers to its data
@@ -275,7 +275,7 @@ void GSetFromArrayOfPtr(
 //    tho: the other GSet
 // Output:
 //   tho is appended at the end of that and becomes empty after this operation
-void GSETAPPEND(
+void GSetAppend(
   GSet* const that,
   GSet* const tho);
 
@@ -292,14 +292,14 @@ void* GSetCurData(
 //   that: the GSet
 // Output:
 //   Return the size of the data set
-int GSETGETSIZE(
+int GSetGetSize(
   GSet const* const that);
 
 // Reset the current element of the iterator according to the direction
 // of the iteration.
 // Input:
 //   that: the GSet
-void GSETITERRESET(
+void GSetIterReset(
   GSet* const that);
 
 // Move the current element in the GSet one step in the direction of the
@@ -312,7 +312,7 @@ void GSETITERRESET(
 //   udpate the current element and return true. If there are elements
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
-bool GSETITERNEXT(
+bool GSetIterNext(
   GSet* const that);
 
 // Move the current element in the GSet one step in the opposite
@@ -325,7 +325,7 @@ bool GSETITERNEXT(
 //   udpate the current element and return true. If there are elements
 //   and the iterator can't move in the requested direction, do nothing
 //   and return false.
-bool GSETITERPREV(
+bool GSetIterPrev(
   GSet* const that);
 
 // Set the iteration type of a GSet
