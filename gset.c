@@ -696,6 +696,14 @@ void GSetIterReset_(
 
   }
 
+  // Ensure the current element matches the current filter if any
+  if (that->filter.fun != NULL)
+    while (
+      that->elem != NULL &&
+      that->filter.fun(&(that->elem->data), that->filter.params) == false)
+      if (GSetIterNext_(that) == false)
+        that->elem = NULL;
+
 }
 
 // Move the iterator to the next element
@@ -717,8 +725,29 @@ bool GSetIterNext_(
     case GSetIterForward:
       if (that->elem->next != NULL) {
 
-        that->elem = that->elem->next;
-        flag = true;
+        if (that->filter.fun == NULL) {
+
+          that->elem = that->elem->next;
+          flag = true;
+
+        } else {
+
+          GSetElem* nextElem = that->elem->next;
+          while (
+            nextElem != NULL &&
+            that->filter.fun(&(nextElem->data), that->filter.params) == false)
+            if (nextElem->next != NULL)
+              nextElem = nextElem->next;
+            else
+              nextElem = NULL;
+          if (nextElem != NULL) {
+
+            that->elem = nextElem;
+            flag = true;
+
+          }
+
+        }
 
       }
 
@@ -727,8 +756,29 @@ bool GSetIterNext_(
     case GSetIterBackward:
       if (that->elem->prev != NULL) {
 
-        that->elem = that->elem->prev;
-        flag = true;
+        if (that->filter.fun == NULL) {
+
+          that->elem = that->elem->prev;
+          flag = true;
+
+        } else {
+
+          GSetElem* prevElem = that->elem->prev;
+          while (
+            prevElem != NULL &&
+            that->filter.fun(&(prevElem->data), that->filter.params) == false)
+            if (prevElem->prev != NULL)
+              prevElem = prevElem->prev;
+            else
+              prevElem = NULL;
+          if (prevElem != NULL) {
+
+            that->elem = prevElem;
+            flag = true;
+
+          }
+
+        }
 
       }
 
@@ -759,12 +809,33 @@ bool GSetIterPrev_(
 
   // Switch according to the type of iterator
   switch (that->type) {
-
+ 
     case GSetIterForward:
       if (that->elem->prev != NULL) {
 
-        that->elem = that->elem->prev;
-        flag = true;
+        if (that->filter.fun == NULL) {
+
+          that->elem = that->elem->prev;
+          flag = true;
+
+        } else {
+
+          GSetElem* prevElem = that->elem->prev;
+          while (
+            prevElem != NULL &&
+            that->filter.fun(&(prevElem->data), that->filter.params) == false)
+            if (prevElem->prev != NULL)
+              prevElem = prevElem->prev;
+            else
+              prevElem = NULL;
+          if (prevElem != NULL) {
+
+            that->elem = prevElem;
+            flag = true;
+
+          }
+
+        }
 
       }
 
@@ -773,8 +844,29 @@ bool GSetIterPrev_(
     case GSetIterBackward:
       if (that->elem->next != NULL) {
 
-        that->elem = that->elem->next;
-        flag = true;
+        if (that->filter.fun == NULL) {
+
+          that->elem = that->elem->next;
+          flag = true;
+
+        } else {
+
+          GSetElem* nextElem = that->elem->next;
+          while (
+            nextElem != NULL &&
+            that->filter.fun(&(nextElem->data), that->filter.params) == false)
+            if (nextElem->next != NULL)
+              nextElem = nextElem->next;
+            else
+              nextElem = NULL;
+          if (nextElem != NULL) {
+
+            that->elem = nextElem;
+            flag = true;
+
+          }
+
+        }
 
       }
 
@@ -800,27 +892,10 @@ bool GSetIterIsFirst_(
 
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
-  // Variable to memorise the returned flag
-  bool flag = true;
-
-  // Switch according to the type of iterator
-  switch (that->type) {
-
-    case GSetIterForward:
-      if (that->elem->prev != NULL) flag = false;
-      break;
-
-    case GSetIterBackward:
-      if (that->elem->next != NULL) flag = false;
-      break;
-
-    default:
-      Raise(TryCatchExc_NotYetImplemented);
-
-  }
-
-  // Return the flag
-  return flag;
+  // Try to go the the previous element with a clone of the iterator and
+  // return true if it couldn't move
+  GSetIter clone = *that;
+  return (GSetIterPrev_(&clone) == false);
 
 }
 
@@ -834,27 +909,10 @@ bool GSetIterIsLast_(
 
   if (that->elem == NULL) Raise(TryCatchExc_OutOfRange);
 
-  // Variable to memorise the returned flag
-  bool flag = true;
-
-  // Switch according to the type of iterator
-  switch (that->type) {
-
-    case GSetIterForward:
-      if (that->elem->next != NULL) flag = false;
-      break;
-
-    case GSetIterBackward:
-      if (that->elem->prev != NULL) flag = false;
-      break;
-
-    default:
-      Raise(TryCatchExc_NotYetImplemented);
-
-  }
-
-  // Return the flag
-  return flag;
+  // Try to go the the previous element with a clone of the iterator and
+  // return true if it couldn't move
+  GSetIter clone = *that;
+  return (GSetIterNext_(&clone) == false);
 
 }
 
@@ -927,6 +985,38 @@ void* GSetIterGetFilterParam_(
   GSetIter* const that) {
 
   return that->filter.params;
+
+}
+
+// Count the number of elements enumerated by an iterator
+// Inputs:
+//   that: the iterator
+//    set: the set
+// Output:
+//   Return the number of elements
+size_t GSetIterCount_(
+  GSetIter const* const that,
+      GSet const* const set) {
+
+  // Create a clone to leave the iterator unchanged
+  GSetIter clone = *that;
+
+  // Variable to memorise the number of elements
+  size_t nb = 0;
+
+  // Count the elements
+  GSetIterReset_(
+    &clone,
+    set);
+  if (clone.elem != NULL) {
+
+    nb = 1;
+    while (GSetIterNext_(&clone) == true) ++nb;
+
+  }
+
+  // Return the number of element
+  return nb;
 
 }
 

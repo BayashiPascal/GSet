@@ -35,13 +35,13 @@ void DummyFree(struct Dummy** const that) {
 // GSet of pointer to Dummy struct
 GSETDEF(Dummy, struct Dummy*)
 
-// Dummy function to test the filter
+// Dummy function to test iterator's filter
 bool Filter(
   void* data,
   void* params) {
 
-  (void)params;
-  return ((*(size_t*)data % 2) == 0);
+  if (data == NULL) return true;
+  return (*(void**)data == params);
 
 }
 
@@ -216,9 +216,6 @@ void CharFree(char* that) {(void)that;}
     printf("remaining %zu elements: ", GSetGetSize(setA));                   \
     GSETFOR(iterA) printf("%zu ", (size_t)GSetGet(iterA));                   \
     printf("\n");                                                            \
-    GSetSetFilter(iterA, Filter, NULL);                                      \
-    void* params = GSetGetFilterParam(iterA);                                \
-    assert(params == NULL);                                                  \
     GSetEmpty(setA);                                                         \
     assert(GSetGetSize(setA) == 0);                                          \
     GSetShuffle(setA);                                                       \
@@ -241,28 +238,53 @@ void CharFree(char* that) {(void)that;}
   TEST(Name, Type*);                                                         \
   do {                                                                       \
     GSet ## Name* setA = GSet ## Name ## Alloc();                            \
-    Type* data = malloc(sizeof(Type));                                       \
-    GSetPush(setA, data);                                                    \
+    FOR(iData, 10) {                                                         \
+      Type* data = malloc(sizeof(Type));                                     \
+      GSetPush(setA, data);                                                  \
+    }                                                                        \
+    GSetIter ## Name* iterA = GSetIter ## Name ## Alloc(setA);               \
+    void* filterParam = GSetGet(iterA);                                      \
+    printf("filter: %p\n", filterParam);                                     \
+    GSetSetFilter(iterA, Filter, filterParam);                               \
+    void* params = GSetGetFilterParam(iterA);                                \
+    assert(params == filterParam);                                           \
+    size_t countFilter = GSetCount(iterA);                                   \
+    assert(countFilter == 1);                                                \
+    printf("%zu filtered elements: ", countFilter);                          \
+    if (countFilter > 0)                                                     \
+      GSETFOR(iterA) printf("%p ",(void*)GSetGet(iterA));                    \
+    printf("\n");                                                            \
+    if (GSetCount(iterA) > 0)                                                \
+      GSETFOR(iterA) {                                                       \
+        assert(GSetGet(iterA) == filterParam);                               \
+      }                                                                      \
     GSet ## Name ## Flush(setA);                                             \
     GSetFree(&setA);                                                         \
+    printf("TestPtr GSet" #Name " OK\n");                                    \
   } while(false)
 
 // Main function
 int main() {
 
-  printf(
-    "Commit id: %s\n",
-    GSetGetCommitId());
-  TEST(Char, char);
-  TEST(Int, int);
-  TEST(UInt, unsigned int);
-  TEST(Long, long);
-  TEST(ULong, unsigned long);
-  TEST(Float, float);
-  TEST(Double, double);
-  TESTPTR(Str, char);
-  TESTPTR(Dummy, struct Dummy);
-  printf("All unit tests OK\n");
+  TryCatchSetRaiseStream(stdout);
+
+  Try {
+
+    printf(
+      "Commit id: %s\n",
+      GSetGetCommitId());
+    TEST(Char, char);
+    TEST(Int, int);
+    TEST(UInt, unsigned int);
+    TEST(Long, long);
+    TEST(ULong, unsigned long);
+    TEST(Float, float);
+    TEST(Double, double);
+    TESTPTR(Str, char);
+    TESTPTR(Dummy, struct Dummy);
+    printf("All unit tests OK\n");
+
+  } EndCatch;
 
   // Return the sucess code
   return EXIT_SUCCESS;

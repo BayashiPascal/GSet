@@ -331,6 +331,16 @@ void GSetIterSetFilter_(
 void* GSetIterGetFilterParam_(
   GSetIter* const that);
 
+// Count the number of elements enumerated by an iterator
+// Inputs:
+//   that: the iterator
+//    set: the set
+// Output:
+//   Return the number of elements
+size_t GSetIterCount_(
+  GSetIter const* const that,
+      GSet const* const set);
+
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -739,6 +749,8 @@ void GSetMergeInvalidType(
   GSetIterSetFilter_((PtrToSetIter)->i, PtrToFun, PtrToParams)
 #define GSetIterGetFilterParam(PtrToSetIter) \
   GSetIterGetFilterParam_((PtrToSetIter)->i)
+#define GSetIterCount(PtrToSetIter) \
+  GSetIterCount_((PtrToSetIter)->i, (PtrToSetIter)->set->s)
 #define GSetReset GSetIterReset
 #define GSetNext GSetIterNext
 #define GSetPrev GSetIterPrev
@@ -746,6 +758,7 @@ void GSetMergeInvalidType(
 #define GSetIsLast GSetIterIsLast
 #define GSetSetFilter GSetIterSetFilter
 #define GSetGetFilterParam GSetIterGetFilterParam
+#define GSetCount GSetIterCount
 
 #define GSetIterForEach(PtrToSetIter)                                        \
   GSetIterReset(PtrToSetIter);                                               \
