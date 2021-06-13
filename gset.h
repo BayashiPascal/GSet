@@ -52,7 +52,7 @@ void GSetFree_(
 //   data: the data
 #define GSETPUSH_(N, T)     \
 void GSetPush_ ## N(        \
-  GSet* const that,  \
+  GSet* const that,         \
              T const data)
 GSETPUSH_(Char, char);
 GSETPUSH_(UChar, unsigned char);
@@ -70,7 +70,7 @@ GSETPUSH_(Ptr, void*);
 //   data: the data
 #define GSETADD_(N, T)     \
 void GSetAdd_ ## N(        \
-  GSet* const that,  \
+  GSet* const that,        \
              T const data)
 GSETADD_(Char, char);
 GSETADD_(UChar, unsigned char);
@@ -86,10 +86,10 @@ GSETADD_(Ptr, void*);
 // Inputs:
 //   that: the set
 //   arr: the array of data
-#define GSETADDARR_(N, T)     \
-void GSetAddArr_ ## N(        \
-  GSet* const that,  \
-             size_t const size, \
+#define GSETADDARR_(N, T)        \
+void GSetAddArr_ ## N(           \
+  GSet* const that,              \
+             size_t const size,  \
              T const* const arr)
 GSETADDARR_(Char, char);
 GSETADDARR_(UChar, unsigned char);
@@ -183,10 +183,10 @@ void GSetShuffle_(
 // It uses qsort, see man page for details. Elements are sorted in ascending
 // order, relative to the comparison function cmp(a,b) which much returns
 // a negative value if a<b, a positive value if a>b, and 0 if a=b
-#define GSETSORT_(N, T) \
-void GSetSort_ ## N(    \
-  GSet* const that,   \
-          int (* const cmp)(void const*, void const*), \
+#define GSETSORT_(N, T)                                 \
+void GSetSort_ ## N(                                    \
+  GSet* const that,                                     \
+          int (* const cmp)(void const*, void const*),  \
          bool const inc)
 GSETSORT_(Char, char);
 GSETSORT_(UChar, unsigned char);
@@ -217,8 +217,8 @@ void GSetIterFree_(
 //   that: the iterator
 // Output:
 //   Return the current data
-#define GSETITERGET_(N, T)                                                   \
-T GSetIterGet_ ## N(                                                         \
+#define GSETITERGET_(N, T)     \
+T GSetIterGet_ ## N(           \
   GSetIter const* const that)
 GSETITERGET_(Char, char);
 GSETITERGET_(UChar, unsigned char);
@@ -236,9 +236,9 @@ GSETITERGET_(Ptr, void*);
 //   set: the associated set
 // Output:
 //   Remove the data at the head of the set and return it
-#define GSETITERPICK_(N, T)            \
-T GSetIterPick_ ## N(                  \
-  GSetIter* const that,         \
+#define GSETITERPICK_(N, T)    \
+T GSetIterPick_ ## N(          \
+  GSetIter* const that,        \
   GSet* const set)
 GSETITERPICK_(Char, char);
 GSETITERPICK_(UChar, unsigned char);
@@ -318,120 +318,120 @@ GSetIterType GSetIterGetType_(
 // Declare a typed GSet containing data of type Type and name GSet<Name>
 #define DEFINEGSETBASE(Name, Type)                                           \
   struct GSet ## Name {                                                      \
-    GSet* s;                                                          \
+    GSet* s;                                                                 \
     Type t;                                                                  \
   };                                                                         \
   typedef struct GSet ## Name GSet ## Name;                                  \
-  static inline GSet ## Name* GSet ## Name ## Alloc(                  \
+  static inline GSet ## Name* GSet ## Name ## Alloc(                         \
     void) {                                                                  \
-    GSet ## Name* that = malloc(sizeof(GSet ## Name));         \
+    GSet ## Name* that = malloc(sizeof(GSet ## Name));                       \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
     Try {                                                                    \
-      *that = (GSet ## Name ) { .s = GSetAlloc() };                      \
+      *that = (GSet ## Name ) { .s = GSetAlloc() };                          \
     } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);              \
+      free(that); Raise(TryCatchExc_MallocFailed);                           \
     } EndCatchDefault;                                                       \
     return that;                                                             \
   }                                                                          \
   static inline GSet ## Name* GSet ## Name ## FromArr(                       \
-    size_t const size,                                                   \
+    size_t const size,                                                       \
     Type const* const arr) {                                                 \
     GSet ## Name* that = GSet ## Name ## Alloc();                            \
-    _Generic((that->t), \
-      char: GSetAddArr_Char, \
-      unsigned char: GSetAddArr_UChar, \
-      int: GSetAddArr_Int, \
-      unsigned int: GSetAddArr_UInt, \
-      long: GSetAddArr_Long, \
-      unsigned long: GSetAddArr_ULong, \
-      float: GSetAddArr_Float, \
-      double: GSetAddArr_Double, \
-      char const: GSetAddArr_Char, \
-      unsigned char const: GSetAddArr_UChar, \
-      int const: GSetAddArr_Int, \
-      unsigned int const: GSetAddArr_UInt, \
-      long const: GSetAddArr_Long, \
-      unsigned long const: GSetAddArr_ULong, \
-      float const: GSetAddArr_Float, \
-      double const: GSetAddArr_Double, \
-      default: GSetAddArr_Ptr)(that->s, size, arr);                           \
-    return that;                                                              \
-  }                                                                           \
-  static inline Type* GSet ## Name ## ToArr(                                  \
-    GSet ## Name const* const that) {                                         \
-    if (GSetGetSize_(that->s) == 0) return NULL;                              \
-    Type* arr = malloc(sizeof(Type) * GSetGetSize_(that->s));                 \
-    if (arr == NULL) Raise(TryCatchExc_MallocFailed);                         \
-    GSetIter* iter = NULL;                                                    \
-    Try {                                                                     \
-      iter = GSetIterAlloc(GSetIterForward);                                  \
-      GSetIterReset_(iter, that->s);                                          \
-      size_t i = 0;                                                           \
-      do {                                                                    \
-        arr[i] =                                           \
-          _Generic((that->t), \
-            char: GSetIterGet_Char, \
-            unsigned char: GSetIterGet_UChar, \
-            int: GSetIterGet_Int, \
-            unsigned int: GSetIterGet_UInt, \
-            long: GSetIterGet_Long, \
-            unsigned long: GSetIterGet_ULong, \
-            float: GSetIterGet_Float, \
-            double: GSetIterGet_Double, \
-            default: GSetIterGet_Ptr)(iter);     \
-        ++i;                                                                  \
-      } while(GSetIterNext_(iter));                                           \
-    } CatchDefault {                                                          \
-      free(arr); GSetIterFree_(&iter);                                        \
-      Raise(TryCatchGetLastExc());                                            \
-    } EndCatchDefault;                                                        \
-    GSetIterFree_(&iter);                                                     \
-    return arr;                                                               \
-  } \
+    _Generic((that->t),                                                      \
+      char: GSetAddArr_Char,                                                 \
+      unsigned char: GSetAddArr_UChar,                                       \
+      int: GSetAddArr_Int,                                                   \
+      unsigned int: GSetAddArr_UInt,                                         \
+      long: GSetAddArr_Long,                                                 \
+      unsigned long: GSetAddArr_ULong,                                       \
+      float: GSetAddArr_Float,                                               \
+      double: GSetAddArr_Double,                                             \
+      char const: GSetAddArr_Char,                                           \
+      unsigned char const: GSetAddArr_UChar,                                 \
+      int const: GSetAddArr_Int,                                             \
+      unsigned int const: GSetAddArr_UInt,                                   \
+      long const: GSetAddArr_Long,                                           \
+      unsigned long const: GSetAddArr_ULong,                                 \
+      float const: GSetAddArr_Float,                                         \
+      double const: GSetAddArr_Double,                                       \
+      default: GSetAddArr_Ptr)(that->s, size, arr);                          \
+    return that;                                                             \
+  }                                                                          \
+  static inline Type* GSet ## Name ## ToArr(                                 \
+    GSet ## Name const* const that) {                                        \
+    if (GSetGetSize_(that->s) == 0) return NULL;                             \
+    Type* arr = malloc(sizeof(Type) * GSetGetSize_(that->s));                \
+    if (arr == NULL) Raise(TryCatchExc_MallocFailed);                        \
+    GSetIter* iter = NULL;                                                   \
+    Try {                                                                    \
+      iter = GSetIterAlloc(GSetIterForward);                                 \
+      GSetIterReset_(iter, that->s);                                         \
+      size_t i = 0;                                                          \
+      do {                                                                   \
+        arr[i] =                                                             \
+          _Generic((that->t),                                                \
+            char: GSetIterGet_Char,                                          \
+            unsigned char: GSetIterGet_UChar,                                \
+            int: GSetIterGet_Int,                                            \
+            unsigned int: GSetIterGet_UInt,                                  \
+            long: GSetIterGet_Long,                                          \
+            unsigned long: GSetIterGet_ULong,                                \
+            float: GSetIterGet_Float,                                        \
+            double: GSetIterGet_Double,                                      \
+            default: GSetIterGet_Ptr)(iter);                                 \
+        ++i;                                                                 \
+      } while(GSetIterNext_(iter));                                          \
+    } CatchDefault {                                                         \
+      free(arr); GSetIterFree_(&iter);                                       \
+      Raise(TryCatchGetLastExc());                                           \
+    } EndCatchDefault;                                                       \
+    GSetIterFree_(&iter);                                                    \
+    return arr;                                                              \
+  }                                                                          \
   struct GSetIter ## Name {                                                  \
-    GSet ## Name* set;                                                \
-    GSetIter* i;                                                      \
+    GSet ## Name* set;                                                       \
+    GSetIter* i;                                                             \
   };                                                                         \
   typedef struct GSetIter ## Name GSetIter ## Name;                          \
-  static inline GSetIter ## Name* GSetIter ## Name ## Alloc(          \
-    GSet ## Name* const set) {                                       \
-    GSetIter ## Name* that = malloc(sizeof(GSetIter ## Name)); \
+  static inline GSetIter ## Name* GSetIter ## Name ## Alloc(                 \
+    GSet ## Name* const set) {                                               \
+    GSetIter ## Name* that = malloc(sizeof(GSetIter ## Name));               \
     if (that == NULL) Raise(TryCatchExc_MallocFailed);                       \
     Try {                                                                    \
       *that =                                                                \
-        (GSetIter ## Name ) {                                                 \
-          .set = set, .i = GSetIterAlloc(GSetIterForward)                     \
-        };\
+        (GSetIter ## Name ) {                                                \
+          .set = set, .i = GSetIterAlloc(GSetIterForward)                    \
+        };                                                                   \
     } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);              \
+      free(that); Raise(TryCatchExc_MallocFailed);                           \
     } EndCatchDefault;                                                       \
     GSetIterReset_(that->i, set->s);                                         \
     return that;                                                             \
   }                                                                          \
-  static inline GSetIter ## Name* GSetIter ## Name ## Clone(          \
-    GSetIter ## Name const* that) {                                         \
-    GSetIter ## Name* clone = malloc(sizeof(GSetIter ## Name));\
+  static inline GSetIter ## Name* GSetIter ## Name ## Clone(                 \
+    GSetIter ## Name const* that) {                                          \
+    GSetIter ## Name* clone = malloc(sizeof(GSetIter ## Name));              \
     if (clone == NULL) Raise(TryCatchExc_MallocFailed);                      \
     Try {                                                                    \
-      *clone = (GSetIter ## Name)                                     \
-        { .set = that->set, .i = GSetIterClone_(that->i) };                   \
+      *clone = (GSetIter ## Name)                                            \
+        { .set = that->set, .i = GSetIterClone_(that->i) };                  \
     } CatchDefault {                                                         \
-      free(clone); Raise(TryCatchExc_MallocFailed);              \
+      free(clone); Raise(TryCatchExc_MallocFailed);                          \
     } EndCatchDefault;                                                       \
     return clone;                                                            \
-  }                                                                          \
+  }
 
-#define GSETDEF(Name, Type)                                               \
+#define GSETDEF(Name, Type)                                                  \
   DEFINEGSETBASE(Name, Type)                                                 \
   void Name ## Free(Type* const that);                                       \
   static inline void GSet ## Name ## Flush(                                  \
-    GSet ## Name* const that) {                                       \
+    GSet ## Name* const that) {                                              \
     Type d = NULL;                                                           \
     while (GSetGetSize_(that->s) > 0) {                                      \
       d = GSetPop_Ptr(that->s);                                              \
       Name ## Free(&d);                                                      \
     }                                                                        \
-  }                                                                          \
+  }
 
 DEFINEGSETBASE(Char, char)
 DEFINEGSETBASE(UChar, unsigned char)
@@ -467,71 +467,71 @@ GSETDEF(DoublePtr, double*)
     GSetFree_(&((*(PtrToPtrToSet))->s));                                     \
     free(*(PtrToPtrToSet));                                                  \
     *(PtrToPtrToSet) = NULL;                                                 \
-  }                                                                          \
+  }
 
 #define GSetPush(PtrToSet, Data)                                             \
   _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetPush_Char,                                         \
-    GSetUChar*: GSetPush_UChar,                                       \
-    GSetInt*: GSetPush_Int,                                           \
-    GSetUInt*: GSetPush_UInt,                                         \
-    GSetLong*: GSetPush_Long,                                         \
-    GSetULong*: GSetPush_ULong,                                       \
-    GSetFloat*: GSetPush_Float,                                       \
-    GSetDouble*: GSetPush_Double,                                     \
+    GSetChar*: GSetPush_Char,                                                \
+    GSetUChar*: GSetPush_UChar,                                              \
+    GSetInt*: GSetPush_Int,                                                  \
+    GSetUInt*: GSetPush_UInt,                                                \
+    GSetLong*: GSetPush_Long,                                                \
+    GSetULong*: GSetPush_ULong,                                              \
+    GSetFloat*: GSetPush_Float,                                              \
+    GSetDouble*: GSetPush_Double,                                            \
     default: GSetPush_Ptr)((PtrToSet)->s, Data);                             \
   (PtrToSet)->t = Data
 
 #define GSetAdd(PtrToSet, Data)                                              \
   _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetAdd_Char,                                          \
-    GSetUChar*: GSetAdd_UChar,                                        \
-    GSetInt*: GSetAdd_Int,                                            \
-    GSetUInt*: GSetAdd_UInt,                                          \
-    GSetLong*: GSetAdd_Long,                                          \
-    GSetULong*: GSetAdd_ULong,                                        \
-    GSetFloat*: GSetAdd_Float,                                        \
-    GSetDouble*: GSetAdd_Double,                                      \
+    GSetChar*: GSetAdd_Char,                                                 \
+    GSetUChar*: GSetAdd_UChar,                                               \
+    GSetInt*: GSetAdd_Int,                                                   \
+    GSetUInt*: GSetAdd_UInt,                                                 \
+    GSetLong*: GSetAdd_Long,                                                 \
+    GSetULong*: GSetAdd_ULong,                                               \
+    GSetFloat*: GSetAdd_Float,                                               \
+    GSetDouble*: GSetAdd_Double,                                             \
     default: GSetAdd_Ptr)((PtrToSet)->s, Data);                              \
   (PtrToSet)->t = Data
 
-#define GSetAddArr(PtrToSet, Size, Data)                                    \
+#define GSetAddArr(PtrToSet, Size, Data)                                     \
   _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetAddArr_Char,                                          \
-    GSetUChar*: GSetAddArr_UChar,                                        \
-    GSetInt*: GSetAddArr_Int,                                            \
-    GSetUInt*: GSetAddArr_UInt,                                          \
-    GSetLong*: GSetAddArr_Long,                                          \
-    GSetULong*: GSetAddArr_ULong,                                        \
-    GSetFloat*: GSetAddArr_Float,                                        \
-    GSetDouble*: GSetAddArr_Double,                                      \
-    default: GSetAddArr_Ptr)((PtrToSet)->s, Size, Data);                 \
+    GSetChar*: GSetAddArr_Char,                                              \
+    GSetUChar*: GSetAddArr_UChar,                                            \
+    GSetInt*: GSetAddArr_Int,                                                \
+    GSetUInt*: GSetAddArr_UInt,                                              \
+    GSetLong*: GSetAddArr_Long,                                              \
+    GSetULong*: GSetAddArr_ULong,                                            \
+    GSetFloat*: GSetAddArr_Float,                                            \
+    GSetDouble*: GSetAddArr_Double,                                          \
+    default: GSetAddArr_Ptr)((PtrToSet)->s, Size, Data);                     \
   (PtrToSet)->t = *(Data)
 
 #define GSetPop(PtrToSet)                                                    \
   (((PtrToSet)->t =                                                          \
      _Generic((PtrToSet),                                                    \
-       GSetChar*: GSetPop_Char,                                       \
-       GSetUChar*: GSetPop_UChar,                                     \
-       GSetInt*: GSetPop_Int,                                         \
-       GSetUInt*: GSetPop_UInt,                                       \
-       GSetLong*: GSetPop_Long,                                       \
-       GSetULong*: GSetPop_ULong,                                     \
-       GSetFloat*: GSetPop_Float,                                     \
-       GSetDouble*: GSetPop_Double,                                   \
+       GSetChar*: GSetPop_Char,                                              \
+       GSetUChar*: GSetPop_UChar,                                            \
+       GSetInt*: GSetPop_Int,                                                \
+       GSetUInt*: GSetPop_UInt,                                              \
+       GSetLong*: GSetPop_Long,                                              \
+       GSetULong*: GSetPop_ULong,                                            \
+       GSetFloat*: GSetPop_Float,                                            \
+       GSetDouble*: GSetPop_Double,                                          \
        default: GSetPop_Ptr)((PtrToSet)->s)) == 0 ? 0 : (PtrToSet)->t)
 
 #define GSetDrop(PtrToSet)                                                   \
   (((PtrToSet)->t =                                                          \
      _Generic((PtrToSet),                                                    \
-       GSetChar*: GSetDrop_Char,                                      \
-       GSetUChar*: GSetDrop_UChar,                                    \
-       GSetInt*: GSetDrop_Int,                                        \
-       GSetUInt*: GSetDrop_UInt,                                      \
-       GSetLong*: GSetDrop_Long,                                      \
-       GSetULong*: GSetDrop_ULong,                                    \
-       GSetFloat*: GSetDrop_Float,                                    \
-       GSetDouble*: GSetDrop_Double,                                  \
+       GSetChar*: GSetDrop_Char,                                             \
+       GSetUChar*: GSetDrop_UChar,                                           \
+       GSetInt*: GSetDrop_Int,                                               \
+       GSetUInt*: GSetDrop_UInt,                                             \
+       GSetLong*: GSetDrop_Long,                                             \
+       GSetULong*: GSetDrop_ULong,                                           \
+       GSetFloat*: GSetDrop_Float,                                           \
+       GSetDouble*: GSetDrop_Double,                                         \
        default: GSetDrop_Ptr)((PtrToSet)->s)) == 0 ? 0 : (PtrToSet)->t)
 
 void GSetAppendInvalidType(
@@ -539,111 +539,111 @@ void GSetAppendInvalidType(
   void*);
 #define GSetAppend(PtrToSetDst, PtrToSetSrc)                                 \
  _Generic((PtrToSetDst),                                                     \
-   GSetChar*:                                                         \
-     _Generic((PtrToSetSrc), \
-       GSetChar*: GSetAppend_, \
-       GSetChar const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                 \
-   GSetUChar*:                                                        \
-     _Generic((PtrToSetSrc), \
-       GSetUChar*: GSetAppend_, \
-       GSetUChar const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                \
-   GSetInt*:                                                          \
-     _Generic((PtrToSetSrc), \
-       GSetInt*: GSetAppend_, \
-       GSetInt const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                  \
-   GSetUInt*:                                                         \
-     _Generic((PtrToSetSrc), \
-       GSetUInt*: GSetAppend_, \
-       GSetUInt const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                 \
-   GSetLong*:                                                         \
-     _Generic((PtrToSetSrc), \
-       GSetLong*: GSetAppend_, \
-       GSetLong const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                 \
-   GSetULong*:                                                        \
-     _Generic((PtrToSetSrc), \
-       GSetULong*: GSetAppend_, \
-       GSetULong const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                \
-   GSetFloat*:                                                        \
-     _Generic((PtrToSetSrc), \
-       GSetFloat*: GSetAppend_, \
-       GSetFloat const*: GSetAppend_, \
-       default: GSetAppendInvalidType),                \
-   GSetDouble*:                                                       \
-     _Generic((PtrToSetSrc), \
-       GSetDouble*: GSetAppend_, \
-       GSetDouble const*: GSetAppend_, \
-       default: GSetAppendInvalidType),               \
+   GSetChar*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetChar*: GSetAppend_,                                               \
+       GSetChar const*: GSetAppend_,                                         \
+       default: GSetAppendInvalidType),                                      \
+   GSetUChar*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetUChar*: GSetAppend_,                                              \
+       GSetUChar const*: GSetAppend_,                                        \
+       default: GSetAppendInvalidType),                                      \
+   GSetInt*:                                                                 \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetInt*: GSetAppend_,                                                \
+       GSetInt const*: GSetAppend_,                                          \
+       default: GSetAppendInvalidType),                                      \
+   GSetUInt*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetUInt*: GSetAppend_,                                               \
+       GSetUInt const*: GSetAppend_,                                         \
+       default: GSetAppendInvalidType),                                      \
+   GSetLong*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetLong*: GSetAppend_,                                               \
+       GSetLong const*: GSetAppend_,                                         \
+       default: GSetAppendInvalidType),                                      \
+   GSetULong*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetULong*: GSetAppend_,                                              \
+       GSetULong const*: GSetAppend_,                                        \
+       default: GSetAppendInvalidType),                                      \
+   GSetFloat*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetFloat*: GSetAppend_,                                              \
+       GSetFloat const*: GSetAppend_,                                        \
+       default: GSetAppendInvalidType),                                      \
+   GSetDouble*:                                                              \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetDouble*: GSetAppend_,                                             \
+       GSetDouble const*: GSetAppend_,                                       \
+       default: GSetAppendInvalidType),                                      \
    default: _Generic((PtrToSetSrc),                                          \
-     GSetChar*: GSetAppendInvalidType,                                \
-     GSetUChar*: GSetAppendInvalidType,                               \
-     GSetInt*: GSetAppendInvalidType,                                 \
-     GSetUInt*: GSetAppendInvalidType,                                \
-     GSetLong*: GSetAppendInvalidType,                                \
-     GSetULong*: GSetAppendInvalidType,                               \
-     GSetFloat*: GSetAppendInvalidType,                               \
-     GSetDouble*: GSetAppendInvalidType,                              \
-     GSetChar const*: GSetAppendInvalidType,                                \
-     GSetUChar const*: GSetAppendInvalidType,                               \
-     GSetInt const*: GSetAppendInvalidType,                                 \
-     GSetUInt const*: GSetAppendInvalidType,                                \
-     GSetLong const*: GSetAppendInvalidType,                                \
-     GSetULong const*: GSetAppendInvalidType,                               \
-     GSetFloat const*: GSetAppendInvalidType,                               \
-     GSetDouble const*: GSetAppendInvalidType,                              \
+     GSetChar*: GSetAppendInvalidType,                                       \
+     GSetUChar*: GSetAppendInvalidType,                                      \
+     GSetInt*: GSetAppendInvalidType,                                        \
+     GSetUInt*: GSetAppendInvalidType,                                       \
+     GSetLong*: GSetAppendInvalidType,                                       \
+     GSetULong*: GSetAppendInvalidType,                                      \
+     GSetFloat*: GSetAppendInvalidType,                                      \
+     GSetDouble*: GSetAppendInvalidType,                                     \
+     GSetChar const*: GSetAppendInvalidType,                                 \
+     GSetUChar const*: GSetAppendInvalidType,                                \
+     GSetInt const*: GSetAppendInvalidType,                                  \
+     GSetUInt const*: GSetAppendInvalidType,                                 \
+     GSetLong const*: GSetAppendInvalidType,                                 \
+     GSetULong const*: GSetAppendInvalidType,                                \
+     GSetFloat const*: GSetAppendInvalidType,                                \
+     GSetDouble const*: GSetAppendInvalidType,                               \
      default: GSetAppend_))((PtrToSetDst)->s, (PtrToSetSrc)->s)
 
 void GSetMergeInvalidType(
   void*,
   void*);
-#define GSetMerge(PtrToSetDst, PtrToSetSrc)                                 \
+#define GSetMerge(PtrToSetDst, PtrToSetSrc)                                  \
  _Generic((PtrToSetDst),                                                     \
-   GSetChar*:                                                         \
-     _Generic((PtrToSetSrc),                                      \
-       GSetChar*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                 \
-   GSetUChar*:                                                        \
-     _Generic((PtrToSetSrc),                                      \
-       GSetUChar*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                \
-   GSetInt*:                                                          \
-     _Generic((PtrToSetSrc),                                      \
-       GSetInt*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                  \
-   GSetUInt*:                                                         \
-     _Generic((PtrToSetSrc),                                      \
-       GSetUInt*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                 \
-   GSetLong*:                                                         \
-     _Generic((PtrToSetSrc),                                      \
-       GSetLong*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                 \
-   GSetULong*:                                                        \
-     _Generic((PtrToSetSrc),                                      \
-       GSetULong*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                \
-   GSetFloat*:                                                        \
-     _Generic((PtrToSetSrc),                                      \
-       GSetFloat*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),                \
-   GSetDouble*:                                                       \
-     _Generic((PtrToSetSrc),                                      \
-       GSetDouble*: GSetMerge_,                                      \
-       default: GSetMergeInvalidType),               \
+   GSetChar*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetChar*: GSetMerge_,                                                \
+       default: GSetMergeInvalidType),                                       \
+   GSetUChar*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetUChar*: GSetMerge_,                                               \
+       default: GSetMergeInvalidType),                                       \
+   GSetInt*:                                                                 \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetInt*: GSetMerge_,                                                 \
+       default: GSetMergeInvalidType),                                       \
+   GSetUInt*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetUInt*: GSetMerge_,                                                \
+       default: GSetMergeInvalidType),                                       \
+   GSetLong*:                                                                \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetLong*: GSetMerge_,                                                \
+       default: GSetMergeInvalidType),                                       \
+   GSetULong*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetULong*: GSetMerge_,                                               \
+       default: GSetMergeInvalidType),                                       \
+   GSetFloat*:                                                               \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetFloat*: GSetMerge_,                                               \
+       default: GSetMergeInvalidType),                                       \
+   GSetDouble*:                                                              \
+     _Generic((PtrToSetSrc),                                                 \
+       GSetDouble*: GSetMerge_,                                              \
+       default: GSetMergeInvalidType),                                       \
    default: _Generic((PtrToSetSrc),                                          \
-     GSetChar*: GSetMergeInvalidType,                                \
-     GSetUChar*: GSetMergeInvalidType,                               \
-     GSetInt*: GSetMergeInvalidType,                                 \
-     GSetUInt*: GSetMergeInvalidType,                                \
-     GSetLong*: GSetMergeInvalidType,                                \
-     GSetULong*: GSetMergeInvalidType,                               \
-     GSetFloat*: GSetMergeInvalidType,                               \
-     GSetDouble*: GSetMergeInvalidType,                              \
+     GSetChar*: GSetMergeInvalidType,                                        \
+     GSetUChar*: GSetMergeInvalidType,                                       \
+     GSetInt*: GSetMergeInvalidType,                                         \
+     GSetUInt*: GSetMergeInvalidType,                                        \
+     GSetLong*: GSetMergeInvalidType,                                        \
+     GSetULong*: GSetMergeInvalidType,                                       \
+     GSetFloat*: GSetMergeInvalidType,                                       \
+     GSetDouble*: GSetMergeInvalidType,                                      \
      default: GSetMerge_))((PtrToSetDst)->s, (PtrToSetSrc)->s)
 
 #define GSetGetSize(PtrToSet) GSetGetSize_((PtrToSet)->s)
@@ -652,14 +652,14 @@ void GSetMergeInvalidType(
 
 #define GSetSort(PtrToSet, CmpFun, FlagIncreasing)                           \
   _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetSort_Char,                                          \
-    GSetUChar*: GSetSort_UChar,                                        \
-    GSetInt*: GSetSort_Int,                                            \
-    GSetUInt*: GSetSort_UInt,                                          \
-    GSetLong*: GSetSort_Long,                                          \
-    GSetULong*: GSetSort_ULong,                                        \
-    GSetFloat*: GSetSort_Float,                                        \
-    GSetDouble*: GSetSort_Double,                                      \
+    GSetChar*: GSetSort_Char,                                                \
+    GSetUChar*: GSetSort_UChar,                                              \
+    GSetInt*: GSetSort_Int,                                                  \
+    GSetUInt*: GSetSort_UInt,                                                \
+    GSetLong*: GSetSort_Long,                                                \
+    GSetULong*: GSetSort_ULong,                                              \
+    GSetFloat*: GSetSort_Float,                                              \
+    GSetDouble*: GSetSort_Double,                                            \
     default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, FlagIncreasing);
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
@@ -672,22 +672,22 @@ void GSetMergeInvalidType(
 #define GSetIterGet(PtrToSetIter)                                            \
   (((PtrToSetIter)->set->t =                                                 \
      _Generic((PtrToSetIter),                                                \
-       GSetIterChar*: GSetIterGet_Char,                               \
-       GSetIterUChar*: GSetIterGet_UChar,                             \
-       GSetIterInt*: GSetIterGet_Int,                                 \
-       GSetIterUInt*: GSetIterGet_UInt,                               \
-       GSetIterLong*: GSetIterGet_Long,                               \
-       GSetIterULong*: GSetIterGet_ULong,                             \
-       GSetIterFloat*: GSetIterGet_Float,                             \
-       GSetIterDouble*: GSetIterGet_Double,                           \
-       GSetIterChar const*: GSetIterGet_Char,                               \
-       GSetIterUChar const*: GSetIterGet_UChar,                             \
-       GSetIterInt const*: GSetIterGet_Int,                                 \
-       GSetIterUInt const*: GSetIterGet_UInt,                               \
-       GSetIterLong const*: GSetIterGet_Long,                               \
-       GSetIterULong const*: GSetIterGet_ULong,                             \
-       GSetIterFloat const*: GSetIterGet_Float,                             \
-       GSetIterDouble const*: GSetIterGet_Double,                           \
+       GSetIterChar*: GSetIterGet_Char,                                      \
+       GSetIterUChar*: GSetIterGet_UChar,                                    \
+       GSetIterInt*: GSetIterGet_Int,                                        \
+       GSetIterUInt*: GSetIterGet_UInt,                                      \
+       GSetIterLong*: GSetIterGet_Long,                                      \
+       GSetIterULong*: GSetIterGet_ULong,                                    \
+       GSetIterFloat*: GSetIterGet_Float,                                    \
+       GSetIterDouble*: GSetIterGet_Double,                                  \
+       GSetIterChar const*: GSetIterGet_Char,                                \
+       GSetIterUChar const*: GSetIterGet_UChar,                              \
+       GSetIterInt const*: GSetIterGet_Int,                                  \
+       GSetIterUInt const*: GSetIterGet_UInt,                                \
+       GSetIterLong const*: GSetIterGet_Long,                                \
+       GSetIterULong const*: GSetIterGet_ULong,                              \
+       GSetIterFloat const*: GSetIterGet_Float,                              \
+       GSetIterDouble const*: GSetIterGet_Double,                            \
        default: GSetIterGet_Ptr)((PtrToSetIter)->i)) == 0 ?                  \
          0 : (PtrToSetIter)->set->t)
 #define GSetGet GSetIterGet
@@ -695,26 +695,26 @@ void GSetMergeInvalidType(
 #define GSetIterPick(PtrToSetIter)                                           \
   (((PtrToSetIter)->set->t =                                                 \
      _Generic((PtrToSetIter),                                                \
-       GSetIterChar*: GSetIterPick_Char,                              \
-       GSetIterUChar*: GSetIterPick_UChar,                            \
-       GSetIterInt*: GSetIterPick_Int,                                \
-       GSetIterUInt*: GSetIterPick_UInt,                              \
-       GSetIterLong*: GSetIterPick_Long,                              \
-       GSetIterULong*: GSetIterPick_ULong,                            \
-       GSetIterFloat*: GSetIterPick_Float,                            \
-       GSetIterDouble*: GSetIterPick_Double,                          \
+       GSetIterChar*: GSetIterPick_Char,                                     \
+       GSetIterUChar*: GSetIterPick_UChar,                                   \
+       GSetIterInt*: GSetIterPick_Int,                                       \
+       GSetIterUInt*: GSetIterPick_UInt,                                     \
+       GSetIterLong*: GSetIterPick_Long,                                     \
+       GSetIterULong*: GSetIterPick_ULong,                                   \
+       GSetIterFloat*: GSetIterPick_Float,                                   \
+       GSetIterDouble*: GSetIterPick_Double,                                 \
        default: GSetIterPick_Ptr)(                                           \
          (PtrToSetIter)->i, (PtrToSetIter)->set->s)) == 0 ?                  \
            0 : (PtrToSetIter)->set->t)
 #define GSetPick GSetIterPick
 
-#define GSetIterReset(PtrToSetIter)                                          \
+#define GSetIterReset(PtrToSetIter) \
   GSetIterReset_((PtrToSetIter)->i, (PtrToSetIter)->set->s)
 #define GSetIterNext(PtrToSetIter) GSetIterNext_((PtrToSetIter)->i)
 #define GSetIterPrev(PtrToSetIter) GSetIterPrev_((PtrToSetIter)->i)
 #define GSetIterIsFirst(PtrToSetIter) GSetIterIsFirst_((PtrToSetIter)->i)
 #define GSetIterIsLast(PtrToSetIter) GSetIterIsLast_((PtrToSetIter)->i)
-#define GSetIterSetType(PtrToSetIter, Type)                                  \
+#define GSetIterSetType(PtrToSetIter, Type) \
   GSetIterSetType_(PtrToSetIter->i, Type)
 #define GSetIterGetType(PtrToSetIter) GSetIterGetType_(PtrToSetIter->i)
 #define GSetReset GSetIterReset
@@ -723,7 +723,7 @@ void GSetMergeInvalidType(
 #define GSetIsFirst GSetIterIsFirst
 #define GSetIsLast GSetIterIsLast
 
-#define GSetIterForEach(PtrToSetIter)                                   \
+#define GSetIterForEach(PtrToSetIter)                                        \
   GSetIterReset(PtrToSetIter);                                               \
   if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
     bool hasEnded = false;                                                   \
@@ -731,11 +731,11 @@ void GSetMergeInvalidType(
     hasEnded = !GSetIterNext(PtrToSetIter))
 #define GSETFOR GSetIterForEach
 
-#define GSetIterEnumerate(PtrToSetIter, Idx)                                  \
-  GSetIterReset(PtrToSetIter);                                                \
-  if (GSetGetSize((PtrToSetIter)->set) > 0) for (                             \
-    size_t hasEnded = 0, Idx = 0;                                             \
-    hasEnded == false;                                                        \
+#define GSetIterEnumerate(PtrToSetIter, Idx)                                 \
+  GSetIterReset(PtrToSetIter);                                               \
+  if (GSetGetSize((PtrToSetIter)->set) > 0) for (                            \
+    size_t hasEnded = 0, Idx = 0;                                            \
+    hasEnded == false;                                                       \
     hasEnded = !GSetIterNext(PtrToSetIter), ++Idx)
 #define GSETENUM GSetIterEnumerate
 
