@@ -35,6 +35,16 @@ void DummyFree(struct Dummy** const that) {
 // GSet of pointer to Dummy struct
 GSETDEF(Dummy, struct Dummy*)
 
+// Dummy function to test the filter
+bool Filter(
+  void* data,
+  void* params) {
+
+  (void)params;
+  return ((*(size_t*)data % 2) == 0);
+
+}
+
 #define SIZE_ARR 3
 
 char arrChar[SIZE_ARR] = {'a', 'b', 'c'};
@@ -206,6 +216,9 @@ void CharFree(char* that) {(void)that;}
     printf("remaining %zu elements: ", GSetGetSize(setA));                   \
     GSETFOR(iterA) printf("%zu ", (size_t)GSetGet(iterA));                   \
     printf("\n");                                                            \
+    GSetSetFilter(iterA, Filter, NULL);                                      \
+    void* params = GSetGetFilterParam(iterA);                                \
+    assert(params == NULL);                                                  \
     GSetEmpty(setA);                                                         \
     assert(GSetGetSize(setA) == 0);                                          \
     GSetShuffle(setA);                                                       \

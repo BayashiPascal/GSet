@@ -313,6 +313,24 @@ void GSetIterSetType_(
 GSetIterType GSetIterGetType_(
   GSetIter const* const that);
 
+// Set the filter of an iterator
+// Inputs:
+//     that: the iterator
+//      fun: the filter's function
+//   params: the parameters of the filter's function
+void GSetIterSetFilter_(
+  GSetIter* const that,
+  bool (*fun)(void*, void*),
+  void *params);
+
+// Get the filter's function parameters
+// Input:
+//     that: the iterator
+// Output:
+//   Return the parameters of the filter's function
+void* GSetIterGetFilterParam_(
+  GSetIter* const that);
+
 // ================== Typed GSet code auto generation  ======================
 
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -409,7 +427,7 @@ GSetIterType GSetIterGetType_(
     return that;                                                             \
   }                                                                          \
   static inline GSetIter ## Name* GSetIter ## Name ## Clone(                 \
-    GSetIter ## Name const* that) {                                          \
+    GSetIter ## Name const* const that) {                                    \
     GSetIter ## Name* clone = malloc(sizeof(GSetIter ## Name));              \
     if (clone == NULL) Raise(TryCatchExc_MallocFailed);                      \
     Try {                                                                    \
@@ -717,11 +735,17 @@ void GSetMergeInvalidType(
 #define GSetIterSetType(PtrToSetIter, Type) \
   GSetIterSetType_(PtrToSetIter->i, Type)
 #define GSetIterGetType(PtrToSetIter) GSetIterGetType_(PtrToSetIter->i)
+#define GSetIterSetFilter(PtrToSetIter, PtrToFun, PtrToParams) \
+  GSetIterSetFilter_((PtrToSetIter)->i, PtrToFun, PtrToParams)
+#define GSetIterGetFilterParam(PtrToSetIter) \
+  GSetIterGetFilterParam_((PtrToSetIter)->i)
 #define GSetReset GSetIterReset
 #define GSetNext GSetIterNext
 #define GSetPrev GSetIterPrev
 #define GSetIsFirst GSetIterIsFirst
 #define GSetIsLast GSetIterIsLast
+#define GSetSetFilter GSetIterSetFilter
+#define GSetGetFilterParam GSetIterGetFilterParam
 
 #define GSetIterForEach(PtrToSetIter)                                        \
   GSetIterReset(PtrToSetIter);                                               \

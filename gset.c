@@ -68,6 +68,17 @@ struct GSet {
 
 };
 
+struct GSetIterFilter {
+
+  // Function of the filter
+  bool (*fun)(void* data, void* params);
+
+  // Parameters of the filter
+  void* params;
+
+};
+typedef struct GSetIterFilter GSetIterFilter;
+
 // Structure of an iterator on a GSet
 struct GSetIter {
 
@@ -76,6 +87,9 @@ struct GSetIter {
 
   // Type of iteration
   enum GSetIterType type;
+
+  // Filter on the iterator
+  GSetIterFilter filter;
 
 };
 
@@ -888,6 +902,34 @@ GSetIterType GSetIterGetType_(
 
 }
 
+
+// Set the filter of an iterator
+// Inputs:
+//     that: the iterator
+//      fun: the filter's function
+//   params: the parameters of the filter's function
+void GSetIterSetFilter_(
+  GSetIter* const that,
+  bool (*fun)(void*, void*),
+  void *params) {
+
+  that->filter.fun = fun;
+  that->filter.params = params;
+
+}
+
+// Get the filter's function parameters
+// Input:
+//     that: the iterator
+// Output:
+//   Return the parameters of the filter's function
+void* GSetIterGetFilterParam_(
+  GSetIter* const that) {
+
+  return that->filter.params;
+
+}
+
 // Deallocation functions for GSet<N>Flush on default typed GSet
 
 #define FREE_(N, T)                                                          \
@@ -1177,6 +1219,7 @@ GSetIter GSetIterCreate(
 
     .elem = NULL,
     .type = type,
+    .filter = (GSetIterFilter) { .fun = NULL, .params = NULL },
 
   };
 
