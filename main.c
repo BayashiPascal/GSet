@@ -252,7 +252,7 @@ void CharFree(char* that) {(void)that;}
     assert(countFilter == 1);                                                \
     printf("%zu filtered elements: ", countFilter);                          \
     if (countFilter > 0)                                                     \
-      GSETFOR(iterA) printf("%p ",(void*)GSetGet(iterA));                    \
+      GSETFOR(iterA) printf("%p ", (void*)GSetGet(iterA));                   \
     printf("\n");                                                            \
     if (GSetCount(iterA) > 0)                                                \
       GSETFOR(iterA) {                                                       \

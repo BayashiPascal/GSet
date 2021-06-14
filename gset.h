@@ -64,6 +64,25 @@ GSETPUSH_(Float, float);
 GSETPUSH_(Double, double);
 GSETPUSH_(Ptr, void*);
 
+// Push an array of data at the head of the set
+// Inputs:
+//   that: the set
+//   arr: the array of data
+#define GSETPUSHARR_(N, T)    \
+void GSetPushArr_ ## N(       \
+     GSet* const that,        \
+    size_t const size,        \
+  T const* const arr)
+GSETPUSHARR_(Char, char);
+GSETPUSHARR_(UChar, unsigned char);
+GSETPUSHARR_(Int, int);
+GSETPUSHARR_(UInt, unsigned int);
+GSETPUSHARR_(Long, long);
+GSETPUSHARR_(ULong, unsigned long);
+GSETPUSHARR_(Float, float);
+GSETPUSHARR_(Double, double);
+GSETPUSHARR_(Ptr, void);
+
 // Add data at the tail of the set
 // Inputs:
 //   that: the set
@@ -318,10 +337,13 @@ GSetIterType GSetIterGetType_(
 //     that: the iterator
 //      fun: the filter's function
 //   params: the parameters of the filter's function
+typedef bool (*GSetIterFilterFun)(
+  void*,
+  void*);
 void GSetIterSetFilter_(
-  GSetIter* const that,
-  bool (*fun)(void*, void*),
-  void *params);
+    GSetIter* const that,
+  GSetIterFilterFun fun,
+              void* params);
 
 // Get the filter's function parameters
 // Input:
@@ -805,15 +827,7 @@ int GSetDoubleCmp(
 int GsetCharPtrCmp(
   void const* a,
   void const* b);
-static inline int GSetStrCmp(
-  void const* a,
-  void const* b) {
-
-  return GsetCharPtrCmp(
-    a,
-    b);
-
-}
+#define GSetStrCmp GsetCharPtrCmp
 
 // End of the guard against multiple inclusion
 #endif

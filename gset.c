@@ -71,7 +71,7 @@ struct GSet {
 struct GSetIterFilter {
 
   // Function of the filter
-  bool (*fun)(void* data, void* params);
+  GSetIterFilterFun fun;
 
   // Parameters of the filter
   void* params;
@@ -234,6 +234,44 @@ GSETPUSH__(ULong, unsigned long)
 GSETPUSH__(Float, float)
 GSETPUSH__(Double, double)
 GSETPUSH__(Ptr, void*)
+
+// Push an array of data at the head of the set
+// Inputs:
+//   that: the set
+//   arr: the array of data
+#define GSETPUSHARR__(N, T)            \
+void GSetPushArr_ ## N(                \
+     GSet* const that,                 \
+    size_t const size,                 \
+  T const* const arr) {                \
+  FOR(i, size) {                       \
+    GSetElem* elem = GSetElemAlloc();  \
+    elem->data.N = arr[i];             \
+    GSetPushElem(that, elem);          \
+  }                                    \
+}
+
+#define GSETPUSHARRPTR__(N, T)         \
+void GSetPushArr_ ## N(                \
+     GSet* const that,                 \
+    size_t const size,                 \
+  T const* const arr) {                \
+  FOR(i, size) {                       \
+    GSetElem* elem = GSetElemAlloc();  \
+    elem->data.N = ((void**)arr)[i];   \
+    GSetAddElem(that, elem);           \
+  }                                    \
+}
+
+GSETPUSHARR__(Char, char)
+GSETPUSHARR__(UChar, unsigned char)
+GSETPUSHARR__(Int, int)
+GSETPUSHARR__(UInt, unsigned int)
+GSETPUSHARR__(Long, long)
+GSETPUSHARR__(ULong, unsigned long)
+GSETPUSHARR__(Float, float)
+GSETPUSHARR__(Double, double)
+GSETPUSHARRPTR__(Ptr, void)
 
 // Add data at the tail of the set
 // Inputs:
@@ -697,12 +735,27 @@ void GSetIterReset_(
   }
 
   // Ensure the current element matches the current filter if any
-  if (that->filter.fun != NULL)
+  if (that->filter.fun != NULL) {
+
+    bool filtered =
+      that->filter.fun(
+        &(that->elem->data),
+        that->filter.params);
     while (
       that->elem != NULL &&
-      that->filter.fun(&(that->elem->data), that->filter.params) == false)
+      filtered == false) {
+
       if (GSetIterNext_(that) == false)
         that->elem = NULL;
+      else
+        filtered =
+          that->filter.fun(
+            &(that->elem->data),
+            that->filter.params);
+
+    }
+
+  }
 
 }
 
@@ -733,13 +786,26 @@ bool GSetIterNext_(
         } else {
 
           GSetElem* nextElem = that->elem->next;
+          bool filtered =
+            that->filter.fun(
+              &(nextElem->data),
+              that->filter.params);
           while (
             nextElem != NULL &&
-            that->filter.fun(&(nextElem->data), that->filter.params) == false)
-            if (nextElem->next != NULL)
+            filtered == false) {
+
+            if (nextElem->next != NULL) {
+
               nextElem = nextElem->next;
-            else
-              nextElem = NULL;
+              filtered =
+                that->filter.fun(
+                  &(nextElem->data),
+                  that->filter.params);
+
+            } else nextElem = NULL;
+
+          }
+
           if (nextElem != NULL) {
 
             that->elem = nextElem;
@@ -764,13 +830,26 @@ bool GSetIterNext_(
         } else {
 
           GSetElem* prevElem = that->elem->prev;
+          bool filtered =
+            that->filter.fun(
+              &(prevElem->data),
+              that->filter.params);
           while (
             prevElem != NULL &&
-            that->filter.fun(&(prevElem->data), that->filter.params) == false)
-            if (prevElem->prev != NULL)
+            filtered == false) {
+
+            if (prevElem->prev != NULL) {
+
               prevElem = prevElem->prev;
-            else
-              prevElem = NULL;
+              filtered =
+                that->filter.fun(
+                  &(prevElem->data),
+                  that->filter.params);
+
+            } else prevElem = NULL;
+
+          }
+
           if (prevElem != NULL) {
 
             that->elem = prevElem;
@@ -809,7 +888,7 @@ bool GSetIterPrev_(
 
   // Switch according to the type of iterator
   switch (that->type) {
- 
+
     case GSetIterForward:
       if (that->elem->prev != NULL) {
 
@@ -821,13 +900,26 @@ bool GSetIterPrev_(
         } else {
 
           GSetElem* prevElem = that->elem->prev;
+          bool filtered =
+            that->filter.fun(
+              &(prevElem->data),
+              that->filter.params);
           while (
             prevElem != NULL &&
-            that->filter.fun(&(prevElem->data), that->filter.params) == false)
-            if (prevElem->prev != NULL)
+            filtered == false) {
+
+            if (prevElem->prev != NULL) {
+
               prevElem = prevElem->prev;
-            else
-              prevElem = NULL;
+              filtered =
+                that->filter.fun(
+                  &(prevElem->data),
+                  that->filter.params);
+
+            } else prevElem = NULL;
+
+          }
+
           if (prevElem != NULL) {
 
             that->elem = prevElem;
@@ -852,13 +944,26 @@ bool GSetIterPrev_(
         } else {
 
           GSetElem* nextElem = that->elem->next;
+          bool filtered =
+            that->filter.fun(
+              &(nextElem->data),
+              that->filter.params);
           while (
             nextElem != NULL &&
-            that->filter.fun(&(nextElem->data), that->filter.params) == false)
-            if (nextElem->next != NULL)
+            filtered == false) {
+
+            if (nextElem->next != NULL) {
+
               nextElem = nextElem->next;
-            else
-              nextElem = NULL;
+              filtered =
+                that->filter.fun(
+                  &(nextElem->data),
+                  that->filter.params);
+
+            } else nextElem = NULL;
+
+          }
+
           if (nextElem != NULL) {
 
             that->elem = nextElem;
@@ -960,16 +1065,15 @@ GSetIterType GSetIterGetType_(
 
 }
 
-
 // Set the filter of an iterator
 // Inputs:
 //     that: the iterator
 //      fun: the filter's function
 //   params: the parameters of the filter's function
 void GSetIterSetFilter_(
-  GSetIter* const that,
-  bool (*fun)(void*, void*),
-  void *params) {
+    GSetIter* const that,
+  GSetIterFilterFun fun,
+              void* params) {
 
   that->filter.fun = fun;
   that->filter.params = params;
