@@ -710,7 +710,7 @@ void GSetMergeInvalidType(
     GSetULong*: GSetSort_ULong,                                              \
     GSetFloat*: GSetSort_Float,                                              \
     GSetDouble*: GSetSort_Double,                                            \
-    default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, FlagIncreasing);
+    default: GSetSort_Ptr)((PtrToSet)->s, CmpFun, FlagIncreasing)
 
 #define GSetIterFree(PtrToPtrToSetIter)                                      \
   if (((PtrToPtrToSetIter) != NULL) && (*(PtrToPtrToSetIter) != NULL)) {     \

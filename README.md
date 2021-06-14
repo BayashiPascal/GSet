@@ -165,6 +165,8 @@ struct GSet {
 };
 ```
 
+An union is preferred to several members for each type with the view to save space in memory, as only one single type will ever be used for a given GSetElem, and to allow the manipulation of the data independantly of its type.
+
 Functions on GSet, if they need access to the data, are defined for each data type. Macro are used to commonalise the code. For example, to pop a data:
 
 ```
@@ -198,7 +200,7 @@ At this level, all the pointers are considered to be pointers to void.
 
 ## 3.2 Typed GSet with polymorphism and type checking
 
-Typed GSet used by the user are defined in the header of the library. Here again, macro is used to commonalise code and allow the user to declare its own typed GSet with a single line of code.
+Typed GSet used by the user are defined in the header of the library. Here again, macro is used to commonalise code.
 
 ```
 // Declare a typed GSet containing data of type Type and name GSet<Name>
@@ -212,6 +214,29 @@ DEFINEGSETBASE(Char, char)
 DEFINEGSETBASE(UChar, unsigned char)
 DEFINEGSETBASE(Int, int)
 ...
+```
+
+The user can declare its own typed GSet with a single line of code as follow: `GSETDEF(Name, Type)` where `Name` is an idenitifer for the new type of GSet and `Type` is the type of the data in the GSet. For example, `GSETDEF(Int, int)` declare a typed GSet called `GSetInt` and containing data of type `int`. Typed GSet provided by default by the library are:
+
+```
+GSetChar,      data type: char
+GSetUChar,     data type: unsigned char
+GSetInt,       data type: int
+GSetUInt,      data type: unsigned int
+GSetLong,      data type: long
+GSetULong,     data type: unsigned long
+GSetFloat,     data type: float
+GSetDouble,    data type: double
+GSetCharPtr,   data type: char*
+GSetUCharPtr,  data type: unsigned char*
+GSetIntPtr,    data type: int*
+GSetUIntPtr,   data type: unsigned int*
+GSetLongPtr,   data type: long*
+GSetULongPtr,  data type: unsigned long*
+GSetFloatPtr,  data type: float*
+GSetDoublePtr, data type: double*
+
+GSetStr, alias of GSetCharPtr
 ```
 
 A typed GSet is simply an untyped GSet and a member `t`. This member's purpose is explained below.
@@ -293,7 +318,7 @@ main.c:272:13: note: in expansion of macro ‘GSetPop’
   272 | double* v = GSetPop(set);
 ```
 
-These tricks come at the expense of otherwise useless assignments and tests, and the user should ponder the loss in performance against the gain in security.
+These tricks come at the expense of otherwise useless assignments and tests plus the memory cost of the member `t`, and the user should ponder the loss in performance against the gain in security.
 
 ## 3.3 Iterators
 
@@ -343,7 +368,54 @@ GSETFOR(iter) {
 
 # 4 Interface
 
+In the functions below `<N>` is to be replaced by the GSet identifier (`Name`) and `<T>` by the data type `Type` used in `GSETDEF(Name, Type)`
 
+## 4.1 GSet<N>
+
+static inline GSet<N>* GSet<N>Alloc(void);
+static inline GSet<N>* GSet<N>FromArr(size_t const size, <T> const* const arr);
+static inline <T>* GSet<N>ToArr(GSet<N> const* const that)
+static inline void GSet<N>Flush(GSet<N>* const that);
+void GSetFree(GSet<N>** const that);
+void GSetPush(GSet<N>* const that, <T> const data);
+void GSetAdd(GSet<N>* that, <T> const data);
+void GSetAddArr(GSet<N>* that, size_t const size, <T> const* const data);
+<T> GSetPop(GSet<N>* const that);
+<T> GSetDrop(GSet<N>* const that);
+void GSetAppend(GSet<N>* const dst, GSet<N> const* const src);
+void GSetMerge(GSet<N>* const dst, GSet<N>* const src);
+size_t GSetGetSize(GSet<N> const* const that);
+void GSetEmpty(GSet<N>* const that);
+void GSetShuffle(GSet<N>* const that)
+void GSetSort(GSet<N>* const that, CmpFun, bool const inc);
+
+## 4.2 GSetIter<N>
+
+static inline GSetIter<N>* GSetIter<N>Alloc(GSet<N>* const set);
+static inline GSetIter<N>* GSetIter<N>Clone(GSetIter<N> const* const that);
+void GSetIterFree(PtrToPtrToSetIter);
+<T> GSetIterGet(GSetIter<N> const* const that);
+GSetGet is an alias for GSetIterGet
+<T> GSetIterPick(GSetIter<N>* const that);
+GSetPick is an alias for GSetIterPick
+void GSetIterReset(GSetIter<N>* const that);
+GSetReset is an alias for GSetIterReset
+bool GSetIterNext(GSetIter<N>* const that);
+GSetNext is an alias for GSetIterNext
+bool GSetIterPrev(GSetIter<N>* const that);
+GSetPrev is an alias for GSetIterPrev
+bool GSetIterIsFirst(GSetIter<N> const* const that);
+GSetIsFirst is an alias for GSetIterIsFirst
+bool GSetIterIsLast(GSetIter<N> const* const that);
+GSetIsLast is an alias for GSetIterIsLast
+void GSetIterSetType(GSetIter<N>* const that, GSetIterType const type);
+GSetIterType GSetIterGetType(GSetIter<N> const* const that)
+void GSetIterSetFilter(GSetIter<N>* const that, PtrToFun, PtrToParams);
+GSetSetFilter is an alias for GSetIterSetFilter
+void* GSetIterGetFilterParam(GSetIter<N> const* const that);
+GSetGetFilterParam is an alias for GSetIterGetFilterParam
+size_t GSetIterCount(GSetIter<N> const* const that);
+GSetCount is an alias for GSetIterCount
 
 # 5 License
 
