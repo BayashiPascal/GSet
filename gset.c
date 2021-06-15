@@ -1226,8 +1226,8 @@ int GsetCharPtrCmp(
   void const* a,
   void const* b) {
 
-  char* sa = *(char* const*)a;
-  char* sb = *(char* const*)b;
+  char const* sa = *(char* const*)a;
+  char const* sb = *(char* const*)b;
   if (sa == NULL && sb == NULL) return 0;
   if (sa == NULL && sb != NULL) return -1;
   if (sa != NULL && sb == NULL) return 1;

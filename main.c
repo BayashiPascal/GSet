@@ -150,7 +150,7 @@ void CharFree(char* that) {(void)that;}
     assert(GSetGet(iterA) == data ## Name[1]);                               \
     assert(GSetIsFirst(iterA) == false);                                     \
     assert(GSetIsLast(iterA) == true);                                       \
-    Type* toArr = GSet ## Name ## ToArr(setA);                               \
+    Type* toArr = GSetIter ## Name ## ToArr(iterA);                          \
     GSetReset(iterA);                                                        \
     GSETENUM(iterA, idx) assert(toArr[idx] == GSetGet(iterA));               \
     printf("%zu elements: ", GSetGetSize(setA));                             \
@@ -255,11 +255,10 @@ void CharFree(char* that) {(void)that;}
       GSETFOR(iterA) printf("%p ", (void*)GSetGet(iterA));                   \
     printf("\n");                                                            \
     if (GSetCount(iterA) > 0)                                                \
-      GSETFOR(iterA) {                                                       \
-        assert(GSetGet(iterA) == filterParam);                               \
-      }                                                                      \
+      GSETFOR(iterA) assert(GSetGet(iterA) == filterParam);                  \
     GSet ## Name ## Flush(setA);                                             \
     GSetFree(&setA);                                                         \
+    GSetIterFree(&iterA);                                                    \
     printf("TestPtr GSet" #Name " OK\n");                                    \
   } while(false)
 

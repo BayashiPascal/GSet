@@ -86,11 +86,11 @@ int main() {
 It can be compiled as follow:
 
 ```
-gcc -std=gnu11 -c main.c
+gcc -std=c17 -c main.c
 gcc main.o -lgset -lm -ltrycatchc -o main 
 ```
 
-# 2.2 User defined typed GSet
+## 2.2 User defined typed GSet
 
 To create a typed `GSet` containing data of, for example, type `struct UserData`, one can use the macro `GSETDEF(UserData, struct UserData)`. Below is a basic example:
 
@@ -135,6 +135,17 @@ int main() {
 }
 ```
 
+## 2.3 Unit tests
+
+The file `main.c` contains unit test for the library, which can be compiled as follow:
+
+```
+gcc -std=c17 -I./ -pedantic -Wall -Wextra -Wno-clobbered -Og -ggdb -g3 -DBUILDMODE=0 -c main.c 
+gcc main.o gset.o -lm -ltrycatchc -o main 
+``` 
+
+It has been check that the compilation generates no warning, as well as running the unit test through `valgrind` generates no warning.
+
 # 3 How it works
 
 ## 3.1 Underlying untyped GSet
@@ -160,8 +171,8 @@ struct GSetElem {
 };
 struct GSet {
   size_t size;
-  GSetElem* first;
-  GSetElem* last;
+  struct GSetElem* first;
+  struct GSetElem* last;
 };
 ```
 
@@ -372,22 +383,143 @@ In the functions below `<N>` is to be replaced by the GSet identifier (`Name`) a
 
 ## 4.1 GSet<N>
 
-static inline GSet<N>* GSet<N>Alloc(void);
-static inline GSet<N>* GSet<N>FromArr(size_t const size, <T> const* const arr);
-static inline <T>* GSet<N>ToArr(GSet<N> const* const that)
-static inline void GSet<N>Flush(GSet<N>* const that);
-void GSetFree(GSet<N>** const that);
-void GSetPush(GSet<N>* const that, <T> const data);
-void GSetAdd(GSet<N>* that, <T> const data);
-void GSetAddArr(GSet<N>* that, size_t const size, <T> const* const data);
-<T> GSetPop(GSet<N>* const that);
-<T> GSetDrop(GSet<N>* const that);
-void GSetAppend(GSet<N>* const dst, GSet<N> const* const src);
-void GSetMerge(GSet<N>* const dst, GSet<N>* const src);
-size_t GSetGetSize(GSet<N> const* const that);
-void GSetEmpty(GSet<N>* const that);
-void GSetShuffle(GSet<N>* const that)
-void GSetSort(GSet<N>* const that, CmpFun, bool const inc);
+`static inline GSet<N>* GSet<N>Alloc(void);`
+
+Create a new instance of `GSet<N>`.
+
+`static inline GSet<N>* GSet<N>FromArr(size_t const size, <T> const* const arr);`
+
+Create a new instance of `GSet<N>` filled with the data in the array `arr` of size `size`.
+
+`void GSetFree(GSet<N>** const that);`
+
+Free the memory used by the set `*that` and set `*that` to `NULL`. The memory used by the data in the set is not freed, use `GSetFlush` instead if you want to free the data too (cf below).
+
+`void GSetPush(GSet<N>* const that, <T> const data);`
+
+Push the `data` at the head of the set `that`.
+
+`void GSetPushArr(GSet<N>* that, size_t const size, <T> const* const arr);`
+
+Push the data in the array `arr`, containing `size` data, at the head of the set `that`.
+
+`void GSetAdd(GSet<N>* that, <T> const data);`
+
+Add the `data` at the tail of the set `that`.
+
+`void GSetAddArr(GSet<N>* that, size_t const size, <T> const* const arr);`
+
+Add the data in the array `arr`, containing `size` data, at the tail of the set `that`.
+
+`<T> GSetPop(GSet<N>* const that);`
+
+Remove and return the data at the head of the set `that`.
+
+`<T> GSetDrop(GSet<N>* const that);`
+
+Remove and return the data at the tail of the set `that`.
+
+`void GSetEmpty(GSet<N>* const that);`
+
+Remove all the data in the set `that`. The memory used by the data is not freed.
+
+`static inline void GSet<N>Flush(GSet<N>* const that);`
+
+Remove all the data in the set `that`. The memory used by the data is freed by calling the user defined function `<N>Free(<T>* const)`. `GSet<N>Flush` is only available if `<T>` is a pointer. The library provides the following `<N>Free` functions:
+
+```
+CharPtrFree(char** const that);
+UCharPtrFree(unsigned char** const that);
+IntPtrFree(int** const that);
+UIntPtrFree(unsigned int** const that);
+LongPtrFree(long** const that);
+ULongPtrFree(unsigned long** const that);
+FloatPtrFree(float** const that);
+DoublePtrFree(double** const that);
+StrFree(char** const that);
+```
+
+The user can define a `<N>Free` function as follow:
+
+```
+struct Dummy {
+  ...
+};
+void DummyFree(struct Dummy** const that) {
+  if (that == NULL || *that == NULL) return;
+  // Free the members of struct Dummy here
+  free(*that); *that = NULL;
+}
+```
+
+`void GSetAppend(GSet<N>* const dst, GSet<N> const* const src);`
+
+Add the data in the set `src` at the tail of the set `dst`.
+
+`void GSetMerge(GSet<N>* const dst, GSet<N>* const src);`
+
+Remove the data in the set `src` and add them at the tail of the set `dst`.
+
+`size_t GSetGetSize(GSet<N> const* const that);`
+
+Get the number of data in the set `that`.
+
+`void GSetShuffle(GSet<N>* const that)`
+
+Shuffle the data in the set `that`.
+
+`void GSetSort(GSet<N>* const that, int (* const cmp)(void const*, void const*), bool const inc);`
+
+Sort the data in the set `that` according to the sorting function `cmp`, in increasing order if `inc` is true, in decreasing order else. The sorting function takes two arguments `a` and `b` which are two pointers to data in the set, and returns an integer lower than 0 if `a<b`, greater than 0 if `a>b`, and equal to 0 if `a=b`. The library provides the following default sorting function for basic types:
+
+```
+int GSetCharCmp(void const* a, void const* b) {
+  return (*(char const*)a < *(char const*)b ? -1 :
+          *(char const*)a > *(char const*)b ? 1 : 0);
+}
+int GSetUCharCmp( void const* a, void const* b) {
+  return (*(unsigned char const*)a < *(unsigned char const*)b ? -1 :
+          *(unsigned char const*)a > *(unsigned char const*)b ? 1 : 0);
+}
+int GSetIntCmp(void const* a, void const* b) {
+  return (*(int const*)a < *(int const*)b ? -1 :
+          *(int const*)a > *(int const*)b ? 1 : 0);
+}
+int GSetUIntCmp(void const* a, void const* b) {
+  return (*(unsigned int const*)a < *(unsigned int const*)b ? -1 :
+          *(unsigned int const*)a > *(unsigned int const*)b ? 1 : 0);
+}
+int GSetLongCmp(void const* a, void const* b) {
+  return (*(long const*)a < *(long const*)b ? -1 :
+          *(long const*)a > *(long const*)b ? 1 : 0);
+}
+int GSetULongCmp(void const* a, void const* b) {
+  return (*(unsigned long const*)a < *(unsigned long const*)b ? -1 :
+          *(unsigned long const*)a > *(unsigned long const*)b ? 1 : 0);
+}
+int GSetFloatCmp(void const* a, void const* b) {
+  float x = *(float*)a;
+  float y = *(float*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+}
+int GSetDoubleCmp(void const* a, void const* b) {
+  double x = *(double*)a;
+  double y = *(double*)b;
+  if ((x - y) > DBL_EPSILON) return 1;
+  else if ((x - y) < -DBL_EPSILON) return -1;
+  else return 0;
+}
+int GsetCharPtrCmp(void const* a, void const* b) {
+  char const* sa = *(char* const*)a;
+  char const* sb = *(char* const*)b;
+  if (sa == NULL && sb == NULL) return 0;
+  if (sa == NULL && sb != NULL) return -1;
+  if (sa != NULL && sb == NULL) return 1;
+  return strcmp(sa, sb);
+}
+```
 
 ## 4.2 GSetIter<N>
 
@@ -416,6 +548,7 @@ void* GSetIterGetFilterParam(GSetIter<N> const* const that);
 GSetGetFilterParam is an alias for GSetIterGetFilterParam
 size_t GSetIterCount(GSetIter<N> const* const that);
 GSetCount is an alias for GSetIterCount
+`static inline <T>* GSet<N>ToArr(GSet<N> const* const that)`
 
 # 5 License
 
