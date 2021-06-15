@@ -135,6 +135,8 @@ int main() {
 }
 ```
 
+It is not possible to create a set of pointer to functions, but there is a work-around: define a structure with a member as the pointer to function and create a set for this structure.
+
 ## 2.3 Unit tests
 
 The file `main.c` contains unit test for the library, which can be compiled as follow:
@@ -413,11 +415,11 @@ Add the data in the array `arr`, containing `size` data, at the tail of the set 
 
 `<T> GSetPop(GSet<N>* const that);`
 
-Remove and return the data at the head of the set `that`.
+Remove and return the data at the head of the set `that`. Raise the exception `TryCatchExc_OutOfRange` if there is no data.
 
 `<T> GSetDrop(GSet<N>* const that);`
 
-Remove and return the data at the tail of the set `that`.
+Remove and return the data at the tail of the set `that`. Raise the exception `TryCatchExc_OutOfRange` if there is no data.
 
 `void GSetEmpty(GSet<N>* const that);`
 
@@ -523,32 +525,83 @@ int GsetCharPtrCmp(void const* a, void const* b) {
 
 ## 4.2 GSetIter<N>
 
-static inline GSetIter<N>* GSetIter<N>Alloc(GSet<N>* const set);
-static inline GSetIter<N>* GSetIter<N>Clone(GSetIter<N> const* const that);
-void GSetIterFree(PtrToPtrToSetIter);
-<T> GSetIterGet(GSetIter<N> const* const that);
-GSetGet is an alias for GSetIterGet
-<T> GSetIterPick(GSetIter<N>* const that);
-GSetPick is an alias for GSetIterPick
-void GSetIterReset(GSetIter<N>* const that);
-GSetReset is an alias for GSetIterReset
-bool GSetIterNext(GSetIter<N>* const that);
-GSetNext is an alias for GSetIterNext
-bool GSetIterPrev(GSetIter<N>* const that);
-GSetPrev is an alias for GSetIterPrev
-bool GSetIterIsFirst(GSetIter<N> const* const that);
-GSetIsFirst is an alias for GSetIterIsFirst
-bool GSetIterIsLast(GSetIter<N> const* const that);
-GSetIsLast is an alias for GSetIterIsLast
-void GSetIterSetType(GSetIter<N>* const that, GSetIterType const type);
-GSetIterType GSetIterGetType(GSetIter<N> const* const that)
-void GSetIterSetFilter(GSetIter<N>* const that, PtrToFun, PtrToParams);
-GSetSetFilter is an alias for GSetIterSetFilter
-void* GSetIterGetFilterParam(GSetIter<N> const* const that);
-GSetGetFilterParam is an alias for GSetIterGetFilterParam
-size_t GSetIterCount(GSetIter<N> const* const that);
-GSetCount is an alias for GSetIterCount
+`static inline GSetIter<N>* GSetIter<N>Alloc(GSet<N>* const set);`
+
+Create a new instance of `GSetIter<N>` to iterate on the set `set` of default type `GSetIterForward`, and default filtering function `NULL` (i.e. no filtering).
+
+`static inline GSetIter<N>* GSetIter<N>Clone(GSetIter<N> const* const that);`
+
+Create a clone of the iterator `that` (new instance with same type, set, current position, filtering function).
+
+`void GSetIterFree(GSetIter<N>** const that);`
+
+Free the memory used by the iterator `*that` and set `*that` to `NULL`.
+
+`<T> GSetIterGet(GSetIter<N> const* const that);`
+
+Return the current data. Raise the exception `TryCatchExc_OutOfRange` if there is no data.
+
+`<T> GSetIterPick(GSetIter<N>* const that);`
+
+Remove and return the current data. Raise the exception `TryCatchExc_OutOfRange` if there is no data.
+
+`void GSetIterReset(GSetIter<N>* const that);`
+
+Reset the iterator, i.e. it's current data becomes the first one according to its type and filter function.
+
+`bool GSetIterNext(GSetIter<N>* const that);`
+
+Move the iterator to the next data according to its type and filter function and return true if there was a next data, or let the current data unchanged and return false if there was no next data.
+
+`bool GSetIterPrev(GSetIter<N>* const that);`
+
+Move the iterator to the previous data according to its type and filter function and return true if there was a previous data, or let the current data unchanged and return false if there was no previous data.
+
+`bool GSetIterIsFirst(GSetIter<N> const* const that);`
+
+Return true if the current data is the first data according to the iterator's type and filter function, else return false, unless there is no current data in which case raise the exception `TryCatchExc_OutOfRange`.
+
+`bool GSetIterIsLast(GSetIter<N> const* const that);`
+
+Return true if the current data is the last data according to the iterator's type and filter function, else return false, unless there is no current data in which case raise the exception `TryCatchExc_OutOfRange`.
+
+`void GSetIterSetType(GSetIter<N>* const that, GSetIterType const type);`
+
+Set the type of iteration (forward/backward) of the iterator `that` to `type`.
+
+`GSetIterType GSetIterGetType(GSetIter<N> const* const that);`
+
+Get the type of iteration (forward/backward) of the iterator `that`.
+
+`void GSetIterSetFilter(GSetIter<N>* const that, GSetIterFilterFun fun, void* params);`
+
+Set the filter function of the iterator `that` to `fun` and the filter function's second argument to `params`. `fun` interface is `typedef bool (*GSetIterFilterFun)(void*, void*);`, cf 3.3 for details.
+
+`void* GSetIterGetFilterParam(GSetIter<N> const* const that);`
+
+Return the filter function's second argument for the iterator `that`.
+
+`size_t GSetIterCount(GSetIter<N> const* const that);`
+
+Return the number of data traversed by the iterator given its filter function.
+
 `static inline <T>* GSet<N>ToArr(GSet<N> const* const that)`
+
+Return the data traversed by the iterator given its filter function as an array of type `<T>`.
+
+The following alias are declared as shortcuts:
+```
+GSetGet is an alias for GSetIterGet
+GSetPick is an alias for GSetIterPick
+GSetReset is an alias for GSetIterReset
+GSetNext is an alias for GSetIterNext
+GSetPrev is an alias for GSetIterPrev
+GSetIsFirst is an alias for GSetIterIsFirst
+GSetIsLast is an alias for GSetIterIsLast
+GSetSetFilter is an alias for GSetIterSetFilter
+GSetGetFilterParam is an alias for GSetIterGetFilterParam
+GSetCount is an alias for GSetIterCount
+```
 
 # 5 License
 

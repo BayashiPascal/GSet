@@ -735,7 +735,7 @@ void GSetIterReset_(
   }
 
   // Ensure the current element matches the current filter if any
-  if (that->filter.fun != NULL) {
+  if (that->elem != NULL && that->filter.fun != NULL) {
 
     bool filtered =
       that->filter.fun(
