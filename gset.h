@@ -525,56 +525,64 @@ GSETDEF(DoublePtr, double*)
   }
 
 #define GSetPush(PtrToSet, Data)                                             \
-  _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetPush_Char,                                                \
-    GSetUChar*: GSetPush_UChar,                                              \
-    GSetInt*: GSetPush_Int,                                                  \
-    GSetUInt*: GSetPush_UInt,                                                \
-    GSetLong*: GSetPush_Long,                                                \
-    GSetULong*: GSetPush_ULong,                                              \
-    GSetFloat*: GSetPush_Float,                                              \
-    GSetDouble*: GSetPush_Double,                                            \
-    default: GSetPush_Ptr)((PtrToSet)->s, Data);                             \
-  (PtrToSet)->t = Data
+  do {                                                                       \
+    _Generic((PtrToSet),                                                     \
+      GSetChar*: GSetPush_Char,                                              \
+      GSetUChar*: GSetPush_UChar,                                            \
+      GSetInt*: GSetPush_Int,                                                \
+      GSetUInt*: GSetPush_UInt,                                              \
+      GSetLong*: GSetPush_Long,                                              \
+      GSetULong*: GSetPush_ULong,                                            \
+      GSetFloat*: GSetPush_Float,                                            \
+      GSetDouble*: GSetPush_Double,                                          \
+      default: GSetPush_Ptr)((PtrToSet)->s, Data);                           \
+    (PtrToSet)->t = Data;                                                    \
+  } while (false)
 
 #define GSetPushArr(PtrToSet, Size, Arr)                                     \
-  _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetPushArr_Char,                                             \
-    GSetUChar*: GSetPushArr_UChar,                                           \
-    GSetInt*: GSetPushArr_Int,                                               \
-    GSetUInt*: GSetPushArr_UInt,                                             \
-    GSetLong*: GSetPushArr_Long,                                             \
-    GSetULong*: GSetPushArr_ULong,                                           \
-    GSetFloat*: GSetPushArr_Float,                                           \
-    GSetDouble*: GSetPushArr_Double,                                         \
-    default: GSetPushArr_Ptr)((PtrToSet)->s, Size, Arr);                     \
-  (PtrToSet)->t = *(Arr)
+  do {                                                                       \
+    _Generic((PtrToSet),                                                     \
+      GSetChar*: GSetPushArr_Char,                                           \
+      GSetUChar*: GSetPushArr_UChar,                                         \
+      GSetInt*: GSetPushArr_Int,                                             \
+      GSetUInt*: GSetPushArr_UInt,                                           \
+      GSetLong*: GSetPushArr_Long,                                           \
+      GSetULong*: GSetPushArr_ULong,                                         \
+      GSetFloat*: GSetPushArr_Float,                                         \
+      GSetDouble*: GSetPushArr_Double,                                       \
+      default: GSetPushArr_Ptr)((PtrToSet)->s, Size, Arr);                   \
+    (PtrToSet)->t = *(Arr);                                                  \
+  } while (false)
 
 #define GSetAdd(PtrToSet, Data)                                              \
-  _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetAdd_Char,                                                 \
-    GSetUChar*: GSetAdd_UChar,                                               \
-    GSetInt*: GSetAdd_Int,                                                   \
-    GSetUInt*: GSetAdd_UInt,                                                 \
-    GSetLong*: GSetAdd_Long,                                                 \
-    GSetULong*: GSetAdd_ULong,                                               \
-    GSetFloat*: GSetAdd_Float,                                               \
-    GSetDouble*: GSetAdd_Double,                                             \
-    default: GSetAdd_Ptr)((PtrToSet)->s, Data);                              \
-  (PtrToSet)->t = Data
+  do {                                                                       \
+    _Generic((PtrToSet),                                                     \
+      GSetChar*: GSetAdd_Char,                                               \
+      GSetUChar*: GSetAdd_UChar,                                             \
+      GSetInt*: GSetAdd_Int,                                                 \
+      GSetUInt*: GSetAdd_UInt,                                               \
+      GSetLong*: GSetAdd_Long,                                               \
+      GSetULong*: GSetAdd_ULong,                                             \
+      GSetFloat*: GSetAdd_Float,                                             \
+      GSetDouble*: GSetAdd_Double,                                           \
+      default: GSetAdd_Ptr)((PtrToSet)->s, Data);                            \
+    (PtrToSet)->t = Data;                                                    \
+  } while (false)
 
 #define GSetAddArr(PtrToSet, Size, Arr)                                      \
-  _Generic((PtrToSet),                                                       \
-    GSetChar*: GSetAddArr_Char,                                              \
-    GSetUChar*: GSetAddArr_UChar,                                            \
-    GSetInt*: GSetAddArr_Int,                                                \
-    GSetUInt*: GSetAddArr_UInt,                                              \
-    GSetLong*: GSetAddArr_Long,                                              \
-    GSetULong*: GSetAddArr_ULong,                                            \
-    GSetFloat*: GSetAddArr_Float,                                            \
-    GSetDouble*: GSetAddArr_Double,                                          \
-    default: GSetAddArr_Ptr)((PtrToSet)->s, Size, Arr);                      \
-  (PtrToSet)->t = *(Arr)
+  do {                                                                       \
+    _Generic((PtrToSet),                                                     \
+      GSetChar*: GSetAddArr_Char,                                            \
+      GSetUChar*: GSetAddArr_UChar,                                          \
+      GSetInt*: GSetAddArr_Int,                                              \
+      GSetUInt*: GSetAddArr_UInt,                                            \
+      GSetLong*: GSetAddArr_Long,                                            \
+      GSetULong*: GSetAddArr_ULong,                                          \
+      GSetFloat*: GSetAddArr_Float,                                          \
+      GSetDouble*: GSetAddArr_Double,                                        \
+      default: GSetAddArr_Ptr)((PtrToSet)->s, Size, Arr);                    \
+    (PtrToSet)->t = *(Arr);                                                  \
+  } while (false)
 
 #define GSetPop(PtrToSet)                                                    \
   (((PtrToSet)->t =                                                          \
