@@ -444,12 +444,13 @@ StrFree(char** const that);
 The user can define a `<N>Free` function as follow:
 
 ```
-struct Dummy {
+struct <N> {
   ...
 };
-void DummyFree(struct Dummy** const that) {
+void <N>Free(struct <N>** const that) {
   if (that == NULL || *that == NULL) return;
-  // Free the members of struct Dummy here
+  // Free the members of struct <N> here
+  ...
   free(*that); *that = NULL;
 }
 ```
