@@ -146,7 +146,7 @@ gcc -std=c17 -I./ -pedantic -Wall -Wextra -Wno-clobbered -Og -ggdb -g3 -DBUILDMO
 gcc main.o gset.o -lm -ltrycatchc -o main 
 ``` 
 
-It has been check that the compilation generates no warning, as well as running the unit test through `valgrind` generates no warning.
+It has been checked that the compilation generates no warning, as well as running the unit test through `valgrind` generates no warning.
 
 # 3 How it works
 
