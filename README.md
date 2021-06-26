@@ -92,7 +92,7 @@ gcc main.o -lgset -lm -ltrycatchc -o main
 
 ## 2.2 User defined typed GSet
 
-To create a typed `GSet` containing data of, for example, type `struct UserData`, one can use the macro `GSETDEF(UserData, struct UserData)`. Below is a basic example:
+To create a typed `GSet` containing data of, for example, type `struct UserData`, one can use the macro `GSETDEF(UserData, struct UserData*)`. Below is a basic example:
 
 ```
 #include <stdio.h>
@@ -106,7 +106,7 @@ struct UserData {
 };
 
 // Create a typed GSet for UserData
-GSETDEF(UserData, struct UserData)
+GSETDEF(UserData, struct UserData*)
 
 // Main function
 int main() {
