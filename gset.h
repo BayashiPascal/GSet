@@ -277,6 +277,16 @@ void GSetIterReset_(
     GSetIter* const that,
   GSet const* const set);
 
+// Check if the iterator is ready
+// Input:
+//   that: the iterator
+// Output:
+//   Return true if the iterator is on an element of its set, false else
+//   (either it's because the set is empty, or the iterator's filter has
+//   no matching element in the set)
+bool GSetIterIsReady_(
+    GSetIter* const that);
+
 // Move the iterator to the next element
 // Input:
 //   that: the iterator
@@ -782,6 +792,7 @@ void GSetMergeInvalidType(
 
 #define GSetIterReset(PtrToSetIter) \
   GSetIterReset_((PtrToSetIter)->i, (PtrToSetIter)->set->s)
+#define GSetIterIsReady(PtrToSetIter) GSetIterIsReady_((PtrToSetIter)->i)
 #define GSetIterNext(PtrToSetIter) GSetIterNext_((PtrToSetIter)->i)
 #define GSetIterPrev(PtrToSetIter) GSetIterPrev_((PtrToSetIter)->i)
 #define GSetIterIsFirst(PtrToSetIter) GSetIterIsFirst_((PtrToSetIter)->i)
@@ -796,6 +807,7 @@ void GSetMergeInvalidType(
 #define GSetIterCount(PtrToSetIter) \
   GSetIterCount_((PtrToSetIter)->i, (PtrToSetIter)->set->s)
 #define GSetReset GSetIterReset
+#define GSetIsReady GSetIterIsReady
 #define GSetNext GSetIterNext
 #define GSetPrev GSetIterPrev
 #define GSetIsFirst GSetIterIsFirst

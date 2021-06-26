@@ -759,6 +759,23 @@ void GSetIterReset_(
 
 }
 
+// Check if the iterator is ready
+// Input:
+//   that: the iterator
+// Output:
+//   Return true if the iterator is on an element of its set, false else
+//   (either it's because the set is empty, or the iterator's filter has
+//   no matching element in the set)
+bool GSetIterIsReady_(
+    GSetIter* const that) {
+
+  if (that->elem == NULL)
+    return false;
+  else
+    return true;
+
+}
+
 // Move the iterator to the next element
 // Input:
 //   that: the iterator

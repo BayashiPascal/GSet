@@ -91,6 +91,7 @@ void CharFree(char* that) {(void)that;}
     GSetIter ## Name* iterA =                                                \
       GSetIter ## Name ## Alloc(setA);                                       \
     bool flagCatch = false;                                                  \
+    assert(GSetIsReady(iterA) == false);                                     \
     Try {GSetIsFirst(iterA);}                                                \
       Catch(TryCatchExc_OutOfRange) {flagCatch = true;} EndCatch;            \
     assert(flagCatch == true);                                               \
@@ -114,6 +115,8 @@ void CharFree(char* that) {(void)that;}
     assert(GSetIsLast(iterC) == true);                                       \
     GSetPush(setA, data ## Name[0]);                                         \
     assert(GSetGetSize(setA) == 1);                                          \
+    GSetReset(iterA);                                                        \
+    assert(GSetIsReady(iterA) == true);                                      \
     GSetReset(iterA);                                                        \
     assert(GSetGet(iterA) == data ## Name[0]);                               \
     assert(GSetIsFirst(iterA) == true);                                      \

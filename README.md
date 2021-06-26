@@ -550,6 +550,10 @@ Remove and return the current data. Raise the exception `TryCatchExc_OutOfRange`
 
 Reset the iterator, i.e. it's current data becomes the first one according to its type and filter function.
 
+`bool GSetIterIsReady(GSetIter<N>* const that);`
+
+Return true if the iterator is on an element of its set, false else (either it's because the set is empty, or the iterator's filter has no matching element in the set). Should be used before iterating or accessing element with the iterator, or the user should get ready to catch an exception `TryCatchExc_OutOfRange` if the iterator wasn't ready.
+
 `bool GSetIterNext(GSetIter<N>* const that);`
 
 Move the iterator to the next data according to its type and filter function and return true if there was a next data, or let the current data unchanged and return false if there was no next data.
@@ -595,6 +599,7 @@ The following alias are declared as shortcuts:
 GSetGet is an alias for GSetIterGet
 GSetPick is an alias for GSetIterPick
 GSetReset is an alias for GSetIterReset
+GSetIsReady is an alias for GSetIterIsReady
 GSetNext is an alias for GSetIterNext
 GSetPrev is an alias for GSetIterPrev
 GSetIsFirst is an alias for GSetIterIsFirst
