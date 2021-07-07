@@ -90,7 +90,7 @@ GSETPUSHARR_(Ptr, void);
 #define GSETADD_(N, T)     \
 void GSetAdd_ ## N(        \
   GSet* const that,        \
-             T const data)
+      T const data)
 GSETADD_(Char, char);
 GSETADD_(UChar, unsigned char);
 GSETADD_(Int, int);
@@ -107,9 +107,9 @@ GSETADD_(Ptr, void*);
 //   arr: the array of data
 #define GSETADDARR_(N, T)        \
 void GSetAddArr_ ## N(           \
-  GSet* const that,              \
-             size_t const size,  \
-             T const* const arr)
+     GSet* const that,           \
+    size_t const size,           \
+  T const* const arr)
 GSETADDARR_(Char, char);
 GSETADDARR_(UChar, unsigned char);
 GSETADDARR_(Int, int);
@@ -119,6 +119,25 @@ GSETADDARR_(ULong, unsigned long);
 GSETADDARR_(Float, float);
 GSETADDARR_(Double, double);
 GSETADDARR_(Ptr, void);
+
+// Add data before the current position of an iterator
+// Inputs:
+//   that: the set iterator
+//   data: the data
+#define GSETITERADDBEFORE_(N, T)                \
+void GSetIterAddBefore_ ## N(                   \
+  GSetIter* const that,                         \
+          T const data,                         \
+      GSet* const set)
+GSETITERADDBEFORE_(Char, char);
+GSETITERADDBEFORE_(UChar, unsigned char);
+GSETITERADDBEFORE_(Int, int);
+GSETITERADDBEFORE_(UInt, unsigned int);
+GSETITERADDBEFORE_(Long, long);
+GSETITERADDBEFORE_(ULong, unsigned long);
+GSETITERADDBEFORE_(Float, float);
+GSETITERADDBEFORE_(Double, double);
+GSETITERADDBEFORE_(Ptr, void*);
 
 // Pop data from the head of the set
 // Input:
@@ -789,6 +808,23 @@ void GSetMergeInvalidType(
          (PtrToSetIter)->i, (PtrToSetIter)->set->s)) == 0 ?                  \
            0 : (PtrToSetIter)->set->t)
 #define GSetPick GSetIterPick
+
+#define GSetIterAddBefore(PtrToSetIter, Data)                                \
+  do {                                                                       \
+    _Generic((PtrToSetIter),                                                 \
+      GSetIterChar*: GSetIterAddBefore_Char,                                 \
+      GSetIterUChar*: GSetIterAddBefore_UChar,                               \
+      GSetIterInt*: GSetIterAddBefore_Int,                                   \
+      GSetIterUInt*: GSetIterAddBefore_UInt,                                 \
+      GSetIterLong*: GSetIterAddBefore_Long,                                 \
+      GSetIterULong*: GSetIterAddBefore_ULong,                               \
+      GSetIterFloat*: GSetIterAddBefore_Float,                               \
+      GSetIterDouble*: GSetIterAddBefore_Double,                             \
+      default: GSetIterAddBefore_Ptr)((PtrToSetIter)->i, Data,               \
+        (PtrToSetIter)->set->s);                                             \
+    (PtrToSetIter)->set->t = Data;                                           \
+  } while (false)
+#define GSetAddBefore GSetIterAddBefore
 
 #define GSetIterReset(PtrToSetIter) \
   GSetIterReset_((PtrToSetIter)->i, (PtrToSetIter)->set->s)

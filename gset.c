@@ -114,6 +114,16 @@ static GSetElem* GSetElemAlloc(
 static void GSetElemFree(
   GSetElem** const that);
 
+// Add an element before a given element
+// Inputs:
+//   that: the GSetElem before which the new element must be added
+//   elem: the GSetElem to be added
+//    set: the GSet containing 'that'
+static void GSetElemAddElemBefore(
+  GSetElem* const that,
+  GSetElem* const elem,
+      GSet* const set);
+
 // Create a new GSet
 // Output:
 //   Return the new GSet.
@@ -333,6 +343,29 @@ GSETADDARR__(ULong, unsigned long)
 GSETADDARR__(Float, float)
 GSETADDARR__(Double, double)
 GSETADDARRPTR__(Ptr, void)
+
+// Add data before the current position of an iterator
+// Inputs:
+//   that: the set iterator
+//   data: the data
+#define GSETITERADDBEFORE__(N, T)               \
+void GSetIterAddBefore_ ## N(                   \
+  GSetIter* const that,                         \
+          T const data,                         \
+      GSet* const set) {                        \
+  GSetElem* elem = GSetElemAlloc();             \
+  elem->data.N = data;                          \
+  GSetElemAddElemBefore(that->elem, elem, set); \
+}
+GSETITERADDBEFORE__(Char, char)
+GSETITERADDBEFORE__(UChar, unsigned char)
+GSETITERADDBEFORE__(Int, int)
+GSETITERADDBEFORE__(UInt, unsigned int)
+GSETITERADDBEFORE__(Long, long)
+GSETITERADDBEFORE__(ULong, unsigned long)
+GSETITERADDBEFORE__(Float, float)
+GSETITERADDBEFORE__(Double, double)
+GSETITERADDBEFORE__(Ptr, void*)
 
 // Pop data from the head of the set
 // Input:
@@ -1306,6 +1339,26 @@ static void GSetElemFree(
   // Free the memory
   free(*that);
   *that = NULL;
+
+}
+
+// Add an element before a given element
+// Inputs:
+//   that: the GSetElem before which the new element must be added
+//   elem: the GSetElem to be added
+//    set: the GSet containing 'that'
+static void GSetElemAddElemBefore(
+  GSetElem* const that,
+  GSetElem* const elem,
+      GSet* const set) {
+
+  // Add the new element
+  if (that->prev != NULL) that->prev->next = elem;
+  elem->prev = that->prev;
+  elem->next = that;
+  that->prev = elem;
+  if (set->first == that) set->first = elem;
+  ++(set->size);
 
 }
 

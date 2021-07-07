@@ -224,6 +224,16 @@ void CharFree(char* that) {(void)that;}
     GSetShuffle(setA);                                                       \
     GSetSort(setA, GSet ## Name ## Cmp, true);                               \
     GSetAddArr(setA, 2, ((Type[]) {0, 0}));                                  \
+    GSetIterReset(iterA);                                                    \
+    GSetNext(iterA);                                                         \
+    GSetAddBefore(iterA, arr ## Name[0]);                                    \
+    assert(GSetGetSize(setA) == 3);                                          \
+    GSetIterReset(iterA);                                                    \
+    assert(GSetGet(iterA) == 0);                                             \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == arr ## Name[0]);                                \
+    GSetNext(iterA);                                                         \
+    assert(GSetGet(iterA) == 0);                                             \
     GSetIterFree(&iterA);                                                    \
     assert(iterA == NULL);                                                   \
     GSetIterFree(&iterB);                                                    \

@@ -19,6 +19,7 @@ Available operations on a GSet are:
 * get the size of set and cound the filtered data
 * empty a GSet with/without freeing its data
 * converting a GSet from/to an array
+* add data before the current position of an iterator
 
 ## Table Of Content
 
@@ -413,6 +414,10 @@ Add the `data` at the tail of the set `that`.
 
 Add the data in the array `arr`, containing `size` data, at the tail of the set `that`.
 
+`void GSetIterAddBefore(GSetIter<N>* that, <T>* const data);`
+
+Add the `data` before the current data pointed to by the iterator `that`
+
 `<T> GSetPop(GSet<N>* const that);`
 
 Remove and return the data at the head of the set `that`. Raise the exception `TryCatchExc_OutOfRange` if there is no data.
@@ -607,6 +612,7 @@ GSetIsLast is an alias for GSetIterIsLast
 GSetSetFilter is an alias for GSetIterSetFilter
 GSetGetFilterParam is an alias for GSetIterGetFilterParam
 GSetCount is an alias for GSetIterCount
+GSetAddBefore is an alias for GSetIterAddBefore
 ```
 
 # 5 License
