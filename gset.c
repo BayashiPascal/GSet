@@ -460,7 +460,7 @@ void GSetAppend_(
     // Memorise the raised exception
     raisedExc = TryCatchGetLastExc();
 
-  } EndCatchDefault;
+  } EndCatch;
 
   // Free memory
   GSetIterFree_(&iter);
@@ -637,7 +637,7 @@ void GSetSort_ ## N(                                     \
     free(arr);                                           \
   } CatchDefault {                                       \
     free(arr); Raise(TryCatchGetLastExc());              \
-  } EndCatchDefault;                                     \
+  } EndCatch;                                     \
 }
 
 GSETSORT__(Char, char)
