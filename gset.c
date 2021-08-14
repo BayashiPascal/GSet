@@ -434,9 +434,6 @@ void GSetAppend_(
   // Iterator on the data to copy
   GSetIter* iter = NULL;
 
-  // Variable to memorise the raised exception, if any
-  int raisedExc = 0;
-
   Try {
 
     // Loop on the element of the set source
@@ -455,18 +452,13 @@ void GSetAppend_(
 
     } while (GSetIterNext_(iter));
 
-  } CatchDefault {
-
-    // Memorise the raised exception
-    raisedExc = TryCatchGetLastExc();
-
   } EndCatch;
 
   // Free memory
   GSetIterFree_(&iter);
 
-  // If there has been a raised exception, it
-  if (raisedExc != 0) Raise(raisedExc);
+  // Forward the exception if any
+  ForwardExc();
 
 }
 

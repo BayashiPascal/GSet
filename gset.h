@@ -408,8 +408,9 @@ size_t GSetIterCount_(
     Try {                                                                    \
       *that = (GSet ## Name ) { .s = GSetAlloc() };                          \
     } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);                           \
+      free(that);                                                            \
     } EndCatch;                                                              \
+    ForwardExc();                                                            \
     return that;                                                             \
   }                                                                          \
   static inline GSet ## Name* GSet ## Name ## FromArr(                       \
@@ -451,8 +452,9 @@ size_t GSetIterCount_(
           .set = set, .i = GSetIterAlloc(GSetIterForward)                    \
         };                                                                   \
     } CatchDefault {                                                         \
-      free(that); Raise(TryCatchExc_MallocFailed);                           \
+      free(that);                                                            \
     } EndCatch;                                                              \
+    ForwardExc();                                                            \
     GSetIterReset_(that->i, set->s);                                         \
     return that;                                                             \
   }                                                                          \
@@ -464,8 +466,9 @@ size_t GSetIterCount_(
       *clone = (GSetIter ## Name)                                            \
         { .set = that->set, .i = GSetIterClone_(that->i) };                  \
     } CatchDefault {                                                         \
-      free(clone); Raise(TryCatchExc_MallocFailed);                          \
+      free(clone);                                                           \
     } EndCatch;                                                              \
+    ForwardExc();                                                            \
     return clone;                                                            \
   }                                                                          \
   static inline Type* GSetIter ## Name ## ToArr(                             \
@@ -495,8 +498,8 @@ size_t GSetIterCount_(
       } while(GSetIterNext_(iter));                                          \
     } CatchDefault {                                                         \
       free(arr); GSetIterFree_(&iter);                                       \
-      Raise(TryCatchGetLastExc());                                           \
     } EndCatch;                                                              \
+    ForwardExc();                                                            \
     GSetIterFree_(&iter);                                                    \
     return arr;                                                              \
   }
