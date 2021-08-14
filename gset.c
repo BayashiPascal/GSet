@@ -637,7 +637,7 @@ void GSetSort_ ## N(                                     \
     free(arr);                                           \
   } CatchDefault {                                       \
     free(arr); Raise(TryCatchGetLastExc());              \
-  } EndCatch;                                     \
+  } EndCatch;                                            \
 }
 
 GSETSORT__(Char, char)
